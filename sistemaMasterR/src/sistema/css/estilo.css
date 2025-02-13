@@ -1,0 +1,179 @@
+/* ===================== */
+/* MENÚ LATERAL */
+/* ===================== */
+.nav.flex-column.nav-pills {
+  width: 280px;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  height: calc(100% - 60px);
+  padding-top: 2rem;
+  background-color: #343b41;
+  z-index: 1000;
+  transition: width 0.3s ease-in-out;
+}
+
+
+/*menu */
+
+/* Cambiar color del botón activo en el menú */
+.nav-pills .nav-link.active {
+  background-color: #636464 !important; /* Color verde (ajústalo al que prefieras) */
+  color: white !important;
+}
+
+/* Cambiar color al pasar el cursor */
+.nav-pills .nav-link:hover {
+  background-color: #969797 !important; /* Un tono más oscuro para efecto hover */
+  color: white !important;
+}
+
+/* Color del texto cuando los botones NO están seleccionados */
+.nav-pills .nav-link {
+  color: #e2d9d9 !important; /* Cambia a un gris oscuro o el color que prefieras */
+  background-color: transparent !important; /* Fondo transparente */
+  transition: background-color 0.3s, color 0.3s ease-in-out;
+}
+
+.titulo p {
+  margin-top: 10px;
+  margin-left: 30px;  
+  color: #ece8e8 !important; /* Negro */
+}
+
+.titulo{
+
+  background-color: #948a8a !important; /* Un gris claro */
+
+}
+
+
+
+
+
+
+/* Contenedor principal */
+.main-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ===================== */
+/* SECCIÓN DEL CONTENIDO */
+/* ===================== */
+.tab-content {
+  margin-left: 200px;
+  flex-grow: 1;
+  padding: 2rem;
+  width: calc(100% - 100px);
+  min-width: 700px;
+  max-width: 1200px; /* Evita que sea demasiado grande */
+  height: auto;
+  transition: width 0.3s ease-in-out, margin-left 0.3s ease-in-out;
+}
+
+/* ===================== */
+/* MEDIA QUERIES PARA RESPONSIVE DESIGN */
+/* ===================== */
+
+/* Para tablets pequeñas */
+@media screen and (max-width: 768px) {
+  .nav.flex-column.nav-pills {
+    width: 200px;
+  }
+
+  .tab-content {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+  }
+}
+
+/* Para móviles: oculta el menú y expande el contenido */
+@media screen and (max-width: 600px) {
+  .nav.flex-column.nav-pills {
+    width: 0;
+    overflow: hidden;
+    padding-top: 0;
+  }
+
+  .tab-content {
+    margin-left: 0;
+    width: 100%; /* Expande el contenido cuando el menú está colapsado */
+    padding: 1rem;
+  }
+
+  /* Botón para mostrar el menú en móviles */
+  .menu-toggle {
+    display: block;
+    position: fixed;
+    top: 20px;
+    left: 10px;
+    background-color: #a8c4d6;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 2000;
+  }
+
+  /* Cuando el menú está abierto */
+  .nav.flex-column.nav-pills.open {
+    width: 250px;
+    padding-top: 2rem;
+  }
+
+  .tab-content.menu-open {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+  }
+}
+
+
+
+
+
+.btn-reg{
+  margin-top: 20px;
+  height: 40px;
+  background: rgb(93, 95, 93);
+  border-radius: 5px;
+  color: rgb(218, 211, 211);
+  
+}
+
+
+
+
+.table{
+  margin-top: 20px;
+}
+
+
+
+
+/* styles.css */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+.shake {
+  animation: shake 0.5s;
+}
+
+
+.tooltip {
+  position: fixed !important; /* 🔥 Evita que mueva el contenido */
+  z-index: 1050 !important; /* 🔥 Asegura que siempre esté encima */
+  max-width: 250px; /* 🔥 Evita que sea demasiado grande */
+  white-space: nowrap; /* 🔥 Evita que haga saltos de línea */
+  overflow: hidden; /* 🔥 Previene que afecte el layout */
+}
+
