@@ -74,6 +74,12 @@ export const router = createBrowserRouter([
       {
         path: "",
         element: <OpenAdmin />,
+        children: [
+          {
+            path: "registro",
+            element: <h1>Inicio</h1>,
+          },
+        ],
       },
     ],
   },
