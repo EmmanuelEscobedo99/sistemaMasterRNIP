@@ -4,6 +4,7 @@ import { Login } from '../accesoLogin/paginas/Login';
 import OpenCapturista from '../layOut/paginas/capturista/OpenCapturista';
 import OpenAdmin from '../layOut/paginas/admin/OpenAdmin';
 import ProtectedRoute from '../router/ProtectedRoute';
+import MenuVerificacion from '../sistemaAdmin/inicioVerificacion/MenuVerificacion';
 
 //import InicioTabla from      '../sistema/paginas/ProcesoRegistro/Tabla/InicioTabla';
 //import MenuModificacion from '../sistema/paginas/MenuBloques/MenuModificacion/MenuModificacion';
@@ -76,8 +77,8 @@ export const router = createBrowserRouter([
         element: <OpenAdmin />,
         children: [
           {
-            path: "registro",
-            element: <h1>Inicio</h1>,
+            path: "verificar",
+            element:<MenuVerificacion/> 
           },
         ],
       },
