@@ -23,8 +23,8 @@ const DatosGenerales = ({ onValidationStatus }) => {
     actualizarDato(name, value);
   };
 
-  const handleRadioChange = (nombre, valor) => {
-    seleccionarRadio(nombre, valor);
+  const handleRadioChange = (nombre, valor, formulario) => {
+    seleccionarRadio(nombre, valor, formulario);
   };
 
   const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
@@ -79,7 +79,7 @@ const DatosGenerales = ({ onValidationStatus }) => {
             name={`radio-${field.id}`}
             value="Sí"
             className="ms-2"
-            onChange={() => handleRadioChange(field.label)}
+            onChange={() => handleRadioChange(field.label, "Sí", "Datos Generales PT1")}
           />
         </div>
       ))}
@@ -89,7 +89,7 @@ const DatosGenerales = ({ onValidationStatus }) => {
         <h5 style={{ color: 'red'}}>Campos con errores:</h5>
         <ul>
           {radioSeleccionados.map((item, index) => (
-            <li key={index}>{item.nombre} {item.valor}</li>
+            <li key={index}>{item.nombre}</li>
           ))}
         </ul>
       </div>
