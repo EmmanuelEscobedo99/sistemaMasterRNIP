@@ -3,6 +3,9 @@ import HookData from '../../sistema/hookData/HookData';
 import VistaDatosGeneralesP1 from '../../sistemaAdmin/componentes/vistas/bloqueUno/VistaDatosGeneralesP1';
 import VistaDatosGeneralesP2 from '../componentes/vistas/bloqueUno/VistaDatosGeneralesP2';
 import VistaConsultarErrores from '../componentes/vistas/ConsultarErrores/VistaConsultarErrores';
+import VistaNombres from '../componentes/vistas/bloqueUno/VistaNombres';
+import VistaAlias from '../componentes/vistas/bloqueUno/VistaAlias';
+import VistaDomicilio from '../componentes/vistas/bloqueUno/VistaDomicilio';
 
 const Bloque2 = () => {
   const [ activeTab, setActiveTab ] = useState( "bformulariouno" );
@@ -46,7 +49,19 @@ const Bloque2 = () => {
                   className={ `nav-link ${ subTab === "subform3" ? "active" : "" }` }
                   onClick={ () => setSubTab( "subform3" ) }
                 >
-                  ➜ Formulario 3
+                  ➜ Nombres
+                </button>
+                <button
+                  className={ `nav-link ${ subTab === "subform4" ? "active" : "" }` }
+                  onClick={ () => setSubTab( "subform4" ) }
+                >
+                  ➜ Alias
+                </button>
+                <button
+                  className={ `nav-link ${ subTab === "subform5" ? "active" : "" }` }
+                  onClick={ () => setSubTab( "subform5" ) }
+                >
+                  ➜ Domicilio
                 </button>
               </div>
             ) }
@@ -74,7 +89,9 @@ const Bloque2 = () => {
               <>
                 { subTab === "subform1" && <div><VistaDatosGeneralesP1 data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
                 { subTab === "subform2" && <div><VistaDatosGeneralesP2 data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
-                { subTab === "subform3" && <div><h4>Formulario 3</h4><p>Contenido del Formulario 3.</p></div> }
+                { subTab === "subform3" && <div><VistaNombres data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
+                { subTab === "subform4" && <div><VistaAlias data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
+                { subTab === "subform5" && <div><VistaDomicilio data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
               </>
             ) }
 
