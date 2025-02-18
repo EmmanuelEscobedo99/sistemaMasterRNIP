@@ -9,6 +9,7 @@ const Admin = () => {
 
   const [busqueda, setBusqueda] = useState("");
   const [resultados, setResultados] = useState([]);
+  const [mostrarBuscador, setMostrarBuscador] = useState(true); // Nuevo estado
 
   const personas = [
     { id: 1, nombre: "Juan Pérez" },
@@ -44,6 +45,7 @@ const Admin = () => {
   };
 
   const handleSeleccionar = (nombre) => {
+    setMostrarBuscador(false); // Oculta el buscador y los resultados
     navigate(`/admin/verificar`);
   };
 
@@ -70,48 +72,49 @@ const Admin = () => {
         </button>
       </div>
 
-      {/* Buscador Mejorado */}
-      <div className="container mt-4">
-        <h4 className="mb-3">Buscar Interno</h4>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Escribe un nombre..."
-          value={busqueda}
-          onChange={handleBuscar}
-        />
+      {/* Buscador y tabla de resultados solo se muestra si mostrarBuscador es true */}
+      {mostrarBuscador && (
+        <div className="container mt-4">
+          <h4 className="mb-3">Buscar Interno</h4>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Escribe un nombre..."
+            value={busqueda}
+            onChange={handleBuscar}
+          />
 
-        {/* Tabla de Resultados */}
-        {resultados.length > 0 && (
-          <div className="mt-3">
-            <table className="table table-striped table-bordered">
-              <thead className="table-dark">
-                <tr>
-                  <th>ID</th>
-                  <th>Nombre</th>
-                  <th>Acción</th>
-                </tr>
-              </thead>
-              <tbody>
-                {resultados.map((persona) => (
-                  <tr key={persona.id}>
-                    <td>{persona.id}</td>
-                    <td>{persona.nombre}</td>
-                    <td>
-                      <button
-                        className="btn btn-primary btn-sm"
-                        onClick={() => handleSeleccionar(persona.nombre)}
-                      >
-                        Seleccionar
-                      </button>
-                    </td>
+          {resultados.length > 0 && (
+            <div className="mt-3">
+              <table className="table table-striped table-bordered">
+                <thead className="table-dark">
+                  <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Acción</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+                </thead>
+                <tbody>
+                  {resultados.map((persona) => (
+                    <tr key={persona.id}>
+                      <td>{persona.id}</td>
+                      <td>{persona.nombre}</td>
+                      <td>
+                        <button
+                          className="btn btn-primary btn-sm"
+                          onClick={() => handleSeleccionar(persona.nombre)}
+                        >
+                          Seleccionar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="container-fluid p-4">
         <Outlet />

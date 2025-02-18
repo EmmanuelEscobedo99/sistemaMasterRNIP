@@ -1,10 +1,9 @@
 import React from 'react';
-
 import { useForm, FormProvider } from 'react-hook-form';
 import '../../../../sistema/css/estilo.css';
-import DatosGenerales from '../../../../sistemaAdmin/componentes/bloqueUno/DatosGenerales';
+import ConsultarErrores from '../../ConsultarErrores/ConsultarErrores';
 
-const VistaDatosGeneralesP1 = ( { data, onFormChange } ) => {
+const VistaConsultarErrores = ( { data, onFormChange } ) => {
   const methods = useForm( { defaultValues: data } );
 
   const onValidationStatus = ( errors ) => {
@@ -17,10 +16,10 @@ const VistaDatosGeneralesP1 = ( { data, onFormChange } ) => {
       <div className="">
         <div className="col-md-12">
           <div className="card shadow-lg p-4">
-            <h6>Incorporación de Datos generales </h6>
+            <h6>Consultar Errores </h6>
             <FormProvider { ...methods }>
               <form>
-                <DatosGenerales
+                <ConsultarErrores
                   data={ data }
                   onFormChange={ onFormChange }
                   onValidationStatus={ onValidationStatus }
@@ -34,4 +33,4 @@ const VistaDatosGeneralesP1 = ( { data, onFormChange } ) => {
   );
 };
 
-export default VistaDatosGeneralesP1;
+export default VistaConsultarErrores;

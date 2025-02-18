@@ -2,9 +2,9 @@ import React from 'react';
 
 import { useForm, FormProvider } from 'react-hook-form';
 import '../../../../sistema/css/estilo.css';
-import DatosGenerales from '../../../../sistemaAdmin/componentes/bloqueUno/DatosGenerales';
+import DatosGeneralesP2 from '../../../../sistemaAdmin/componentes/bloqueUno/DatosGeneralesP2';
 
-const VistaDatosGeneralesP1 = ( { data, onFormChange } ) => {
+const VistaDatosGeneralesP2 = ( { data, onFormChange } ) => {
   const methods = useForm( { defaultValues: data } );
 
   const onValidationStatus = ( errors ) => {
@@ -20,7 +20,7 @@ const VistaDatosGeneralesP1 = ( { data, onFormChange } ) => {
             <h6>Incorporación de Datos generales </h6>
             <FormProvider { ...methods }>
               <form>
-                <DatosGenerales
+                <DatosGeneralesP2
                   data={ data }
                   onFormChange={ onFormChange }
                   onValidationStatus={ onValidationStatus }
@@ -34,4 +34,4 @@ const VistaDatosGeneralesP1 = ( { data, onFormChange } ) => {
   );
 };
 
-export default VistaDatosGeneralesP1;
+export default VistaDatosGeneralesP2;
