@@ -11,6 +11,12 @@ import VistaJuridicos from '../componentes/vistas/bloqueDos/VistaJuridicos';
 import VistaJuridicosP2 from '../componentes/vistas/bloqueDos/VistaJuridicosP2';
 import VistaEjecucion from '../componentes/vistas/bloqueDos/VistaEjecucion';
 import VistaEjecucionP2 from '../componentes/vistas/bloqueDos/VistaEjecucionP2';
+import VistaODelito from '../componentes/vistas/bloqueDos/VistaODelito';
+import VistaIngresos from '../componentes/vistas/bloqueDos/VistaIngresos';
+import VistaIngresosP2 from '../componentes/vistas/bloqueDos/VistaIngresosP2';
+import VistaIngdelito from '../componentes/vistas/bloqueDos/VistaIngdelito';
+import VistaPrincipales from '../componentes/vistas/bloqueSeis/VistaPrincipales';
+import VistaHuella from '../componentes/vistas/bloqueDos/VistaHuella';
 
 const Bloque2 = () => {
   const [ activeTab, setActiveTab ] = useState( "bformulariouno" );
@@ -196,16 +202,16 @@ const Bloque2 = () => {
                 { subTab === "subform3" && <div><VistaJuridicosP2 data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
                 { subTab === "subform4" && <div><VistaEjecucion data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
                 { subTab === "subform5" && <div><VistaEjecucionP2 data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
-                { subTab === "subform6" && <div><h1>ODELITO</h1></div> }
-                { subTab === "subform7" && <div><h1>INGRESOS PT1</h1></div> }
-                { subTab === "subform8" && <div><h1>INGRESOS PT2</h1></div> }
-                { subTab === "subform9" && <div><h1>INGDELITO</h1></div> }
+                { subTab === "subform6" && <div><VistaODelito data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
+                { subTab === "subform7" && <div><VistaIngresos data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
+                { subTab === "subform8" && <div><VistaIngresosP2 data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
+                { subTab === "subform9" && <div><VistaIngdelito data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
               </>
             ) }
             { activeTab === "bformularioseis" && (
               <>
-                { subTab === "subform1" && <div><h1>PRINCIPALES</h1></div> }
-                { subTab === "subform2" && <div><h1>HUELLAS</h1></div> }
+                { subTab === "subform1" && <div><VistaPrincipales data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
+                { subTab === "subform2" && <div><VistaHuella data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
               </>
             ) }
 
