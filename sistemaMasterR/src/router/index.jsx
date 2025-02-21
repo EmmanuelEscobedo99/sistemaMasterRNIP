@@ -77,7 +77,7 @@ export const router = createBrowserRouter([
         element: <OpenAdmin />,
         children: [
           {
-            path: "verificar",
+            path: "verificar/:LLAVE",
             element:<MenuVerificacion/> 
           },
         ],

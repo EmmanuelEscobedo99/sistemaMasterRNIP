@@ -44,9 +44,9 @@ const Admin = () => {
     }
   };
 
-  const handleSeleccionar = (nombre) => {
+  const handleSeleccionar = (LLAVE) => {
     setMostrarBuscador(false); // Oculta el buscador y los resultados
-    navigate(`/admin/verificar`);
+    navigate(`/admin/verificar/${LLAVE}`);
   };
 
   return (
@@ -54,10 +54,11 @@ const Admin = () => {
       <div className="bg-primary text-light d-flex justify-content-between align-items-center p-3 shadow-sm">
         <div className="d-flex align-items-center">
           <i className="bi bi-person-circle fs-1 me-3"></i>
-          <div className="sidebar-heading fw-bold fs-6">Admin Panel</div>
+          <div className="sidebar-heading fw-bold fs-6">Panel Administrativo</div>
         </div>
         <div className="d-flex">
-          <NavLink to="/admin/verificar" className="nav-link text-light">
+          <h3>RNIP</h3>
+         {/*} <NavLink to="/admin/verificar" className="nav-link text-light">
             <i className="bi bi-search me-2"></i> Opción 1
           </NavLink>
           <NavLink to="/capturista/nuevoRegistro" className="nav-link text-light">
@@ -65,7 +66,7 @@ const Admin = () => {
           </NavLink>
           <NavLink to="/capturista/incompletos" className="nav-link text-light">
             <i className="bi bi-exclamation-triangle me-2"></i> Opción 3
-          </NavLink>
+          </NavLink>*/}
         </div>
         <button onClick={handleLogout} className="btn btn-outline-light">
           <i className="bi bi-box-arrow-right me-2"></i> Cerrar sesión
@@ -102,7 +103,7 @@ const Admin = () => {
                       <td>
                         <button
                           className="btn btn-primary btn-sm"
-                          onClick={() => handleSeleccionar(persona.nombre)}
+                          onClick={() => handleSeleccionar(persona.id)}
                         >
                           Seleccionar
                         </button>

@@ -30,8 +30,8 @@ const Bloque2 = () => {
       <div className="row">
         {/* Menú lateral */ }
         <div className="col-md-0">
-          <div className="nav flex-column nav-pills bg-secondary p-3 rounded shadow-sm">
-            <h5 className="text-center mb-3 text-white">Dalia</h5>
+          <div className="nav flex-column nav-pills bg-dark p-3 shadow-sm">
+            <h5 className="text-center mb-3 text-white">DALIA</h5>
 
             {/* Opción principal */ }
             <button
@@ -174,12 +174,12 @@ const Bloque2 = () => {
             >
               Consultar Errores
             </button>
-            <button
+            {/*<button
               className={ `nav-link ${ activeTab === "finalizar" ? "active" : "" }` }
               onClick={ () => setActiveTab( "finalizar" ) }
             >
               Finalizar
-            </button>
+            </button>*/}
           </div>
         </div>
 
@@ -216,7 +216,7 @@ const Bloque2 = () => {
             ) }
 
             { activeTab === "terminar" && <div><VistaConsultarErrores data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
-            { activeTab === "finalizar" && <div><h4>Finalizar</h4></div> }
+            {/*{ activeTab === "finalizar" && <div><h4>Finalizar</h4></div> }*/}
           </div>
         </div>
       </div>

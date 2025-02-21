@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import '../../../../sistema/css/estilo.css';
 import Ingdelito from '../../bloqueDos/Ingdelito';
 import SubirPrincipales from '../../bloqueSeis/SubirPrincipales';
+import useDatosGeneralesStore from '../../../zustand/useDatosGeneralesStore';
 
 const VistaPrincipales = ( { data, onFormChange } ) => {
+
+  //const { limpiarErrores } = useDatosGeneralesStore();
+
   const methods = useForm( { defaultValues: data } );
+
+  /*useEffect(() => {
+    limpiarErrores();
+  }, []);*/
 
   const onValidationStatus = ( errors ) => {
     const hasErrors = Object.keys( errors ).length > 0;
