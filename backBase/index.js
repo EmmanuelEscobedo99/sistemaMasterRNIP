@@ -6,6 +6,7 @@ const ipRouter = require('./routes/ip/ipRouter');
 const loginRouter = require('./routes/auth/authRoutes');
 const registroRoutes = require('./routes/registroUsuarios/registroUsuarios');
 const datosRoutes = require('./routes/mostrarDatos/mostrarDatos');
+const mostrarPrincipalesRoutes = require('./routes/Bloque6/mostrarPrincipalesRoutes');
 
 const app = express();
 const PORT = 3000;
@@ -27,6 +28,8 @@ app.use('/api/auth', loginRouter);
 
 app.use('/api/registrarUsuarios', registroRoutes);
 app.use('/api/datos', datosRoutes);
+
+app.use('/api/mostrarPrincipales', mostrarPrincipalesRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);

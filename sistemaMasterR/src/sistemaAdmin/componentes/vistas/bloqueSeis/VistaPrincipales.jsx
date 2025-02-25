@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import '../../../../sistema/css/estilo.css';
 import Ingdelito from '../../bloqueDos/Ingdelito';
-import SubirPrincipales from '../../bloqueSeis/SubirPrincipales';
+import MostrarPrincipales from '../../bloqueSeis/MostrarPrincipales';
 import useDatosGeneralesStore from '../../../zustand/useDatosGeneralesStore';
 
 const VistaPrincipales = ( { data, onFormChange } ) => {
@@ -28,7 +28,7 @@ const VistaPrincipales = ( { data, onFormChange } ) => {
             <h6>Incorporación de imagenes principales </h6>
             <FormProvider { ...methods }>
               <form>
-                <SubirPrincipales
+                <MostrarPrincipales
                   data={ data }
                   onFormChange={ onFormChange }
                   onValidationStatus={ onValidationStatus }
