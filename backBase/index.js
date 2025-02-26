@@ -9,6 +9,7 @@ const datosRoutes = require('./routes/mostrarDatos/mostrarDatos');
 const idAlternaRoutes = require('./routes/idAlterna/idAlternaRoutes');
 const mostrarPrincipalesRoutes = require('./routes/Bloque6/mostrarPrincipalesRoutes');
 const mostrarHuellasRoutes = require('./routes/Bloque6/mostrarHuellasRoutes');
+const mostrarDatosGenerales = require('./routes/Bloque1/DatosGenerales/DatosGeneralesRoutes');
 
 const app = express();
 const PORT = 3000;
@@ -35,6 +36,7 @@ app.use('/api/idAlterna', idAlternaRoutes);
 
 app.use('/api/mostrarPrincipales', mostrarPrincipalesRoutes);
 app.use('/api/mostrarHuellas', mostrarHuellasRoutes);
+app.use('/api/bloque1', mostrarDatosGenerales);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);

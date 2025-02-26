@@ -5,10 +5,15 @@ import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import '../../../sistema/css/estilo.css';
 import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1/ValidacionBloqueUno';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
+import useStore from '../../zustand/useStore';
+import api from '../../../api/api';
 
 const DatosGenerales = ({ onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { datos, actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
+  const { datosGenerales, cargarDatosGenerales } = useStore();
+
+  const [idAlterna, setIdAlterna] = useState(1); // Simulación de ID alterna, debe obtenerse dinámicamente
 
   const handleChange = (e) => {
     const { name, value } = e.target;
