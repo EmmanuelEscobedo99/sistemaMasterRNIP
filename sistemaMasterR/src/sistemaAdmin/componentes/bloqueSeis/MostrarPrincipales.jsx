@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { set, useFormContext } from 'react-hook-form';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card } from 'react-bootstrap';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
 import useStore from '../../zustand/useStore';
+import api from '../../../api/api';
 
 const MostrarPrincipales = ({ data, onValidationStatus }) => {
   const { register, formState: { errors } } = useFormContext();
@@ -11,6 +12,26 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
   const { datosFormulario, cargarDatosFormulario } = useStore();
   
   const [idAlterna, setIdAlterna] = useState(1); // Simulación de ID alterna, debe obtenerse dinámicamente
+
+  const obtenerIdAlterna = async ( LLAVE ) => {
+    try {
+      const response = await api.post( 'obtenerIdAlterna/idAlterna', { LLAVE } );
+      if ( response && response.data.status !== 404 ) {
+        //dispatch( setIdAlterna( response.data[ 0 ].ID_ALTERNA ) );
+        //dispatch( setEnviando( false ) );
+        setIdAlterna( response.data[ 0 ].ID_ALTERNA );
+      } else {
+        //dispatch( setEnviando( true ) );
+        //dispatch( agregarError2( 'Error al obtener el ID alterna.' ) );
+      }
+    } catch ( error ) {
+      console.error( 'Error al obtener el ID alterna:', error );
+    }
+  };
+
+  /*useEffect(() => {
+    obtenerIdAlterna( LLAVE );
+  }, [ LLAVE ]);*/ //SE DESBLOQUEA CUANDO YA TENGAMOS LA TABLA DE MOVIMIENTOS CORRECTA
 
   useEffect(() => {
     if (idAlterna) {

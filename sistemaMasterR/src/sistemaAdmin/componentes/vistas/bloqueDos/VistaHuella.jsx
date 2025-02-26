@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import '../../../../sistema/css/estilo.css';
-import SubirHuellas from '../../bloqueSeis/SubirHuellas';
+import MostrarHuellas from '../../bloqueSeis/MostrarHuellas';
 
 const VistaHuella = ( { data, onFormChange } ) => {
   const methods = useForm( { defaultValues: data } );
@@ -19,7 +19,7 @@ const VistaHuella = ( { data, onFormChange } ) => {
             <h6>Incorporación de huellas </h6>
             <FormProvider { ...methods }>
               <form>
-                <SubirHuellas
+                <MostrarHuellas
                   data={ data }
                   onFormChange={ onFormChange }
                   onValidationStatus={ onValidationStatus }
