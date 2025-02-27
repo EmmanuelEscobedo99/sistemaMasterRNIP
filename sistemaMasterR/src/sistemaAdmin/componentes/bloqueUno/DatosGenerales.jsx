@@ -28,6 +28,39 @@ const DatosGenerales = ({ onValidationStatus }) => {
     actualizarDato(name, value);
   };
 
+  const obtenerIdAlterna = async ( LLAVE ) => {
+    try {
+      const response = await api.post( 'obtenerIdAlterna/idAlterna', { LLAVE } );
+      if ( response && response.data.status !== 404 ) {
+        //dispatch( setIdAlterna( response.data[ 0 ].ID_ALTERNA ) );
+        //dispatch( setEnviando( false ) );
+        setIdAlterna( response.data[ 0 ].ID_ALTERNA );
+      } else {
+        //dispatch( setEnviando( true ) );
+        //dispatch( agregarError2( 'Error al obtener el ID alterna.' ) );
+      }
+    } catch ( error ) {
+      console.error( 'Error al obtener el ID alterna:', error );
+    }
+  };
+
+  /*useEffect(() => {
+    obtenerIdAlterna( LLAVE );
+  }, [ LLAVE ]);*/ //SE DESBLOQUEA CUANDO YA TENGAMOS LA TABLA DE MOVIMIENTOS CORRECTA
+
+  useEffect(() => {
+    if (idAlterna) {
+      cargarDatosGenerales('datos_generales', idAlterna);
+    }
+  }, [idAlterna, cargarDatosGenerales]);
+
+  useEffect(() => {
+    console.log("Datos del formulario:", datosGenerales);
+  }, [datosGenerales]);
+
+  // ✅ Corregido: Ahora accede a `imagenes`, no `imagenesPrincipales`
+  const datosGeneralesObtenidos = datosGeneralesObtenidos.datos || [];
+
   const handleRadioChange = (nombre, valor, formulario) => {
     seleccionarRadio(nombre, valor, formulario);
   };
