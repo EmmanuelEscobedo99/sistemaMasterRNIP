@@ -5,10 +5,12 @@ import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import '../../../sistema/css/estilo.css';
 import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1/ValidacionBloqueUno';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
+import useStore from '../../zustand/useStore';
 
 const DatosGeneralesP2 = ( { data, onFormChange, onValidationStatus } ) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { datos, actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
+  const { nombres, cargarNombres } = useStore();
 
   const handleChange = ( e ) => {
     const { name, value } = e.target;
@@ -39,12 +41,15 @@ const DatosGeneralesP2 = ( { data, onFormChange, onValidationStatus } ) => {
     <Tooltip>{ message }</Tooltip>
   );
 
+  const nombresObtenidos = nombres?.[0] || {};
+  console.log(nombresObtenidos)
+
   return (
     <div className="row">
       { [
-        { id: "dnombre", label: "Nombre" },
-        { id: "dpaterno", label: "Apellido Paterno" },
-        { id: "dmaterno", label: "Apellido Materno" },
+        { id: "DNOMBRE", label: "Nombre" },
+        { id: "DPATERNO", label: "Apellido Paterno" },
+        { id: "DMATERNO", label: "Apellido Materno" },
       ].map( ( field ) => (
         <div key={ field.id } className="col-md-3 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
@@ -57,6 +62,7 @@ const DatosGeneralesP2 = ( { data, onFormChange, onValidationStatus } ) => {
               id={ field.id }
               name={ field.id }
               placeholder={ errors[ field.id ] ? errors[ field.id ].message : field.label }
+              value={nombresObtenidos[0][field.id] || ''}
               { ...register( field.id, { onChange: handleChange } ) }
               style={ { borderColor: errors[ field.id ] ? 'red' : '' } }
             />

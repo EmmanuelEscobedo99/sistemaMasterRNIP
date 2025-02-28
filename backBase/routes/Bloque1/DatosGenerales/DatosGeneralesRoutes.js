@@ -3,6 +3,6 @@ const datosGeneralesController = require( '../../../controllers/Bloque1/DatosGen
 
 const router = express.Router();
 
-router.get('/obtenerDatosGenerales', datosGeneralesController.obtenerDatosGenerales);
+router.get('/obtenerDatosGenerales/:idAlterna', datosGeneralesController.obtenerDatosGenerales);
 
 module.exports = router;

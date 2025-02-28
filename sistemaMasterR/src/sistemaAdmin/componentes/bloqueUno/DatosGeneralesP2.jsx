@@ -1,14 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import '../../../sistema/css/estilo.css';
 import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1/ValidacionBloqueUno';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
+import useStore from '../../zustand/useStore';
 
 const DatosGeneralesP2 = ( { data, onFormChange, onValidationStatus } ) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { datos, actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
+  const { datosGenerales, cargarDatosGenerales } = useStore();
 
   const handleChange = ( e ) => {
     const { name, value } = e.target;
@@ -39,25 +41,27 @@ const DatosGeneralesP2 = ( { data, onFormChange, onValidationStatus } ) => {
     <Tooltip>{ message }</Tooltip>
   );
 
+  const datosGeneralesObtenidos = datosGenerales?.[0] || {};
+
   return (
     <div className="row">
       { [
-        { id: "telefono", label: "Telefono del individuo" },
-        { id: "formula", label: "Formula" },
-        { id: "subformula", label: "Subformula" },
-        { id: "folio", label: "Folio" },
-        { id: "codbar", label: "CIB (antes NCP)" },
-        { id: "tipoexp", label: "Tipo de expediente" },
-        { id: "escolaridad", label: "Escolaridad" },
-        { id: "etnia", label: "Etnia" },
-        { id: "religion", label: "Religión" },
-        { id: "remesa", label: "Remesa de traslado al interno" },
-        { id: "estadoexpediente", label: "Estado actual del expediente" },
-        { id: "ubicacioninterno", label: "Ubicación del individuo" },
-        { id: "idhablaindigena", label: "Habla lengua indígena" },
-        { id: "idindigena", label: "Identificacion de la condicion" },
-        { id: "idsentenciaabsolutoria", label: "Leyenda de sentencia" },
-        { id: "idanalfabeta", label: "Es analfabeta el individuo" },
+        { id: "TELEFONO", label: "Telefono del individuo" },
+        { id: "FORMULA", label: "Formula" },
+        { id: "SUBFORMULA", label: "Subformula" },
+        { id: "FOLIO", label: "Folio" },
+        { id: "CODBAR", label: "CIB (antes NCP)" },
+        { id: "TIPOEXP", label: "Tipo de expediente" },
+        { id: "ESCOLARIDAD", label: "Escolaridad" },
+        { id: "ETNIA", label: "Etnia" },
+        { id: "RELIGION", label: "Religión" },
+        { id: "REMESA", label: "Remesa de traslado al interno" },
+        { id: "ESTADO_EXPEDIENTE", label: "Estado actual del expediente" },
+        { id: "UBICACION_INTERNO", label: "Ubicación del individuo" },
+        { id: "ID_HABLA_INDIGENA", label: "Habla lengua indígena" },
+        { id: "ID_INDIGENA", label: "Identificacion de la condicion" },
+        { id: "ID_SENTENCIA_ABSOLUTORIA", label: "Leyenda de sentencia" },
+        { id: "ID_ANALFABETA", label: "Es analfabeta el individuo" },
       ].map( ( field ) => (
         <div key={ field.id } className="col-md-3 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
@@ -70,6 +74,7 @@ const DatosGeneralesP2 = ( { data, onFormChange, onValidationStatus } ) => {
               id={ field.id }
               name={ field.id }
               placeholder={ errors[ field.id ] ? errors[ field.id ].message : field.label }
+              value={datosGeneralesObtenidos[field.id] || ''}
               { ...register( field.id, { onChange: handleChange } ) }
               style={ { borderColor: errors[ field.id ] ? 'red' : '' } }
             />

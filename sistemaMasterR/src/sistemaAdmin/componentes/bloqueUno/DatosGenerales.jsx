@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Tooltip, OverlayTrigger } from 'react-bootstrap';
@@ -12,8 +12,9 @@ const DatosGenerales = ({ onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { datos, actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { datosGenerales, cargarDatosGenerales } = useStore();
+  const { nombres, cargarNombres } = useStore();
 
-  const [idAlterna, setIdAlterna] = useState(1); // Simulación de ID alterna, debe obtenerse dinámicamente
+  const [idAlterna, setIdAlterna] = useState(1);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,38 +29,31 @@ const DatosGenerales = ({ onValidationStatus }) => {
     actualizarDato(name, value);
   };
 
-  const obtenerIdAlterna = async ( LLAVE ) => {
+  const obtenerIdAlterna = async (LLAVE) => {
     try {
-      const response = await api.post( 'obtenerIdAlterna/idAlterna', { LLAVE } );
-      if ( response && response.data.status !== 404 ) {
-        //dispatch( setIdAlterna( response.data[ 0 ].ID_ALTERNA ) );
-        //dispatch( setEnviando( false ) );
-        setIdAlterna( response.data[ 0 ].ID_ALTERNA );
-      } else {
-        //dispatch( setEnviando( true ) );
-        //dispatch( agregarError2( 'Error al obtener el ID alterna.' ) );
+      const response = await api.post('obtenerIdAlterna/idAlterna', { LLAVE });
+      if (response && response.data.status !== 404) {
+        setIdAlterna(response.data[0].ID_ALTERNA);
       }
-    } catch ( error ) {
-      console.error( 'Error al obtener el ID alterna:', error );
+    } catch (error) {
+      console.error('Error al obtener el ID alterna:', error);
     }
   };
 
-  /*useEffect(() => {
-    obtenerIdAlterna( LLAVE );
-  }, [ LLAVE ]);*/ //SE DESBLOQUEA CUANDO YA TENGAMOS LA TABLA DE MOVIMIENTOS CORRECTA
-
   useEffect(() => {
     if (idAlterna) {
-      cargarDatosGenerales('datos_generales', idAlterna);
+      cargarDatosGenerales('obtenerDatosGenerales', idAlterna);
+      cargarNombres('obtenerNombres', idAlterna);
     }
-  }, [idAlterna, cargarDatosGenerales]);
+  }, [idAlterna]);
 
   useEffect(() => {
-    console.log("Datos del formulario:", datosGenerales);
-  }, [datosGenerales]);
+    onValidationStatus(errors);
+  }, [errors]);
 
-  // ✅ Corregido: Ahora accede a `imagenes`, no `imagenesPrincipales`
-  const datosGeneralesObtenidos = datosGeneralesObtenidos.datos || [];
+  const datosGeneralesObtenidos = datosGenerales?.[0] || {};
+  //const nombresObtenidos = nombres?.[0] || {};
+  //console.log(nombresObtenidos)
 
   const handleRadioChange = (nombre, valor, formulario) => {
     seleccionarRadio(nombre, valor, formulario);
@@ -67,31 +61,27 @@ const DatosGenerales = ({ onValidationStatus }) => {
 
   const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
-  useEffect(() => {
-    onValidationStatus(errors);
-  }, [errors, onValidationStatus]);
-
   const renderTooltip = (message) => <Tooltip>{message}</Tooltip>;
 
   return (
     <div className="row">
       {[
-        { id: "fechacap", label: "Fecha de captura" },
-        { id: "sexo", label: "Sexo del individuo" },
-        { id: "edad", label: "Edad del individuo" },
-        { id: "estatura", label: "Estatura del individuo" },
-        { id: "peso", label: "Peso del individuo" },
-        { id: "estciv", label: "Estado civil del individuo" },
-        { id: "fecnac", label: "Fecha de nacimiento" },
-        { id: "nentid", label: "Entidad de nacimiento" },
-        { id: "nmunic", label: "Municipio de nacimiento" },
-        { id: "npais", label: "País de nacimiento" },
-        { id: "nacionalidad", label: "Nacionalidad" },
-        { id: "tipsan", label: "Tipo de sangre" },
-        { id: "tipsan1", label: "Factor RH" },
-        { id: "usoant", label: "Usa anteojos" },
-        { id: "rfc", label: "RFC" },
-        { id: "oficiodes", label: "Oficio del individuo" },
+        { id: "FECHA_CAP", label: "Fecha de captura" },
+        { id: "SEXO", label: "Sexo del individuo" },
+        { id: "EDAD", label: "Edad del individuo" },
+        { id: "ESTATURA", label: "Estatura del individuo" },
+        { id: "PESO", label: "Peso del individuo" },
+        { id: "EST_CIV", label: "Estado civil del individuo" },
+        { id: "FEC_NAC", label: "Fecha de nacimiento" },
+        { id: "NENTID", label: "Entidad de nacimiento" },
+        { id: "NMUNIC", label: "Municipio de nacimiento" },
+        { id: "NPAIS", label: "País de nacimiento" },
+        { id: "NNACIONA", label: "Nacionalidad" },
+        { id: "TIP_SAN", label: "Tipo de sangre" },
+        { id: "TIP_SAN1", label: "Factor RH" },
+        { id: "USO_ANT", label: "Usa anteojos" },
+        { id: "RFC", label: "RFC" },
+        { id: "OFICIO_DES", label: "Oficio del individuo" },
       ].map((field) => (
         <div key={field.id} className="col-md-3 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
@@ -105,7 +95,7 @@ const DatosGenerales = ({ onValidationStatus }) => {
               name={field.id}
               placeholder={errors[field.id] ? errors[field.id].message : field.label}
               {...register(field.id, { onChange: handleChange })}
-              value={datos[field.id] || ''}
+              value={datosGeneralesObtenidos[field.id] || ''}
               style={{ borderColor: errors[field.id] ? 'red' : '' }}
             />
           </OverlayTrigger>
