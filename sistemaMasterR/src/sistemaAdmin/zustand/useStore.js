@@ -7,6 +7,8 @@ const useStore = create((set) => ({
   datosHuellas: {}, // Estado para almacenar las Huellas
   datosGenerales: {}, // Estado para almacenar los datos generales
   nombres: {}, // Estado para almacenar los nombres
+  alias: {}, // Estado para almacenar los alias
+  domicilio: {}, // Estado para almacenar los domicilios
 
   cargarDatosFormulario: async (tabla, idAlterna) => {
     try {
@@ -40,6 +42,22 @@ const useStore = create((set) => ({
       console.error('Error al cargar los datos:', error);
     }
   },
+  cargarAlias: async (tabla, idAlterna) => {
+    try {
+      const response = await api.get(`/alias/${tabla}/${idAlterna}`);
+      set({ alias: response.data }); // Guardar directamente la respuesta en Zustand
+    } catch (error) {
+      console.error('Error al cargar los datos:', error);
+    }
+  },
+  cargarDomicilio: async (tabla, idAlterna) => {
+    try {
+      const response = await api.get(`/domicilio/${tabla}/${idAlterna}`);
+      set({ domicilio: response.data }); // Guardar directamente la respuesta en Zustand
+    } catch (error) {
+      console.error('Error al cargar los datos:', error);
+    }
+  }
 }));
 
 export default useStore;

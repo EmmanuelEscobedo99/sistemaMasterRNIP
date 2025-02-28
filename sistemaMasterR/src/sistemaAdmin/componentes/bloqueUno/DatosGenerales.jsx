@@ -13,6 +13,8 @@ const DatosGenerales = ({ onValidationStatus }) => {
   const { datos, actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { datosGenerales, cargarDatosGenerales } = useStore();
   const { nombres, cargarNombres } = useStore();
+  const { domicilio, cargarDomicilio } = useStore();
+  const { alias, cargarAlias } = useStore();
 
   const [idAlterna, setIdAlterna] = useState(1);
 
@@ -44,6 +46,8 @@ const DatosGenerales = ({ onValidationStatus }) => {
     if (idAlterna) {
       cargarDatosGenerales('obtenerDatosGenerales', idAlterna);
       cargarNombres('obtenerNombres', idAlterna);
+      cargarDomicilio('obtenerDomicilio', idAlterna);
+      cargarAlias('obtenerAlias', idAlterna);
     }
   }, [idAlterna]);
 
