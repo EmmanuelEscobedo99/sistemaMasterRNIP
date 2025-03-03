@@ -13,6 +13,7 @@ const mostrarDatosGenerales = require('./routes/Bloque1/DatosGenerales/DatosGene
 const mostrarNombres = require('./routes/Bloque1/Nombres/NombresRoutes');
 const mostrarAlias = require('./routes/Bloque1/Alias/AliasRoutes');
 const mostrarDomicilio = require('./routes/Bloque1/Domicilio/DomicilioRoutes');
+const mostrarSituacion = require('./routes/Bloque2/Situacion/SituacionRoutes');
 
 const app = express();
 const PORT = 3000;
@@ -43,6 +44,7 @@ app.use('/api/bloque1', mostrarDatosGenerales);
 app.use('/api/nombres', mostrarNombres);
 app.use('/api/alias', mostrarAlias);
 app.use('/api/domicilio', mostrarDomicilio);
+app.use('/api/situacion', mostrarSituacion);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);

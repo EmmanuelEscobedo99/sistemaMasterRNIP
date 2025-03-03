@@ -107,10 +107,10 @@ const ConsultarErrores = () => {
 
       {/* Button to submit the feedback */ }
       <button
-        className="btn btn-primary mt-3"
+        className="btn btn-danger mt-3"
         onClick={ handleLimpiarErrors }
       >
-        Enviar Mensaje
+        Rechazar
       </button>
 
       {/* Button to confirm */ }

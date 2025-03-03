@@ -15,6 +15,7 @@ const DatosGenerales = ({ onValidationStatus }) => {
   const { nombres, cargarNombres } = useStore();
   const { domicilio, cargarDomicilio } = useStore();
   const { alias, cargarAlias } = useStore();
+  const { situacion, cargarSituacion } = useStore();
 
   const [idAlterna, setIdAlterna] = useState(1);
 
@@ -48,6 +49,7 @@ const DatosGenerales = ({ onValidationStatus }) => {
       cargarNombres('obtenerNombres', idAlterna);
       cargarDomicilio('obtenerDomicilio', idAlterna);
       cargarAlias('obtenerAlias', idAlterna);
+      cargarSituacion('obtenerSituacion', idAlterna);
     }
   }, [idAlterna]);
 

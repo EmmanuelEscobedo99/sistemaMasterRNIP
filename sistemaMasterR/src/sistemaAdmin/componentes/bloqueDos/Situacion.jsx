@@ -5,10 +5,12 @@ import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import '../../../sistema/css/estilo.css';
 import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1/ValidacionBloqueUno';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
+import useStore from '../../zustand/useStore';
 
 const Domicilio = ( { data, onFormChange, onValidationStatus } ) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { datos, actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
+  const { situacion, cargarSituacion } = useStore();
 
   const handleChange = ( e ) => {
     const { name, value } = e.target;
@@ -39,23 +41,26 @@ const Domicilio = ( { data, onFormChange, onValidationStatus } ) => {
     <Tooltip>{ message }</Tooltip>
   );
 
+  const situacionObtenida = situacion?.[0] || {};
+  console.log(situacionObtenida);
+
   return (
     <div className="row">
       { [
-        { id: "avprevia", label: "Número de averiguación previa" },
-        { id: "sitkey", label: "Consecutivo de situación" },
-        { id: "clasifica", label: "Clasificación juridica del individuo" },
-        { id: "peligro", label: "Grado de peligrosidad del individuo" },
-        { id: "fuero", label: "Fuero" },
-        { id: "proceso", label: "Número de proceso" },
-        { id: "ingreso", label: "Ingreso" },
-        { id: "fecact", label: "Fecha de actualización" },
-        { id: "delito", label: "Delito principal" },
-        { id: "consig", label: "Número de consignación" },
-        { id: "consides", label: "Descripción de consignación" },
-        { id: "mp", label: "Ministerio público que consigna" },
-        { id: "fechaaveri", label: "Fecha de averiguación previa" },
-        { id: "sendeter", label: "Sentido determinación por el juez" },
+        { id: "AV_PREVIA", label: "Número de averiguación previa" },
+        { id: "SIT_KEY", label: "Consecutivo de situación" },
+        { id: "CLASIFICA", label: "Clasificación juridica del individuo" },
+        { id: "PELIGRO", label: "Grado de peligrosidad del individuo" },
+        { id: "FUERO", label: "Fuero" },
+        { id: "PROCESO", label: "Número de proceso" },
+        { id: "INGRESO", label: "Ingreso" },
+        { id: "FEC_ACT", label: "Fecha de actualización" },
+        { id: "DELITO", label: "Delito principal" },
+        { id: "CONSIG", label: "Número de consignación" },
+        { id: "CONSI_DES", label: "Descripción de consignación" },
+        { id: "MP", label: "Ministerio público que consigna" },
+        { id: "FECHAAVERI", label: "Fecha de averiguación previa" },
+        { id: "SENDETER", label: "Sentido determinación por el juez" },
       ].map( ( field ) => (
         <div key={ field.id } className="col-md-3 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
@@ -68,6 +73,7 @@ const Domicilio = ( { data, onFormChange, onValidationStatus } ) => {
               id={ field.id }
               name={ field.id }
               placeholder={ errors[ field.id ] ? errors[ field.id ].message : field.label }
+              value={situacionObtenida[field.id] || ''}
               { ...register( field.id, { onChange: handleChange } ) }
               style={ { borderColor: errors[ field.id ] ? 'red' : '' } }
             />
