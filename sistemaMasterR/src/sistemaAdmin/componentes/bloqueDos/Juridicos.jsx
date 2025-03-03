@@ -5,10 +5,12 @@ import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import '../../../sistema/css/estilo.css';
 import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1/ValidacionBloqueUno';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
+import useStore from '../../zustand/useStore';
 
 const Domicilio = ( { data, onFormChange, onValidationStatus } ) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { datos, actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
+  const { juridicos } = useStore();
 
   const handleChange = ( e ) => {
     const { name, value } = e.target;
@@ -39,25 +41,29 @@ const Domicilio = ( { data, onFormChange, onValidationStatus } ) => {
     <Tooltip>{ message }</Tooltip>
   );
 
+  const juridicosObtenidos = juridicos?.[0] || {};
+  const juriObt = juridicosObtenidos?.[0] || {};
+  console.log(juriObt);
+
   return (
     <div className="row">
       { [
-        { id: "fechacon", label: "Fecha de consignación" },
-        { id: "njuzgado", label: "Número de juzgado" },
-        { id: "fechar", label: "Fecha de radicación" },
-        { id: "tribunal", label: "Tribunal proceso" },
-        { id: "amparo", label: "Amparo" },
-        { id: "senresol", label: "Resolución amparo 1era instancia" },
-        { id: "fechresola", label: "Fecha de resolución 1era instancia" },
-        { id: "toca", label: "Número de toca" },
-        { id: "Dictamen", label: "Sentido resolución 2da instancia" },
-        { id: "amparo2", label: "Amparo 2da instancia" },
-        { id: "senresol2", label: "Sentido resolución amparo 2da instancia" },
-        { id: "fechresola2", label: "Fecha resolución amparo 2da instancia" },
-        { id: "fechresolp", label: "Sentido resolución 1era instancia" },
-        { id: "senresolp", label: "Sentido resolución 1era instancia" },
-        { id: "fechater", label: "Fecha de auto de término" },
-        { id: "senter", label: "Sentido del término" },
+        { id: "FECHACON", label: "Fecha de consignación" },
+        { id: "NJUZGADO", label: "Número de juzgado" },
+        { id: "FECHAR", label: "Fecha de radicación" },
+        { id: "TRIBUNAL", label: "Tribunal proceso" },
+        { id: "AMPARO", label: "Amparo" },
+        { id: "SENRESOL", label: "Resolución amparo 1era instancia" },
+        { id: "FECHRESOLA", label: "Fecha de resolución 1era instancia" },
+        { id: "TOCA", label: "Número de toca" },
+        { id: "DICTAMEN", label: "Sentido resolución 2da instancia" },
+        { id: "AMPARO2", label: "Amparo 2da instancia" },
+        { id: "SENRESOL2", label: "Sentido resolución amparo 2da instancia" },
+        { id: "FECHRESOLA2", label: "Fecha resolución amparo 2da instancia" },
+        { id: "FECHRESOLP", label: "Sentido resolución 1era instancia" },
+        { id: "SENRESOLP", label: "Sentido resolución 1era instancia" },
+        { id: "FECHATER", label: "Fecha de auto de término" },
+        { id: "SENTER", label: "Sentido del término" },
       ].map( ( field ) => (
         <div key={ field.id } className="col-md-3 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
@@ -70,6 +76,7 @@ const Domicilio = ( { data, onFormChange, onValidationStatus } ) => {
               id={ field.id }
               name={ field.id }
               placeholder={ errors[ field.id ] ? errors[ field.id ].message : field.label }
+              value={juriObt[field.id] || ''}
               { ...register( field.id, { onChange: handleChange } ) }
               style={ { borderColor: errors[ field.id ] ? 'red' : '' } }
             />

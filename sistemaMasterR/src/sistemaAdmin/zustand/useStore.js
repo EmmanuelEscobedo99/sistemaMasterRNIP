@@ -10,6 +10,7 @@ const useStore = create((set) => ({
   alias: {}, // Estado para almacenar los alias
   domicilio: {}, // Estado para almacenar los domicilios
   situacion: {}, // Estado para almacenar la situación
+  juridicos: {}, // Estado para almacenar los jurídicos
 
   cargarDatosFormulario: async (tabla, idAlterna) => {
     try {
@@ -63,6 +64,14 @@ const useStore = create((set) => ({
     try {
       const response = await api.get(`/situacion/${tabla}/${idAlterna}`);
       set({ situacion: response.data }); // Guardar directamente la respuesta en Zustand
+    } catch (error) {
+      console.error('Error al cargar los datos:', error);
+    }
+  },
+  cargarJuridicos: async (tabla, idAlterna) => {
+    try {
+      const response = await api.get(`/juridicos/${tabla}/${idAlterna}`);
+      set({ juridicos: response.data }); // Guardar directamente la respuesta en Zustand
     } catch (error) {
       console.error('Error al cargar los datos:', error);
     }

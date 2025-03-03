@@ -14,6 +14,7 @@ const mostrarNombres = require('./routes/Bloque1/Nombres/NombresRoutes');
 const mostrarAlias = require('./routes/Bloque1/Alias/AliasRoutes');
 const mostrarDomicilio = require('./routes/Bloque1/Domicilio/DomicilioRoutes');
 const mostrarSituacion = require('./routes/Bloque2/Situacion/SituacionRoutes');
+const mostrarJuridicos = require('./routes/Bloque2/Juridicos/JuridicosRoutes');
 
 const app = express();
 const PORT = 3000;
@@ -45,6 +46,7 @@ app.use('/api/nombres', mostrarNombres);
 app.use('/api/alias', mostrarAlias);
 app.use('/api/domicilio', mostrarDomicilio);
 app.use('/api/situacion', mostrarSituacion);
+app.use('/api/juridicos', mostrarJuridicos);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
