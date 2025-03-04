@@ -10,7 +10,7 @@ import useStore from '../../zustand/useStore';
 const JuridicosP2 = ( { data, onFormChange, onValidationStatus } ) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { datos, actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
-  const { juridicos } = datos;
+  const { juridicos } = useStore();
 
   const handleChange = ( e ) => {
     const { name, value } = e.target;
@@ -41,28 +41,29 @@ const JuridicosP2 = ( { data, onFormChange, onValidationStatus } ) => {
     <Tooltip>{ message }</Tooltip>
   );
 
-  const juridicosObtenidos = juridicos?.[0] || {};
+  /*const juridicosObtenidos = juridicos?.[0] || {};
   const juriObt = juridicosObtenidos?.[0] || {};
-  console.log(juriObt);
+  console.log(juriObt);*/
+  //console.log(juridicos)
 
   return (
     <div className="row">
       { [
-        { id: "calidad", label: "Calidad delicuencial del individuo" },
-        { id: "fechresolt", label: "Fecha de resolución 2da instancia" },
-        { id: "tribunals", label: "Tribunal 2da instancia" },
-        { id: "tribunalpa", label: "Tribunal amparo 1era instancia" },
-        { id: "tribunalsa", label: "Tribunal amparo 2da instancia" },
-        { id: "autor", label: "Autor" },
-        { id: "autoria", label: "Autoria" },
-        { id: "peligroc", label: "Peligrosidad criminal" },
-        { id: "fechaapela", label: "Fecha de apelación" },
-        { id: "fechaamparo", label: "Fecha de amparo 1era instancia" },
-        { id: "fechaamparo2", label: "Fecha de amparo 2da instancia" },
-        { id: "penaanoa", label: "Abono de pena años" },
-        { id: "penamesa", label: "Abono de pena meses" },
-        { id: "penadiaa", label: "Abono de pena días" },
-        { id: "fcumplimientos", label: "Fecha de cumplimiento de sentencia" },
+        { id: "CALIDAD", label: "Calidad delicuencial del individuo" },
+        { id: "FECHRESOLT", label: "Fecha de resolución 2da instancia" },
+        { id: "TRIBUNALS", label: "Tribunal 2da instancia" },
+        { id: "TRIBUNALPA", label: "Tribunal amparo 1era instancia" },
+        { id: "TRIBUNALSA", label: "Tribunal amparo 2da instancia" },
+        { id: "AUTOR", label: "Autor" },
+        { id: "AUTORIA", label: "Autoria" },
+        { id: "PELIGROC", label: "Peligrosidad criminal" },
+        { id: "FECHAAPELA", label: "Fecha de apelación" },
+        { id: "FECHAAMPARO", label: "Fecha de amparo 1era instancia" },
+        { id: "FECHAAMPARO2", label: "Fecha de amparo 2da instancia" },
+        { id: "PENAANOA", label: "Abono de pena años" },
+        { id: "PENAMESA", label: "Abono de pena meses" },
+        { id: "PENADIAA", label: "Abono de pena días" },
+        { id: "FCUMPLIMIENTOS", label: "Fecha de cumplimiento de sentencia" },
       ].map( ( field ) => (
         <div key={ field.id } className="col-md-3 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
@@ -75,6 +76,7 @@ const JuridicosP2 = ( { data, onFormChange, onValidationStatus } ) => {
               id={ field.id }
               name={ field.id }
               placeholder={ errors[ field.id ] ? errors[ field.id ].message : field.label }
+              value={juridicos[0][field.id] || ''}
               { ...register( field.id, { onChange: handleChange } ) }
               style={ { borderColor: errors[ field.id ] ? 'red' : '' } }
             />

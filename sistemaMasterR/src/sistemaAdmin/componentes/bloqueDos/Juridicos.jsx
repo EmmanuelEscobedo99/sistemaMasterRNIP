@@ -41,9 +41,10 @@ const Domicilio = ( { data, onFormChange, onValidationStatus } ) => {
     <Tooltip>{ message }</Tooltip>
   );
 
-  const juridicosObtenidos = juridicos?.[0] || {};
-  const juriObt = juridicosObtenidos?.[0] || {};
-  console.log(juriObt);
+  //console.log(juridicos)
+  //const juridicosObtenidos = juridicos?.[0] || {};
+  //const juriObt = juridicosObtenidos?.[0] || {};
+  //console.log(juriObt);
 
   return (
     <div className="row">
@@ -76,7 +77,7 @@ const Domicilio = ( { data, onFormChange, onValidationStatus } ) => {
               id={ field.id }
               name={ field.id }
               placeholder={ errors[ field.id ] ? errors[ field.id ].message : field.label }
-              value={juriObt[field.id] || ''}
+              value={juridicos[0][field.id] || ''}
               { ...register( field.id, { onChange: handleChange } ) }
               style={ { borderColor: errors[ field.id ] ? 'red' : '' } }
             />
