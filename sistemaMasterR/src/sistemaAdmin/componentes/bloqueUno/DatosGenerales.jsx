@@ -17,6 +17,7 @@ const DatosGenerales = ({ onValidationStatus }) => {
   const { cargarAlias } = useStore();
   const { cargarSituacion } = useStore();
   const { cargarJuridicos } = useStore();
+  const { cargarEjecucion } = useStore();
 
   const [idAlterna, setIdAlterna] = useState(1);
 
@@ -52,6 +53,7 @@ const DatosGenerales = ({ onValidationStatus }) => {
       cargarAlias('obtenerAlias', idAlterna);
       cargarSituacion('obtenerSituacion', idAlterna);
       cargarJuridicos('obtenerJuridicos', idAlterna);
+      cargarEjecucion('obtenerEjecucion', idAlterna);
     }
   }, [idAlterna]);
 
