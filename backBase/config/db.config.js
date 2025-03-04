@@ -6,7 +6,7 @@ const pool = mysql.createPool({
     user: "root",
     password: "",
     port: 3306,
-    database: "rnip"
+    database: "rnip2"
 });
 
 // Verificar la conexión al pool
