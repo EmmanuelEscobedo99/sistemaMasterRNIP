@@ -5,10 +5,12 @@ import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import '../../../sistema/css/estilo.css';
 import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1/ValidacionBloqueUno';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
+import useStore from '../../zustand/useStore';
 
 const JuridicosP2 = ( { data, onFormChange, onValidationStatus } ) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { datos, actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
+  const { juridicos } = datos;
 
   const handleChange = ( e ) => {
     const { name, value } = e.target;
@@ -38,6 +40,10 @@ const JuridicosP2 = ( { data, onFormChange, onValidationStatus } ) => {
   const renderTooltip = ( message ) => (
     <Tooltip>{ message }</Tooltip>
   );
+
+  const juridicosObtenidos = juridicos?.[0] || {};
+  const juriObt = juridicosObtenidos?.[0] || {};
+  console.log(juriObt);
 
   return (
     <div className="row">
