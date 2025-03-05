@@ -12,6 +12,8 @@ const useStore = create((set) => ({
   situacion: {}, // Estado para almacenar la situación
   juridicos: {}, // Estado para almacenar los jurídicos
   ejecucion: {}, // Estado para almacenar la ejecución
+  odelito: {}, // Estado para almacenar el odelito
+  ingresos: {}, // Estado para almacenar los ingresos
 
   cargarDatosFormulario: async (tabla, idAlterna) => {
     try {
@@ -85,6 +87,22 @@ const useStore = create((set) => ({
       console.error('Error al cargar los datos:', error);
     }
   },
+  cargarODelito: async (tabla, idAlterna) => {
+    try {
+      const response = await api.get(`/odelitos/${tabla}/${idAlterna}`);
+      set({ odelito: response.data }); // Guardar directamente la respuesta en Zustand
+    } catch (error) {
+      console.error('Error al cargar los datos:', error);
+    }
+  },
+  cargarIngresos: async (tabla, idAlterna) => {
+    try {
+      const response = await api.get(`/ingresos/${tabla}/${idAlterna}`);
+      set({ ingresos: response.data }); // Guardar directamente la respuesta en Zustand
+    } catch (error) {
+      console.error('Error al cargar los datos:', error);
+    }
+  }
 }));
 
 export default useStore;

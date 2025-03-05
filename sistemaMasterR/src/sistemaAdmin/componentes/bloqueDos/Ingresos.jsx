@@ -5,10 +5,12 @@ import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import '../../../sistema/css/estilo.css';
 import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1/ValidacionBloqueUno';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
+import useStore from '../../zustand/useStore';
 
 const Ingresos = ( { data, onFormChange, onValidationStatus } ) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { datos, actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
+  const { ingresos } = useStore();
 
   const handleChange = ( e ) => {
     const { name, value } = e.target;
@@ -39,25 +41,27 @@ const Ingresos = ( { data, onFormChange, onValidationStatus } ) => {
     <Tooltip>{ message }</Tooltip>
   );
 
+  //console.log(ingresos);
+
   return (
     <div className="row">
       { [
-        { id: "dautori", label: "Autoridad que consigna" },
-        { id: "dpartida", label: "No de causa o partida penal" },
-        { id: "dfecha", label: "Fecha de la causa" },
-        { id: "dobserva", label: "Observaciones situación penal" },
-        { id: "proceso", label: "Número de proceso" },
-        { id: "edoproceso", label: "Número de proceso" },
-        { id: "fuero", label: "Fuero" },
-        { id: "davprevia", label: "Número de averiguación previa" },
-        { id: "njuzgado", label: "Número de juzgado" },
-        { id: "fechar", label: "Fecha de radicación" },
-        { id: "classd", label: "Consignado por" },
-        { id: "tribunal", label: "Tribunal" },
-        { id: "fechejec", label: "Fecha de ejecución" },
-        { id: "fechares", label: "Fecha de arresto" },
-        { id: "fechaapartir", label: "Fecha de compurgación" },
-        { id: "penaano", label: "Pena en años" },
+        { id: "DAUTORI", label: "Autoridad que consigna" },
+        { id: "DPARTIDA", label: "No de causa o partida penal" },
+        { id: "DFECHA", label: "Fecha de la causa" },
+        { id: "DOBSERVA", label: "Observaciones situación penal" },
+        { id: "PROCESO", label: "Número de proceso" },
+        { id: "EDO_PROCESO", label: "Número de proceso" },
+        { id: "FUERO", label: "Fuero" },
+        { id: "DAV_PREVIA", label: "Número de averiguación previa" },
+        { id: "NJUZGADO", label: "Número de juzgado" },
+        { id: "FECHAR", label: "Fecha de radicación" },
+        { id: "CLASSD", label: "Consignado por" },
+        { id: "TRIBUNAL", label: "Tribunal" },
+        { id: "FECHEJEC", label: "Fecha de ejecución" },
+        { id: "FECHARES", label: "Fecha de arresto" },
+        { id: "FECHAAPARTIR", label: "Fecha de compurgación" },
+        { id: "PENAANO", label: "Pena en años" },
       ].map( ( field ) => (
         <div key={ field.id } className="col-md-3 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
@@ -70,6 +74,7 @@ const Ingresos = ( { data, onFormChange, onValidationStatus } ) => {
               id={ field.id }
               name={ field.id }
               placeholder={ errors[ field.id ] ? errors[ field.id ].message : field.label }
+              value={ingresos[0][field.id] || ''}
               { ...register( field.id, { onChange: handleChange } ) }
               style={ { borderColor: errors[ field.id ] ? 'red' : '' } }
             />

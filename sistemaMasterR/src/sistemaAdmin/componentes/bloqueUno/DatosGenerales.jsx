@@ -18,6 +18,8 @@ const DatosGenerales = ({ onValidationStatus }) => {
   const { cargarSituacion } = useStore();
   const { cargarJuridicos } = useStore();
   const { cargarEjecucion } = useStore();
+  const { cargarODelito } = useStore();
+  const { cargarIngresos } = useStore();
 
   const [idAlterna, setIdAlterna] = useState(1);
 
@@ -54,6 +56,8 @@ const DatosGenerales = ({ onValidationStatus }) => {
       cargarSituacion('obtenerSituacion', idAlterna);
       cargarJuridicos('obtenerJuridicos', idAlterna);
       cargarEjecucion('obtenerEjecucion', idAlterna);
+      cargarODelito('obtenerODelito', idAlterna);
+      cargarIngresos('obtenerIngresos', idAlterna);
     }
   }, [idAlterna]);
 

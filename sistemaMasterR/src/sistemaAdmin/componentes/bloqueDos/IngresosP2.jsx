@@ -5,10 +5,12 @@ import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import '../../../sistema/css/estilo.css';
 import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1/ValidacionBloqueUno';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
+import useStore from '../../zustand/useStore';
 
 const IngresosP2 = ( { data, onFormChange, onValidationStatus } ) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { datos, actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
+  const { ingresos } = useStore();
 
   const handleChange = ( e ) => {
     const { name, value } = e.target;
@@ -39,27 +41,29 @@ const IngresosP2 = ( { data, onFormChange, onValidationStatus } ) => {
     <Tooltip>{ message }</Tooltip>
   );
 
+  console.log(ingresos);
+
   return (
     <div className="row">
       { [
-        { id: "penames", label: "Pena en meses" },
-        { id: "penadia", label: "Pena en dias" },
-        { id: "ceresoejec", label: "Cereso de compurgamiento" },
-        { id: "fexterna", label: "Fecha de externación" },
-        { id: "motivoexter", label: "Motivo de externación" },
-        { id: "terminoresol", label: "Término de la resolución" },
-        { id: "idtiporesolucion", label: "Tipo de resolución" },
-        { id: "estadolugproceso", label: "Entidad donde se llevó el proceso" },
-        { id: "municipiolugproceso", label: "Municipio donde se llevó el proceso" },
-        { id: "horaingreso", label: "Hora que ingresa el interno" },
-        { id: "horaexterna", label: "Hora de externación del interno" },
-        { id: "fechaexterna", label: "Fecha de externación" },
-        { id: "fechareingreso", label: "Fecha externación y reingreso" },
-        { id: "horareingreso", label: "Hora externación y reingreso" },
-        { id: "fechaextrein", label: "Fecha externación y reingreso" },
-        { id: "horaextreing", label: "Hora externación del interno" },
-        { id: "idestatussituacion", label: "Estatus situación penal actual" },
-        { id: "fechaingreso", label: "Fecha de ingreso del interno" },
+        { id: "PENAMES", label: "Pena en meses" },
+        { id: "PENADIA", label: "Pena en dias" },
+        { id: "CERESOEJEC", label: "Cereso de compurgamiento" },
+        { id: "FEXTERNA", label: "Fecha de externación" },
+        { id: "MOTIVOEXTER", label: "Motivo de externación" },
+        { id: "TERMINORESOL", label: "Término de la resolución" },
+        { id: "ID_TIPO_RESOLUCION", label: "Tipo de resolución" },
+        { id: "ESTADO_LUG_PROCESO", label: "Entidad donde se llevó el proceso" },
+        { id: "MUNICIPIO_LUG_PROCESO", label: "Municipio donde se llevó el proceso" },
+        { id: "HORA_INGRESO", label: "Hora que ingresa el interno" },
+        { id: "HORA_EXTERNA", label: "Hora de externación del interno" },
+        { id: "FECHA_EXTERNA", label: "Fecha de externación" },
+        { id: "FECHA_REINGRESO", label: "Fecha externación y reingreso" },
+        { id: "HORA_REINGRESO", label: "Hora externación y reingreso" },
+        { id: "FECHA_EXT_REIN", label: "Fecha externación y reingreso" },
+        { id: "HORA_EXT_REING", label: "Hora externación del interno" },
+        { id: "ID_ESTATUS_SITUACION", label: "Estatus situación penal actual" },
+        { id: "FECHA_INGRESO", label: "Fecha de ingreso del interno" },
       ].map( ( field ) => (
         <div key={ field.id } className="col-md-3 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
@@ -72,6 +76,7 @@ const IngresosP2 = ( { data, onFormChange, onValidationStatus } ) => {
               id={ field.id }
               name={ field.id }
               placeholder={ errors[ field.id ] ? errors[ field.id ].message : field.label }
+              value={ingresos[0][field.id] || ''}
               { ...register( field.id, { onChange: handleChange } ) }
               style={ { borderColor: errors[ field.id ] ? 'red' : '' } }
             />
