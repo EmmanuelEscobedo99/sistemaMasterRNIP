@@ -39,9 +39,9 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
     }
   }, [idAlterna, cargarDatosFormulario]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("Datos del formulario:", datosFormulario);
-  }, [datosFormulario]);
+  }, [datosFormulario]);*/
 
   // ✅ Corregido: Ahora accede a `imagenes`, no `imagenesPrincipales`
   const imagenesPrincipales = datosFormulario.imagenes || [];

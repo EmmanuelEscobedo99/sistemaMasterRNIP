@@ -42,7 +42,7 @@ const Domicilio = ( { data, onFormChange, onValidationStatus } ) => {
   );
 
   const situacionObtenida = situacion?.[0] || {};
-  console.log(situacionObtenida);
+  //console.log(situacionObtenida);
 
   return (
     <div className="row">

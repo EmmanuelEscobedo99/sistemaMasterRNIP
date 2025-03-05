@@ -5,10 +5,12 @@ import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import '../../../sistema/css/estilo.css';
 import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1/ValidacionBloqueUno';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
+import useStore from '../../zustand/useStore';
 
 const ODelito = ( { data, onFormChange, onValidationStatus } ) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { datos, actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
+  const { odelito } = useStore();
 
   const handleChange = ( e ) => {
     const { name, value } = e.target;
@@ -39,14 +41,16 @@ const ODelito = ( { data, onFormChange, onValidationStatus } ) => {
     <Tooltip>{ message }</Tooltip>
   );
 
+  console.log(odelito);
+
   return (
     <div className="row">
       { [
-        { id: "sitkey", label: "Situación del delito" },
-        { id: "delito", label: "Clave del delito" },
-        { id: "modalidad", label: "Clave de la modalidad del delito" },
-        { id: "responjur", label: "Responsabilidad jurídica" },
-        { id: "delitosentencia", label: "Descripción del delito sentencia" },
+        { id: "SIT_KEY", label: "Situación del delito" },
+        { id: "DELITO", label: "Clave del delito" },
+        { id: "MODALIDAD", label: "Clave de la modalidad del delito" },
+        { id: "RESPONJUR", label: "Responsabilidad jurídica" },
+        { id: "DELITO_SENTENCIA", label: "Descripción del delito sentencia" },
       ].map( ( field ) => (
         <div key={ field.id } className="col-md-3 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
@@ -59,6 +63,7 @@ const ODelito = ( { data, onFormChange, onValidationStatus } ) => {
               id={ field.id }
               name={ field.id }
               placeholder={ errors[ field.id ] ? errors[ field.id ].message : field.label }
+              value={odelito[0][0][field.id] || ''}
               { ...register( field.id, { onChange: handleChange } ) }
               style={ { borderColor: errors[ field.id ] ? 'red' : '' } }
             />

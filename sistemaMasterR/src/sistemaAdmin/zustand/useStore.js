@@ -11,6 +11,10 @@ const useStore = create((set) => ({
   domicilio: {}, // Estado para almacenar los domicilios
   situacion: {}, // Estado para almacenar la situación
   juridicos: {}, // Estado para almacenar los jurídicos
+  ejecucion: {}, // Estado para almacenar la ejecución
+  odelito: {}, // Estado para almacenar el odelito
+  ingresos: {}, // Estado para almacenar los ingresos
+  ingdelito: {}, // Estado para almacenar el ingelito
 
   cargarDatosFormulario: async (tabla, idAlterna) => {
     try {
@@ -72,6 +76,38 @@ const useStore = create((set) => ({
     try {
       const response = await api.get(`/juridicos/${tabla}/${idAlterna}`);
       set({ juridicos: response.data }); // Guardar directamente la respuesta en Zustand
+    } catch (error) {
+      console.error('Error al cargar los datos:', error);
+    }
+  },
+  cargarEjecucion: async (tabla, idAlterna) => {
+    try {
+      const response = await api.get(`/ejecucion/${tabla}/${idAlterna}`);
+      set({ ejecucion: response.data }); // Guardar directamente la respuesta en Zustand
+    } catch (error) {
+      console.error('Error al cargar los datos:', error);
+    }
+  },
+  cargarODelito: async (tabla, idAlterna) => {
+    try {
+      const response = await api.get(`/odelitos/${tabla}/${idAlterna}`);
+      set({ odelito: response.data }); // Guardar directamente la respuesta en Zustand
+    } catch (error) {
+      console.error('Error al cargar los datos:', error);
+    }
+  },
+  cargarIngresos: async (tabla, idAlterna) => {
+    try {
+      const response = await api.get(`/ingresos/${tabla}/${idAlterna}`);
+      set({ ingresos: response.data }); // Guardar directamente la respuesta en Zustand
+    } catch (error) {
+      console.error('Error al cargar los datos:', error);
+    }
+  },
+  cargarIngDelito: async (tabla, idAlterna) => {
+    try {
+      const response = await api.get(`/ingdelito/${tabla}/${idAlterna}`);
+      set({ ingdelito: response.data }); // Guardar directamente la respuesta en Zustand
     } catch (error) {
       console.error('Error al cargar los datos:', error);
     }

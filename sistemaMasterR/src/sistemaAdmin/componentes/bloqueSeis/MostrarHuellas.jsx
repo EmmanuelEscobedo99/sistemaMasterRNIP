@@ -20,9 +20,9 @@ const MostrarHuellas = ({ data, onFormChange, onValidationStatus }) => {
     }
   }, [idAlterna]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("Datos Huellas:", datosHuellas);
-  }, [datosHuellas]);
+  }, [datosHuellas]);*/
 
   useEffect(() => {
     onValidationStatus(errors);

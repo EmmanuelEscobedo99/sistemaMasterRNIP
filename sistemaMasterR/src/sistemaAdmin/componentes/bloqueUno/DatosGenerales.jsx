@@ -11,7 +11,17 @@ import api from '../../../api/api';
 const DatosGenerales = ({ onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
-  const { datosGenerales, cargarDatosGenerales, cargarNombres, cargarDomicilio, cargarAlias, cargarSituacion, cargarJuridicos } = useStore();
+
+  const { datosGenerales, cargarDatosGenerales } = useStore();
+  const { cargarNombres } = useStore();
+  const { cargarDomicilio } = useStore();
+  const { cargarAlias } = useStore();
+  const { cargarSituacion } = useStore();
+  const { cargarJuridicos } = useStore();
+  const { cargarEjecucion } = useStore();
+  const { cargarODelito } = useStore();
+  const { cargarIngresos } = useStore();
+  const { cargarIngDelito } = useStore();
 
   const [idAlterna, setIdAlterna] = useState(1);
 
@@ -47,6 +57,10 @@ const DatosGenerales = ({ onValidationStatus }) => {
       cargarAlias('obtenerAlias', idAlterna);
       cargarSituacion('obtenerSituacion', idAlterna);
       cargarJuridicos('obtenerJuridicos', idAlterna);
+      cargarEjecucion('obtenerEjecucion', idAlterna);
+      cargarODelito('obtenerODelito', idAlterna);
+      cargarIngresos('obtenerIngresos', idAlterna);
+      cargarIngDelito('obtenerIngDelito', idAlterna);
     }
   }, [idAlterna]);
 
