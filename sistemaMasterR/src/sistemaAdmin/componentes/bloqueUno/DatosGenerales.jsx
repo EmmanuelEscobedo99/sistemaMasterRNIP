@@ -20,6 +20,7 @@ const DatosGenerales = ({ onValidationStatus }) => {
   const { cargarEjecucion } = useStore();
   const { cargarODelito } = useStore();
   const { cargarIngresos } = useStore();
+  const { cargarIngDelito } = useStore();
 
   const [idAlterna, setIdAlterna] = useState(1);
 
@@ -58,6 +59,7 @@ const DatosGenerales = ({ onValidationStatus }) => {
       cargarEjecucion('obtenerEjecucion', idAlterna);
       cargarODelito('obtenerODelito', idAlterna);
       cargarIngresos('obtenerIngresos', idAlterna);
+      cargarIngDelito('obtenerIngDelito', idAlterna);
     }
   }, [idAlterna]);
 

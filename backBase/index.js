@@ -18,6 +18,7 @@ const mostrarJuridicos = require('./routes/Bloque2/Juridicos/JuridicosRoutes');
 const mostrarEjecucion = require('./routes/Bloque2/Ejecucion/EjecucionRoutes');
 const mostrarODelitos = require('./routes/Bloque2/ODelito/ODelitoRoutes');
 const mostrarIngresos = require('./routes/Bloque2/Ingresos/IngresosRoutes');
+const mostrarIngdelito = require('./routes/Bloque2/Ingdelito/IngdelitoRoutes');
 
 const app = express();
 const PORT = 3000;
@@ -53,6 +54,7 @@ app.use('/api/juridicos', mostrarJuridicos);
 app.use('/api/ejecucion', mostrarEjecucion);
 app.use('/api/odelitos', mostrarODelitos);
 app.use('/api/ingresos', mostrarIngresos);
+app.use('/api/ingdelito', mostrarIngdelito);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);

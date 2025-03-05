@@ -41,7 +41,7 @@ const IngresosP2 = ( { data, onFormChange, onValidationStatus } ) => {
     <Tooltip>{ message }</Tooltip>
   );
 
-  console.log(ingresos);
+  //console.log(ingresos);
 
   return (
     <div className="row">

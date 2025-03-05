@@ -14,6 +14,7 @@ const useStore = create((set) => ({
   ejecucion: {}, // Estado para almacenar la ejecución
   odelito: {}, // Estado para almacenar el odelito
   ingresos: {}, // Estado para almacenar los ingresos
+  ingdelito: {}, // Estado para almacenar el ingelito
 
   cargarDatosFormulario: async (tabla, idAlterna) => {
     try {
@@ -102,7 +103,15 @@ const useStore = create((set) => ({
     } catch (error) {
       console.error('Error al cargar los datos:', error);
     }
-  }
+  },
+  cargarIngDelito: async (tabla, idAlterna) => {
+    try {
+      const response = await api.get(`/ingdelito/${tabla}/${idAlterna}`);
+      set({ ingdelito: response.data }); // Guardar directamente la respuesta en Zustand
+    } catch (error) {
+      console.error('Error al cargar los datos:', error);
+    }
+  },
 }));
 
 export default useStore;
