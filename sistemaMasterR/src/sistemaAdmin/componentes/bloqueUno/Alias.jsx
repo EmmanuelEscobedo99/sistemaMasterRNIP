@@ -7,79 +7,79 @@ import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
 import useStore from '../../zustand/useStore';
 
-const Alias = ( { data, onFormChange, onValidationStatus } ) => {
+const Alias = ({ data, onFormChange, onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
-  const { datos, actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
-  const { alias, cargarAlias } = useStore();
+  const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
+  const { alias } = useStore();
 
-  const handleChange = ( e ) => {
+  useEffect(() => {
+    onValidationStatus(errors);
+  }, [errors, onValidationStatus]);
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
     const lowercaseName = name.toLowerCase();
-    const validationResult = ValidacionBloqueUno[ `validacion${ capitalizeFirstLetter( lowercaseName ) }` ]( value );
+    const validationResult = ValidacionBloqueUno[`validacion${capitalizeFirstLetter(lowercaseName)}`]?.(value);
 
-    if ( validationResult !== true ) {
-      setError( name, { type: 'formulario 1', message: validationResult } );
+    if (validationResult !== true) {
+      setError(name, { type: 'manual', message: validationResult });
     } else {
-      clearErrors( name );
+      clearErrors(name);
     }
-    onFormChange( name, value );
+    onFormChange(name, value);
   };
 
-  const handleRadioChange = ( nombre, valor, formulario ) => {
-    seleccionarRadio( nombre, valor, formulario );
+  const handleRadioChange = (nombre, valor, formulario) => {
+    seleccionarRadio(nombre, valor, formulario);
   };
 
-  const capitalizeFirstLetter = ( string ) => {
-    return string.charAt( 0 ).toUpperCase() + string.slice( 1 );
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
-  useEffect( () => {
-    onValidationStatus( errors );
-  }, [ errors, onValidationStatus ] );
-
-  const renderTooltip = ( message ) => (
-    <Tooltip>{ message }</Tooltip>
+  const renderTooltip = (message) => (
+    <Tooltip>{message}</Tooltip>
   );
 
-  const aliasObtenidos = alias?.[0] || {};
-  console.log(aliasObtenidos);
+  const aliasObtenidos = alias?.[0] || [];  // Aquí nos aseguramos de que sea un array de alias
+
+  console.log('Alias obtenidos:', aliasObtenidos);
 
   return (
     <div className="row">
-      { [
-        { id: "ALIAS", label: "Alias" },
-      ].map( ( field ) => (
-        <div key={ field.id } className="col-md-3 form-floating mt-3 d-flex align-items-center">
+      {aliasObtenidos.map((item, index) => (
+        <div key={index} className="col-md-3 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
             placement="right"
-            overlay={ errors[ field.id ] ? renderTooltip( errors[ field.id ].message ) : <></> }
+            overlay={errors[`ALIAS_${index}`] ? renderTooltip(errors[`ALIAS_${index}`].message) : <></>}
           >
             <input
               type="text"
-              className={ `form-control ${ errors[ field.id ] ? 'is-invalid shake' : '' }` }
-              id={ field.id }
-              name={ field.id }
-              placeholder={ errors[ field.id ] ? errors[ field.id ].message : field.label }
-              value={aliasObtenidos[0][field.id] || ''}
-              { ...register( field.id, { onChange: handleChange } ) }
-              style={ { borderColor: errors[ field.id ] ? 'red' : '' } }
+              className={`form-control ${errors[`ALIAS_${index}`] ? 'is-invalid shake' : ''}`}
+              id={`ALIAS_${index}`}
+              name={`ALIAS_${index}`}
+              placeholder={`Alias ${index + 1}`}
+              value={item.ALIAS || ''}
+              {...register(`ALIAS_${index}`, { onChange: handleChange })}
+              style={{ borderColor: errors[`ALIAS_${index}`] ? 'red' : '' }}
             />
           </OverlayTrigger>
-          <label htmlFor={ field.id } style={ { marginLeft: '10px' } }>{ field.label }</label>
+          <label htmlFor={`ALIAS_${index}`} style={{ marginLeft: '10px' }}>{`Alias ${index + 1}`}</label>
 
-          {/* Radio Button */ }
+          {/* Radio Button */}
           <input
             type="radio"
-            name={ `radio-${ field.id }` }
+            name={`radio-ALIAS_${index}`}
             value="Sí"
             className="ms-2"
-            onChange={ () => handleRadioChange( field.label, 'Sí', 'Alias' ) }
+            onChange={() => handleRadioChange(`Alias ${index + 1}`, 'Sí', 'Alias')}
           />
         </div>
-      ) ) }
-       {/* Lista de radio seleccionados */}
-       <div className="mt-4">
-        <h5 style={{ color: 'red'}}>Campos con errores:</h5>
+      ))}
+
+      {/* Lista de radio seleccionados */}
+      <div className="mt-4">
+        <h5 style={{ color: 'red' }}>Campos con errores:</h5>
         <ul>
           {radioSeleccionados.map((item, index) => (
             <li key={index}>{item.nombre}</li>

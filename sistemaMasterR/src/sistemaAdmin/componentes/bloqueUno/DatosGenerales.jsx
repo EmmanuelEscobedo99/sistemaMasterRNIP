@@ -11,12 +11,7 @@ import api from '../../../api/api';
 const DatosGenerales = ({ onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
-  const { datosGenerales, cargarDatosGenerales } = useStore();
-  const { cargarNombres } = useStore();
-  const { cargarDomicilio } = useStore();
-  const { cargarAlias } = useStore();
-  const { cargarSituacion } = useStore();
-  const { cargarJuridicos } = useStore();
+  const { datosGenerales, cargarDatosGenerales, cargarNombres, cargarDomicilio, cargarAlias, cargarSituacion, cargarJuridicos } = useStore();
 
   const [idAlterna, setIdAlterna] = useState(1);
 
@@ -60,8 +55,6 @@ const DatosGenerales = ({ onValidationStatus }) => {
   }, [errors]);
 
   const datosGeneralesObtenidos = datosGenerales?.[0] || {};
-  //const nombresObtenidos = nombres?.[0] || {};
-  //console.log(nombresObtenidos)
 
   const handleRadioChange = (nombre, valor, formulario) => {
     seleccionarRadio(nombre, valor, formulario);
@@ -71,26 +64,46 @@ const DatosGenerales = ({ onValidationStatus }) => {
 
   const renderTooltip = (message) => <Tooltip>{message}</Tooltip>;
 
+  // Función para mapear los valores correctos
+  const getFieldValue = (fieldId) => {
+    switch (fieldId) {
+      case "EST_CIV":
+        return datosGeneralesObtenidos.estado_civil_descripcion || datosGeneralesObtenidos.EST_CIV || '';
+      case "NENTID":
+        return datosGeneralesObtenidos.nombre_entidad_nacimiento || datosGeneralesObtenidos.NENTID || '';
+      case "NMUNIC":
+        return datosGeneralesObtenidos.nombre_municipio_nacimiento || datosGeneralesObtenidos.NMUNIC || '';
+      case "NPAIS":
+        return datosGeneralesObtenidos.nombre_pais || datosGeneralesObtenidos.NPAIS || '';
+      case "NNACIONA":
+        return datosGeneralesObtenidos.nombre_nacionalidad || datosGeneralesObtenidos.NNACIONA || '';
+      default:
+        return datosGeneralesObtenidos[fieldId] || '';
+    }
+  };
+
+  const fields = [
+    { id: "FECHA_CAP", label: "Fecha de captura" },
+    { id: "SEXO", label: "Sexo del individuo" },
+    { id: "EDAD", label: "Edad del individuo" },
+    { id: "ESTATURA", label: "Estatura del individuo" },
+    { id: "PESO", label: "Peso del individuo" },
+    { id: "EST_CIV", label: "Estado civil del individuo" },
+    { id: "FEC_NAC", label: "Fecha de nacimiento" },
+    { id: "NENTID", label: "Entidad de nacimiento" },
+    { id: "NMUNIC", label: "Municipio de nacimiento" },
+    { id: "NPAIS", label: "País de nacimiento" },
+    { id: "NNACIONA", label: "Nacionalidad" },
+    { id: "TIP_SAN", label: "Tipo de sangre" },
+    { id: "TIP_SAN1", label: "Factor RH" },
+    { id: "USO_ANT", label: "Usa anteojos" },
+    { id: "RFC", label: "RFC" },
+    { id: "OFICIO_DES", label: "Oficio del individuo" }
+  ];
+
   return (
     <div className="row">
-      {[
-        { id: "FECHA_CAP", label: "Fecha de captura" },
-        { id: "SEXO", label: "Sexo del individuo" },
-        { id: "EDAD", label: "Edad del individuo" },
-        { id: "ESTATURA", label: "Estatura del individuo" },
-        { id: "PESO", label: "Peso del individuo" },
-        { id: "EST_CIV", label: "Estado civil del individuo" },
-        { id: "FEC_NAC", label: "Fecha de nacimiento" },
-        { id: "NENTID", label: "Entidad de nacimiento" },
-        { id: "NMUNIC", label: "Municipio de nacimiento" },
-        { id: "NPAIS", label: "País de nacimiento" },
-        { id: "NNACIONA", label: "Nacionalidad" },
-        { id: "TIP_SAN", label: "Tipo de sangre" },
-        { id: "TIP_SAN1", label: "Factor RH" },
-        { id: "USO_ANT", label: "Usa anteojos" },
-        { id: "RFC", label: "RFC" },
-        { id: "OFICIO_DES", label: "Oficio del individuo" },
-      ].map((field) => (
+      {fields.map((field, index) => (
         <div key={field.id} className="col-md-3 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
             placement="right"
@@ -103,26 +116,27 @@ const DatosGenerales = ({ onValidationStatus }) => {
               name={field.id}
               placeholder={errors[field.id] ? errors[field.id].message : field.label}
               {...register(field.id, { onChange: handleChange })}
-              value={datosGeneralesObtenidos[field.id] || ''}
+              value={getFieldValue(field.id)}
               style={{ borderColor: errors[field.id] ? 'red' : '' }}
             />
           </OverlayTrigger>
           <label htmlFor={field.id} style={{ marginLeft: '10px' }}>{field.label}</label>
 
           {/* Radio Button */}
-          <input
-            type="radio"
-            name={`radio-${field.id}`}
-            value="Sí"
-            className="ms-2"
-            onChange={() => handleRadioChange(field.label, "Sí", "Datos Generales PT1")}
-          />
+          <div className="ms-2">
+            <input
+              type="radio"
+              name={`radio-${field.id}`}
+              value="Sí"
+              onChange={() => handleRadioChange(field.label, "Sí", "Datos Generales PT1")}
+            />
+          </div>
         </div>
       ))}
 
       {/* Lista de radio seleccionados */}
       <div className="mt-4">
-        <h5 style={{ color: 'red'}}>Campos con errores:</h5>
+        <h5 style={{ color: 'red' }}>Campos con errores:</h5>
         <ul>
           {radioSeleccionados.map((item, index) => (
             <li key={index}>{item.nombre}</li>
