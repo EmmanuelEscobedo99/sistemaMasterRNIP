@@ -12,16 +12,7 @@ const DatosGenerales = ({ onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
 
-  const { datosGenerales, cargarDatosGenerales } = useStore();
-  const { cargarNombres } = useStore();
-  const { cargarDomicilio } = useStore();
-  const { cargarAlias } = useStore();
-  const { cargarSituacion } = useStore();
-  const { cargarJuridicos } = useStore();
-  const { cargarEjecucion } = useStore();
-  const { cargarODelito } = useStore();
-  const { cargarIngresos } = useStore();
-  const { cargarIngDelito } = useStore();
+  const { datosGenerales, cargarDatosGenerales, cargarNombres, cargarDomicilio, cargarAlias, cargarSituacion, cargarJuridicos, cargarEjecucion, cargarODelito, cargarIngresos, cargarIngDelito } = useStore();
 
   const [idAlterna, setIdAlterna] = useState(1);
 
@@ -78,11 +69,20 @@ const DatosGenerales = ({ onValidationStatus }) => {
 
   const renderTooltip = (message) => <Tooltip>{message}</Tooltip>;
 
-  // Función para mapear los valores correctos
+  // Función para formatear fechas YYYY-MM-DD
+  const formatFecha = (fechaISO) => {
+    if (!fechaISO) return '';
+    const fecha = new Date(fechaISO);
+    return fecha.toISOString().split('T')[0];
+  };
+
+  // Función para mapear valores correctos (incluye SEXO y FECHAS)
   const getFieldValue = (fieldId) => {
     switch (fieldId) {
       case "EST_CIV":
         return datosGeneralesObtenidos.estado_civil_descripcion || datosGeneralesObtenidos.EST_CIV || '';
+      case "SEXO":
+        return datosGeneralesObtenidos.sexo_descripcion || datosGeneralesObtenidos.SEXO || '';
       case "NENTID":
         return datosGeneralesObtenidos.nombre_entidad_nacimiento || datosGeneralesObtenidos.NENTID || '';
       case "NMUNIC":
@@ -91,6 +91,9 @@ const DatosGenerales = ({ onValidationStatus }) => {
         return datosGeneralesObtenidos.nombre_pais || datosGeneralesObtenidos.NPAIS || '';
       case "NNACIONA":
         return datosGeneralesObtenidos.nombre_nacionalidad || datosGeneralesObtenidos.NNACIONA || '';
+      case "FECHA_CAP":
+      case "FEC_NAC":
+        return formatFecha(datosGeneralesObtenidos[fieldId]);
       default:
         return datosGeneralesObtenidos[fieldId] || '';
     }

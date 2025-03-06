@@ -7,87 +7,105 @@ import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
 import useStore from '../../zustand/useStore';
 
-const ODelito = ( { data, onFormChange, onValidationStatus } ) => {
+const ODelito = ({ data, onFormChange, onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
-  const { datos, actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
+  const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { odelito } = useStore();
 
-  const handleChange = ( e ) => {
+  useEffect(() => {
+    onValidationStatus(errors);
+  }, [errors, onValidationStatus]);
+
+  const handleChange = (index, e) => {
     const { name, value } = e.target;
     const lowercaseName = name.toLowerCase();
-    const validationResult = ValidacionBloqueUno[ `validacion${ capitalizeFirstLetter( lowercaseName ) }` ]( value );
+    const validationResult = ValidacionBloqueUno[`validacion${capitalizeFirstLetter(lowercaseName)}`]?.(value);
 
-    if ( validationResult !== true ) {
-      setError( name, { type: 'formulario 1', message: validationResult } );
+    if (validationResult !== true) {
+      setError(`${name}_${index}`, { type: 'formulario 1', message: validationResult });
     } else {
-      clearErrors( name );
+      clearErrors(`${name}_${index}`);
     }
-    onFormChange( name, value );
+    onFormChange(`${name}_${index}`, value);
   };
 
-  const handleRadioChange = ( nombre, valor, formulario ) => {
-    seleccionarRadio( nombre, valor, formulario );
+  const handleRadioChange = (nombre, valor, formulario, index) => {
+    const nombreCompleto = `${nombre} Delito ${index + 1}`;
+    seleccionarRadio(nombreCompleto, valor, formulario);
   };
 
-  const capitalizeFirstLetter = ( string ) => {
-    return string.charAt( 0 ).toUpperCase() + string.slice( 1 );
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
-  useEffect( () => {
-    onValidationStatus( errors );
-  }, [ errors, onValidationStatus ] );
-
-  const renderTooltip = ( message ) => (
-    <Tooltip>{ message }</Tooltip>
+  const renderTooltip = (message) => (
+    <Tooltip>{message}</Tooltip>
   );
 
   console.log(odelito);
 
-  return (
-    <div className="row">
-      { [
-        { id: "SIT_KEY", label: "Situación del delito" },
-        { id: "DELITO", label: "Clave del delito" },
-        { id: "MODALIDAD", label: "Clave de la modalidad del delito" },
-        { id: "RESPONJUR", label: "Responsabilidad jurídica" },
-        { id: "DELITO_SENTENCIA", label: "Descripción del delito sentencia" },
-      ].map( ( field ) => (
-        <div key={ field.id } className="col-md-3 form-floating mt-3 d-flex align-items-center">
-          <OverlayTrigger
-            placement="right"
-            overlay={ errors[ field.id ] ? renderTooltip( errors[ field.id ].message ) : <></> }
-          >
-            <input
-              type="text"
-              className={ `form-control ${ errors[ field.id ] ? 'is-invalid shake' : '' }` }
-              id={ field.id }
-              name={ field.id }
-              placeholder={ errors[ field.id ] ? errors[ field.id ].message : field.label }
-              value={odelito[0][0][field.id] || ''}
-              { ...register( field.id, { onChange: handleChange } ) }
-              style={ { borderColor: errors[ field.id ] ? 'red' : '' } }
-            />
-          </OverlayTrigger>
-          <label htmlFor={ field.id } style={ { marginLeft: '10px' } }>{ field.label }</label>
+  const fields = [
+    { id: "SIT_KEY", label: "Situación del delito" },
+    { id: "DELITO_DESC", label: "Descripción del delito" },
+    { id: "ID_DESMOD", label: "Clave de modalidad (ID_DESMOD)" },
+    { id: "RESPONJUR_DESC", label: "Responsabilidad jurídica" },
+    { id: "DELITO_SENTENCIA", label: "Descripción del delito sentencia" },
+  ];
 
-          {/* Radio Button */ }
-          <input
-            type="radio"
-            name={ `radio-${ field.id }` }
-            value="Sí"
-            className="ms-2"
-            onChange={ () => handleRadioChange( field.label, 'Sí', 'ODelito' ) }
-          />
+  return (
+    <div className="container-fluid">
+      {odelito[0]?.map((delito, index) => (
+        <div key={index} className="mb-4 p-3 border rounded">
+          <h5>{`Delito #${index + 1}`}</h5>
+          <div className="row">
+            {fields.map((field) => (
+              <div key={field.id} className="col-md-3 form-floating mt-3 d-flex align-items-center">
+                <OverlayTrigger
+                  placement="right"
+                  overlay={errors[`${field.id}_${index}`] ? renderTooltip(errors[`${field.id}_${index}`]?.message) : <></>}
+                >
+                  <input
+                    type="text"
+                    className={`form-control ${errors[`${field.id}_${index}`] ? 'is-invalid shake' : ''}`}
+                    id={`${field.id}_${index}`}
+                    name={field.id}
+                    placeholder={field.label}
+                    value={delito[field.id] || ''}
+                    {...register(`${field.id}_${index}`, {
+                      onChange: (e) => handleChange(index, e),
+                    })}
+                    style={{ borderColor: errors[`${field.id}_${index}`] ? 'red' : '' }}
+                    readOnly
+                  />
+                </OverlayTrigger>
+                <label htmlFor={`${field.id}_${index}`} style={{ marginLeft: '10px' }}>{field.label}</label>
+
+                {/* Radio Button */}
+                <input
+                  type="radio"
+                  name={`radio-${field.id}-${index}`}
+                  value="Sí"
+                  className="ms-2"
+                  onChange={() => handleRadioChange(field.label, 'Sí', 'ODelito', index)}
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      ) ) }
-       {/* Lista de radio seleccionados */}
-       <div className="mt-4">
-        <h5 style={{ color: 'red'}}>Campos con errores:</h5>
-        <ul>
-          {radioSeleccionados.map((item, index) => (
-            <li key={index}>{item.nombre}</li>
-          ))}
-        </ul>
+      ))}
+
+      {/* Lista de campos marcados como error */}
+      <div className="mt-4">
+        <h5 style={{ color: 'red' }}>Campos con errores:</h5>
+        {radioSeleccionados.length > 0 ? (
+          <ul>
+            {radioSeleccionados.map((item, index) => (
+              <li key={index}>{item.nombre}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>Sin campos marcados por el momento.</p>
+        )}
       </div>
     </div>
   );
