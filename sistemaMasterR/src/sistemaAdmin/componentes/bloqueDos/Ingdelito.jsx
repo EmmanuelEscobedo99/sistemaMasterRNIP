@@ -53,7 +53,7 @@ const Ingdelito = ({ data, onFormChange, onValidationStatus }) => {
           <h5>Delito #{index + 1}</h5>
           <div className="row">
             {fields.map((field) => (
-              <div key={field.id} className="col-md-3 form-floating mt-3 d-flex align-items-center">
+              <div key={field.id} className="col-md-6 form-floating mt-3 d-flex align-items-center">
                 <OverlayTrigger
                   placement="right"
                   overlay={errors[`${field.id}_${index}`] ? renderTooltip(errors[`${field.id}_${index}`]?.message) : <></>}
@@ -70,9 +70,21 @@ const Ingdelito = ({ data, onFormChange, onValidationStatus }) => {
                     readOnly
                   />
                 </OverlayTrigger>
-                <label htmlFor={`${field.id}_${index}`} style={{ marginLeft: '10px' }}>{field.label}</label>
+                <label
+                  htmlFor={`${field.id}_${index}`}
+                  title={field.label} // Muestra el label completo al pasar el mouse
+                  style={{
+                    marginLeft: '10px',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '100%'
+                  }}
+                >
+                  {field.label}
+                </label>
 
-                {/* Radio Button */}
+                {/* Radio Button para marcar campo */}
                 <input
                   type="radio"
                   name={`radio-${field.id}-${index}`}
