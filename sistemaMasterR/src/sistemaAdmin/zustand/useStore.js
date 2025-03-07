@@ -27,7 +27,7 @@ const useStore = create((set) => ({
   },
   cargarDatosHuellas: async (tabla, idAlterna) => {
     try {
-      const response = await api.post(`/mostrarHuellas/${tabla}`, {idAlterna});
+      const response = await api.get(`/mostrarHuellas/${tabla}/${idAlterna}`);
       set({ datosHuellas: response.data }); // Guardar directamente la respuesta en Zustand
     } catch (error) {
       console.error('Error al cargar los datos:', error);
