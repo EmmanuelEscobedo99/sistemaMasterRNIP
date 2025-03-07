@@ -14,6 +14,7 @@ import MenuVerificacion from '../sistemaAdmin/inicioVerificacion/MenuVerificacio
 //import RegistroBloques from '../sistema/paginas/Registrar/RegistroBloques'; 
 
 import MenuRegistro from '../sistema/inicioRegistro/MenuRegistro'
+import MenuVerificacion6 from '../sistemaAdmin/inicioVerificacion/MenuVerificacion6';
 
 export const router = createBrowserRouter([
   {
@@ -82,7 +83,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "bloque6",
-            element:<MenuRegistro/>
+            element:<MenuVerificacion6/>
           },
         ],
       },
