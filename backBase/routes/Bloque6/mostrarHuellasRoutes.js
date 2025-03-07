@@ -3,7 +3,7 @@ const pool = require('../../config/db.config');
 
 const router = express.Router();
 
-router.get('/huellas/:idAlterna', async (req, res) => {
+router.post('/huellas', async (req, res) => {
     const { idAlterna } = req.params;
     try {
         const query = "SELECT IMAGEN, GRUPO FROM imagenes WHERE ID_ALTERNA = ? AND GRUPO IN ('1', '2', '3', '4', '5', '6', '7', '8', '9', '0');";
