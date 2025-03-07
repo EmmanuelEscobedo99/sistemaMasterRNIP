@@ -3,7 +3,7 @@ const datosGeneralesService = require( '../../../services/Bloque1/DatosGenerales
 const datosGeneralesController = {
   async obtenerDatosGenerales( req, res ) {
     try {
-      const { idAlterna } = req.params;
+      const { idAlterna } = req.body;
       const result = await datosGeneralesService.obtenerDatosGenerales( idAlterna );
       res.status( 200 ).json( result );
     } catch ( error ) {

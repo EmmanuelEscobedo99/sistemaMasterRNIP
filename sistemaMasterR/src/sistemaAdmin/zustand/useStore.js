@@ -19,7 +19,7 @@ const useStore = create((set) => ({
 
   cargarDatosFormulario: async (tabla, idAlterna) => {
     try {
-      const response = await api.get(`/mostrarPrincipales/${tabla}/${idAlterna}`);
+      const response = await api.post(`/mostrarPrincipales/${tabla}`, {idAlterna});
       set({ datosFormulario: response.data }); // Guardar directamente la respuesta en Zustand
     } catch (error) {
       console.error('Error al cargar los datos:', error);
@@ -27,7 +27,7 @@ const useStore = create((set) => ({
   },
   cargarDatosHuellas: async (tabla, idAlterna) => {
     try {
-      const response = await api.get(`/mostrarHuellas/${tabla}/${idAlterna}`);
+      const response = await api.post(`/mostrarHuellas/${tabla}`, {idAlterna});
       set({ datosHuellas: response.data }); // Guardar directamente la respuesta en Zustand
     } catch (error) {
       console.error('Error al cargar los datos:', error);
@@ -35,7 +35,7 @@ const useStore = create((set) => ({
   },
   cargarDatosGenerales: async (tabla, idAlterna) => {
     try {
-      const response = await api.get(`/bloque1/${tabla}/${idAlterna}`);
+      const response = await api.post(`/bloque1/${tabla}`, {idAlterna});
       set({ datosGenerales: response.data }); // Guardar directamente la respuesta en Zustand
     } catch (error) {
       console.error('Error al cargar los datos:', error);
