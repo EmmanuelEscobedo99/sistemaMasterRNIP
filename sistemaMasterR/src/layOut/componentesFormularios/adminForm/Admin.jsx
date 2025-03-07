@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
+import { setIdAlterna } from '../../../sistemaAdmin/reducers/slice/idAlterna/idAlternaSlice';
 import { FinalizarSesion } from "../../../accesoLogin/reducers/thunks/finalizarSesion/FinalizarSesion";
 import { useEffect, useState } from 'react';
 import useStore from '../../../sistemaAdmin/zustand/useStore';
@@ -49,12 +50,12 @@ const Admin = () => {
     }
   };
 
-  const handleSeleccionar = (CODBAR) => {
+  const handleSeleccionar = (idAlterna) => {
     setMostrarBuscador(false);
     const tabla = "principales";
-    const idAlterna = 1; // Puedes cambiarlo según los datos obtenidos
+    dispatch(setIdAlterna(idAlterna)); // Guardar en Redux
     useStore.getState().cargarDatosFormulario(tabla, idAlterna);
-    navigate(`/admin/verificar/${CODBAR}`);
+    navigate(`/admin/verificar/${idAlterna}`);
   };
 
   return (

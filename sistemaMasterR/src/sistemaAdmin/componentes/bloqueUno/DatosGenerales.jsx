@@ -7,6 +7,7 @@ import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
 import useStore from '../../zustand/useStore';
 import api from '../../../api/api';
+import { useSelector } from 'react-redux';
 
 const DatosGenerales = ({ onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
@@ -14,7 +15,8 @@ const DatosGenerales = ({ onValidationStatus }) => {
 
   const { datosGenerales, cargarDatosGenerales, cargarNombres, cargarDomicilio, cargarAlias, cargarSituacion, cargarJuridicos, cargarEjecucion, cargarODelito, cargarIngresos, cargarIngDelito } = useStore();
 
-  const [idAlterna, setIdAlterna] = useState(1);
+  //const [idAlterna, setIdAlterna] = useState(1);
+  const idAlterna = useSelector((state) => state.idAlterna.value);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
