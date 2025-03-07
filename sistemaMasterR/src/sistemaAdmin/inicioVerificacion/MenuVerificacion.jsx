@@ -46,12 +46,12 @@ const Bloque2 = () => {
             >
               Bloque 2
             </button>
-            <button
+            {/*<button
               className={ `nav-link ${ activeTab === "bformularioseis" ? "active" : "" }` }
               onClick={ () => setActiveTab( "bformularioseis" ) }
             >
               Bloque 6
-            </button>
+            </button>*/}
 
             {/* Subpestañas dentro de "B Formulario Uno" */ }
             { activeTab === "bformulariouno" && (

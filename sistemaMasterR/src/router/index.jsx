@@ -80,6 +80,10 @@ export const router = createBrowserRouter([
             path: "verificar",
             element:<MenuVerificacion/> 
           },
+          {
+            path: "bloque6",
+            element:<MenuRegistro/>
+          },
         ],
       },
     ],
