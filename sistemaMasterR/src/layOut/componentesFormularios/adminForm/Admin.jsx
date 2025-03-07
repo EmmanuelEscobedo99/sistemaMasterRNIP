@@ -55,7 +55,7 @@ const Admin = () => {
     const tabla = "principales";
     dispatch(setIdAlterna(idAlterna)); // Guardar en Redux
     useStore.getState().cargarDatosFormulario(tabla, idAlterna);
-    navigate(`/admin/verificar/${idAlterna}`);
+    navigate(`/admin/verificar`);
   };
 
   return (
