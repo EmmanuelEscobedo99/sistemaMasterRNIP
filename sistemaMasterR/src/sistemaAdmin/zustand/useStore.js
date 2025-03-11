@@ -16,6 +16,8 @@ const useStore = create((set) => ({
   ingresos: {}, // Estado para almacenar los ingresos
   ingdelito: {}, // Estado para almacenar el ingelito
   internos: {}, // Estado para almacenar los internos
+  internosBloque1y2: [],
+  internosBloque6: [],
 
   cargarDatosFormulario: async (tabla, idAlterna) => {
     try {
@@ -121,6 +123,24 @@ const useStore = create((set) => ({
       console.error('Error al cargar los datos:', error);
     }
   },
+  cargarInternosBloque1y2: async () => {
+    try {
+      const response = await api.get('/buscarInternos/procesado6');
+      set({ internosBloque1y2: response.data });
+    } catch (error) {
+      console.error('Error al cargar los datos del Bloque 1 y 2:', error);
+    }
+  },
+
+  cargarInternosBloque6: async () => {
+    try {
+      const response = await api.get('/buscarInternos/procesado7');
+      set({ internosBloque6: response.data });
+    } catch (error) {
+      console.error('Error al cargar los datos del Bloque 6:', error);
+    }
+  },
+
 }));
 
 export default useStore;

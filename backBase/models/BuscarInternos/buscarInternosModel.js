@@ -1,33 +1,55 @@
 const pool = require('../../config/db.config');
 
 const buscarInternosModel = {
-  async obtenerInternos() {
+  async obtenerInternos(procesado) {
     try {
-      // Primera consulta: Obtener todos los ID_ALTERNA donde PROCESADO = 6
-      const [movimientos] = await pool.query(
-        "SELECT ID_ALTERNA FROM movimientos WHERE PROCESADO = 6"
-      );
+      // 1️⃣ Obtener la LLAVE más reciente con PROCESADO = 6 o 7
+      const [movimientos] = await pool.query(`
+        SELECT LLAVE, MAX(FECHA_ACTUALIZACION) AS ULTIMA_FECHA
+        FROM movimientos 
+        WHERE PROCESADO = ?
+        GROUP BY LLAVE
+      `, [procesado]);
 
-      // Verificar si hay resultados antes de hacer la segunda consulta
       if (movimientos.length === 0) {
-        return []; // Retornar un array vacío si no hay resultados
+        return [];
       }
 
-      // Obtener la lista de ID_ALTERNA
-      const idsAlterna = movimientos.map(mov => mov.ID_ALTERNA);
+      // 2️⃣ Obtener los ID_ALTERNA más recientes por cada LLAVE
+      const resultados = await Promise.all(movimientos.map(async ({ LLAVE, ULTIMA_FECHA }) => {
+        const [fila] = await pool.query(`
+          SELECT ID_ALTERNA, LLAVE 
+          FROM movimientos 
+          WHERE LLAVE = ? AND FECHA_ACTUALIZACION = ? AND PROCESADO = ?
+          LIMIT 1
+        `, [LLAVE, ULTIMA_FECHA, procesado]);
 
-      // Segunda consulta: Obtener datos de datos_generales para cada ID_ALTERNA
-      const consultas = idsAlterna.map(id =>
-        pool.query("SELECT * FROM nombres WHERE ID_ALTERNA = ?", [id])
-      );
+        return fila.length > 0 ? fila[0] : null;
+      }));
 
-      // Ejecutar todas las consultas en paralelo
-      const resultados = await Promise.all(consultas);
+      const idAlternas = resultados.filter(item => item !== null).map(item => item.ID_ALTERNA);
 
-      // Formatear resultados ya que Promise.all devuelve un array de arrays
-      const datosGenerales = resultados.map(res => res[0]);
+      if (idAlternas.length === 0) {
+        return [];
+      }
 
-      return datosGenerales;
+      // 3️⃣ Obtener los datos de nombres y agrupar por ID_ALTERNA
+      const [nombres] = await pool.query(`
+        SELECT ID_ALTERNA, DNOMBRE, DPATERNO, DMATERNO 
+        FROM nombres 
+        WHERE ID_ALTERNA IN (?)
+      `, [idAlternas]);
+
+      // 4️⃣ Agrupar los nombres bajo un solo ID_ALTERNA
+      const nombresAgrupados = nombres.reduce((acc, { ID_ALTERNA, DNOMBRE, DPATERNO, DMATERNO }) => {
+        if (!acc[ID_ALTERNA]) {
+          acc[ID_ALTERNA] = { ID_ALTERNA, nombres: [] };
+        }
+        acc[ID_ALTERNA].nombres.push({ DNOMBRE, DPATERNO, DMATERNO });
+        return acc;
+      }, {});
+
+      return Object.values(nombresAgrupados);
     } catch (error) {
       console.error("Error en obtenerInternos:", error);
       throw error;

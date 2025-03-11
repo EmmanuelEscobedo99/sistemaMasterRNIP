@@ -1,12 +1,12 @@
-const buscarInternosModel = require( '../../models/BuscarInternos/buscarInternosModel' );
+const buscarInternosModel = require('../../models/BuscarInternos/buscarInternosModel');
 
 const buscarInternosService = {
-  async obtenerInternos() {
+  async obtenerInternos(procesado) {
     try {
-      const result = await buscarInternosModel.obtenerInternos();
+      const result = await buscarInternosModel.obtenerInternos(procesado);
       return result;
-    } catch ( error ) {
-      console.error( error );
+    } catch (error) {
+      console.error(error);
       throw error;
     }
   },

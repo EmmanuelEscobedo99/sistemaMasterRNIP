@@ -56,7 +56,7 @@ app.use('/api/ejecucion', mostrarEjecucion);
 app.use('/api/odelitos', mostrarODelitos);
 app.use('/api/ingresos', mostrarIngresos);
 app.use('/api/ingdelito', mostrarIngdelito);
-app.use('/api/internos', mostrarInternos);
+app.use('/api/buscarInternos', mostrarInternos);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
