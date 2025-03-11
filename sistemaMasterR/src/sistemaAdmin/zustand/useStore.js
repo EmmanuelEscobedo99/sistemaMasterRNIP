@@ -134,7 +134,7 @@ const useStore = create((set) => ({
 
   cargarInternosBloque6: async () => {
     try {
-      const response = await api.get('/buscarInternos/procesado7');
+      const response = await api.get('/buscarInternos/procesado8'); // ✅ Cambio aquí
       set({ internosBloque6: response.data });
     } catch (error) {
       console.error('Error al cargar los datos del Bloque 6:', error);

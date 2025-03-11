@@ -3,7 +3,6 @@ const pool = require('../../config/db.config');
 const buscarInternosModel = {
   async obtenerInternos(procesado) {
     try {
-      // 1️⃣ Obtener la LLAVE más reciente con PROCESADO = 6 o 7
       const [movimientos] = await pool.query(`
         SELECT LLAVE, MAX(FECHA_ACTUALIZACION) AS ULTIMA_FECHA
         FROM movimientos 
@@ -15,7 +14,6 @@ const buscarInternosModel = {
         return [];
       }
 
-      // 2️⃣ Obtener los ID_ALTERNA más recientes por cada LLAVE
       const resultados = await Promise.all(movimientos.map(async ({ LLAVE, ULTIMA_FECHA }) => {
         const [fila] = await pool.query(`
           SELECT ID_ALTERNA, LLAVE 
@@ -33,14 +31,12 @@ const buscarInternosModel = {
         return [];
       }
 
-      // 3️⃣ Obtener los datos de nombres y agrupar por ID_ALTERNA
       const [nombres] = await pool.query(`
         SELECT ID_ALTERNA, DNOMBRE, DPATERNO, DMATERNO 
         FROM nombres 
         WHERE ID_ALTERNA IN (?)
       `, [idAlternas]);
 
-      // 4️⃣ Agrupar los nombres bajo un solo ID_ALTERNA
       const nombresAgrupados = nombres.reduce((acc, { ID_ALTERNA, DNOMBRE, DPATERNO, DMATERNO }) => {
         if (!acc[ID_ALTERNA]) {
           acc[ID_ALTERNA] = { ID_ALTERNA, nombres: [] };

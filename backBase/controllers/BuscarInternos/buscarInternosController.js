@@ -3,7 +3,7 @@ const buscarInternosService = require('../../services/buscarInternos/buscarInter
 const buscarInternosController = {
   async obtenerInternosProcesado6(req, res) {
     try {
-      const result = await buscarInternosService.obtenerInternos(6); // PROCESADO = 6
+      const result = await buscarInternosService.obtenerInternos(6);
       res.status(200).json(result);
     } catch (error) {
       console.error(error);
@@ -11,9 +11,9 @@ const buscarInternosController = {
     }
   },
 
-  async obtenerInternosProcesado7(req, res) {
+  async obtenerInternosProcesado8(req, res) { // ✅ Cambio aquí
     try {
-      const result = await buscarInternosService.obtenerInternos(7); // PROCESADO = 7
+      const result = await buscarInternosService.obtenerInternos(8); // ✅ Cambio aquí
       res.status(200).json(result);
     } catch (error) {
       console.error(error);
@@ -23,3 +23,4 @@ const buscarInternosController = {
 };
 
 module.exports = buscarInternosController;
+``

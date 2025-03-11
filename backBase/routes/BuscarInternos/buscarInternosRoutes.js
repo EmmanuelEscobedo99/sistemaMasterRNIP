@@ -3,8 +3,7 @@ const buscarInternosController = require('../../controllers/BuscarInternos/busca
 
 const router = express.Router();
 
-// Nueva estructura de rutas
 router.get('/procesado6', buscarInternosController.obtenerInternosProcesado6);
-router.get('/procesado7', buscarInternosController.obtenerInternosProcesado7);
+router.get('/procesado8', buscarInternosController.obtenerInternosProcesado8); // ✅ Cambio aquí
 
 module.exports = router;
