@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const cookieParser = require('cookie-parser'); // Importar cookie-parser
+const cookieParser = require('cookie-parser'); // Importar cookie-parser //a
 const dotenv = require('dotenv');
 const ipRouter = require('./routes/ip/ipRouter');
 const loginRouter = require('./routes/auth/authRoutes');
