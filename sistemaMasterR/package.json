@@ -27,7 +27,7 @@
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^3.1.0",
-    "sweetalert2": "^11.15.2",
+    "sweetalert2": "^11.17.2",
     "yup": "^1.6.1",
     "zustand": "^5.0.3"
   },

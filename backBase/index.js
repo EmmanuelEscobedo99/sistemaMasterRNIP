@@ -20,6 +20,8 @@ const mostrarODelitos = require('./routes/Bloque2/ODelito/ODelitoRoutes');
 const mostrarIngresos = require('./routes/Bloque2/Ingresos/IngresosRoutes');
 const mostrarIngdelito = require('./routes/Bloque2/Ingdelito/IngdelitoRoutes');
 const mostrarInternos = require('./routes/BuscarInternos/buscarInternosRoutes');
+const rechazarRoutes = require('./routes/Rechazar/RechazarRoutes');
+const AprovarRoutes = require('./routes/Aprovar/AprovarRoutes');
 
 const app = express();
 const PORT = 3000;
@@ -57,6 +59,8 @@ app.use('/api/odelitos', mostrarODelitos);
 app.use('/api/ingresos', mostrarIngresos);
 app.use('/api/ingdelito', mostrarIngdelito);
 app.use('/api/buscarInternos', mostrarInternos);
+app.use('/api/rechazar', rechazarRoutes);
+app.use('/api/aprovar', AprovarRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);

@@ -3,6 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
+import api from '../../../api/api';
 
 const ConsultarErrores = () => {
 
@@ -10,6 +12,9 @@ const ConsultarErrores = () => {
 
   const { radioSeleccionados, limpiarErrores } = useDatosGeneralesStore();
   const [ mensaje, setMensaje ] = useState( '' ); // State to store the feedback message
+
+  //const [idAlterna, setIdAlterna] = useState(1);
+  const idAlterna = useSelector( ( state ) => state.idAlterna.value );
 
   const handleMessageChange = ( e ) => {
     setMensaje( e.target.value ); // Update the message as the user types
@@ -26,35 +31,85 @@ const ConsultarErrores = () => {
     }
   };
 
-  const handleLimpiarErrors = () => {
-    limpiarErrores();
-    navigate( '/admin' );
+  const handleLimpiarErrors = async (event) => {
+    event.preventDefault();
+
+    Swal.fire( {
+      title: '¿Estás seguro?',
+      text: 'Esta acción rechazará el registro',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, rechazar',
+      cancelButtonText: 'Cancelar'
+    } ).then( async ( result ) => {
+      if ( result.isConfirmed ) {
+        try {
+          await api.put( `rechazar/rechazarRegistro/${ idAlterna }` );
+          limpiarErrores();
+
+          Swal.fire( {
+            title: 'Rechazado',
+            text: 'El registro ha sido rechazado correctamente.',
+            icon: 'success',
+            confirmButtonText: 'Aceptar'
+          } ).then( () => {
+            navigate( '/admin' );
+          } );
+
+        } catch ( error ) {
+          console.error( 'Error al enviar la petición:', error );
+          Swal.fire( {
+            title: 'Error',
+            text: 'No se pudo rechazar el registro.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+          } );
+        }
+      }
+    } );
   };
 
-  const handleAprovarRegistro = (event) => {
+
+  const handleAprovarRegistro = async ( event ) => {
     event.preventDefault(); // Evita cualquier comportamiento predeterminado
-  
-    Swal.fire({
+
+    Swal.fire( {
       title: '¿Estás seguro?',
       text: 'Esta acción aprobará el registro',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, aprobar',
       cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        limpiarErrores(); // Limpia los errores
-        Swal.fire({
-          title: 'Aprobado',
-          text: 'El registro ha sido aprobado correctamente.',
-          icon: 'success',
-          confirmButtonText: 'Aceptar'
-        }).then(() => {
-          navigate('/admin'); // Redirige después de que se cierre el mensaje de éxito
-        });
+    } ).then( async ( result ) => {
+      if ( result.isConfirmed ) {
+        try {
+          // Realiza la petición a la API antes de limpiar errores
+          await api.put( `aprovar/aprovarRegistro/${ idAlterna }` );
+
+          limpiarErrores();
+
+          Swal.fire( {
+            title: 'Aprobado',
+            text: 'El registro ha sido aprobado correctamente.',
+            icon: 'success',
+            confirmButtonText: 'Aceptar'
+          } ).then( () => {
+            navigate( '/admin' ); // Redirige después de que se cierre el mensaje de éxito
+          } );
+
+        } catch ( error ) {
+          console.error( "Error al aprobar el registro:", error );
+          Swal.fire( {
+            title: 'Error',
+            text: 'Hubo un problema al aprobar el registro.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          } );
+        }
       }
-    });
+    } );
   };
+
   // You can group errors by their form if needed
   const groupedErrors = radioSeleccionados.reduce( ( acc, item ) => {
     const formName = item.formulario || 'Desconocido'; // Default to 'Desconocido' if no form name
@@ -90,10 +145,10 @@ const ConsultarErrores = () => {
         className="btn btn-danger mt-3"
         onClick={handleLimpiarErrors}
       >
-        Limpiar Errores
-      </button>*/}
+        Limpiar Errores 
+      </button>*/} 
 
-      {/* Textarea for sending feedback */ }
+      {/* Textarea for sending feedback .*/ }
       <div className="mt-4">
         <h6>Envíales un mensaje sobre los errores:</h6>
         <textarea
