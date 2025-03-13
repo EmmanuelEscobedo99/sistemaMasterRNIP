@@ -7,36 +7,36 @@ import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
 import useStore from '../../zustand/useStore';
 
-const Ingdelito = ({ data, onFormChange, onValidationStatus }) => {
+const Ingdelito = ( { data, onFormChange, onValidationStatus } ) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { ingdelito } = useStore();
 
-  const handleChange = (index, e) => {
+  const handleChange = ( index, e ) => {
     const { name, value } = e.target;
     const lowercaseName = name.toLowerCase();
-    const validationResult = ValidacionBloqueUno[`validacion${capitalizeFirstLetter(lowercaseName)}`]?.(value);
+    const validationResult = ValidacionBloqueUno[ `validacion${ capitalizeFirstLetter( lowercaseName ) }` ]?.( value );
 
-    if (validationResult !== true) {
-      setError(`${name}_${index}`, { type: 'formulario 1', message: validationResult });
+    if ( validationResult !== true ) {
+      setError( `${ name }_${ index }`, { type: 'formulario 1', message: validationResult } );
     } else {
-      clearErrors(`${name}_${index}`);
+      clearErrors( `${ name }_${ index }` );
     }
-    onFormChange(`${name}_${index}`, value);
+    onFormChange( `${ name }_${ index }`, value );
   };
 
-  const handleRadioChange = (nombre, valor, formulario, index) => {
-    const nombreCompleto = `${nombre} - Ingdelito ${index + 1}`;
-    seleccionarRadio(nombreCompleto, valor, formulario);
+  const handleRadioChange = ( nombre, valor, formulario, index ) => {
+    const nombreCompleto = `${ nombre } - Ingdelito ${ index + 1 }`;
+    seleccionarRadio( nombreCompleto, valor, formulario );
   };
 
-  const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+  const capitalizeFirstLetter = ( string ) => string.charAt( 0 ).toUpperCase() + string.slice( 1 );
 
-  useEffect(() => {
-    onValidationStatus(errors);
-  }, [errors, onValidationStatus]);
+  useEffect( () => {
+    onValidationStatus( errors );
+  }, [ errors, onValidationStatus ] );
 
-  const renderTooltip = (message) => <Tooltip>{message}</Tooltip>;
+  const renderTooltip = ( message ) => <Tooltip>{ message }</Tooltip>;
 
   const fields = [
     { id: "DELITO_DESC", label: "Descripción del Delito" },
@@ -48,58 +48,58 @@ const Ingdelito = ({ data, onFormChange, onValidationStatus }) => {
 
   return (
     <div className="container-fluid">
-      {ingdelito[0]?.map((delito, index) => (
-        <div key={index} className="mb-4 p-3 border rounded">
-          <h5>Delito #{index + 1}</h5>
+      { ingdelito[ 0 ]?.map( ( delito, index ) => (
+        <div key={ index } className="mb-4 p-3 border rounded">
+          <h5>Delito #{ index + 1 }</h5>
           <div className="row">
-            {fields.map((field) => (
-              <div key={field.id} className="col-md-6 form-floating mt-3 d-flex align-items-center">
+            { fields.map( ( field ) => (
+              <div key={ field.id } className="col-md-6 form-floating mt-3 d-flex align-items-center">
                 <OverlayTrigger
                   placement="right"
-                  overlay={errors[`${field.id}_${index}`] ? renderTooltip(errors[`${field.id}_${index}`]?.message) : <></>}
+                  overlay={ errors[ `${ field.id }_${ index }` ] ? renderTooltip( errors[ `${ field.id }_${ index }` ]?.message ) : <></> }
                 >
                   <input
                     type="text"
-                    className={`form-control ${errors[`${field.id}_${index}`] ? 'is-invalid shake' : ''}`}
-                    id={`${field.id}_${index}`}
-                    name={`${field.id}_${index}`}
-                    placeholder={errors[`${field.id}_${index}`]?.message || field.label}
-                    value={delito[field.id] || ''}
-                    {...register(`${field.id}_${index}`, { onChange: (e) => handleChange(index, e) })}
-                    style={{ borderColor: errors[`${field.id}_${index}`] ? 'red' : '' }}
+                    className={ `form-control ${ errors[ `${ field.id }_${ index }` ] ? 'is-invalid shake' : '' }` }
+                    id={ `${ field.id }_${ index }` }
+                    name={ `${ field.id }_${ index }` }
+                    placeholder={ errors[ `${ field.id }_${ index }` ]?.message || field.label }
+                    value={ delito[ field.id ] || '' }
+                    { ...register( `${ field.id }_${ index }`, { onChange: ( e ) => handleChange( index, e ) } ) }
+                    style={ { borderColor: errors[ `${ field.id }_${ index }` ] ? 'red' : '' } }
                     readOnly
                   />
                 </OverlayTrigger>
                 <label
-                  htmlFor={`${field.id}_${index}`}
-                  title={field.label} // Muestra el label completo al pasar el mouse
-                  style={{
+                  htmlFor={ `${ field.id }_${ index }` }
+                  title={ field.label } // Muestra el label completo al pasar el mouse
+                  style={ {
                     marginLeft: '10px',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     maxWidth: '100%'
-                  }}
+                  } }
                 >
-                  {field.label}
+                  { field.label }
                 </label>
 
-                {/* Radio Button para marcar campo */}
+                {/* Radio Button para marcar campo */ }
                 <input
                   type="radio"
-                  name={`radio-${field.id}-${index}`}
+                  name={ `radio-${ field.id }-${ index }` }
                   value="Sí"
                   className="ms-2"
-                  onChange={() => handleRadioChange(field.label, 'Sí', 'Ingdelito', index)}
+                  onChange={ () => handleRadioChange( field.label, 'Sí', 'Ingdelito', index ) }
                 />
               </div>
-            ))}
+            ) ) }
           </div>
         </div>
-      ))}
+      ) ) }
 
-      {/* Lista de radio seleccionados */}
-      <div className="mt-4">
+      {/* Lista de radio seleccionados */ }
+      {/*<div className="mt-4">
         <h5 style={{ color: 'red' }}>Campos con errores:</h5>
         <ul>
           {radioSeleccionados.length > 0 ? (
@@ -110,7 +110,7 @@ const Ingdelito = ({ data, onFormChange, onValidationStatus }) => {
             <li>Sin campos marcados por el momento.</li>
           )}
         </ul>
-      </div>
+      </div>*/}
     </div>
   );
 };

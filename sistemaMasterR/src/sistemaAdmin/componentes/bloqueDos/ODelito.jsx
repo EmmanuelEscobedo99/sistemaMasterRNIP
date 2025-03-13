@@ -104,7 +104,7 @@ const ODelito = ({ data, onFormChange, onValidationStatus }) => {
       </div>
 
       {/* Lista de campos marcados como error */}
-      <div className="mt-4">
+      {/*<div className="mt-4">
         <h5 style={{ color: 'red' }}>Campos con errores:</h5>
         {radioSeleccionados.length > 0 ? (
           <ul>
@@ -115,7 +115,7 @@ const ODelito = ({ data, onFormChange, onValidationStatus }) => {
         ) : (
           <p>Sin campos marcados por el momento.</p>
         )}
-      </div>
+      </div>*/}
     </div>
   );
 };

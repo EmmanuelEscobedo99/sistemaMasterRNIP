@@ -154,14 +154,14 @@ const DatosGenerales = ({ onValidationStatus }) => {
       ))}
 
       {/* Lista de radio seleccionados */}
-      <div className="mt-4">
+      {/*<div className="mt-4">
         <h5 style={{ color: 'red' }}>Campos con errores:</h5>
         <ul>
           {radioSeleccionados.map((item, index) => (
             <li key={index}>{item.nombre}</li>
           ))}
         </ul>
-      </div>
+      </div>*/}
     </div>
   );
 };
