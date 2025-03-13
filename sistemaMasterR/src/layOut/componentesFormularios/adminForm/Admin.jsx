@@ -10,43 +10,43 @@ const Admin = () => {
   const navigate = useNavigate();
   const { cargarInternos } = useStore();
 
-  useEffect(() => {
-    cargarInternos("obtenerInternos");
-  }, []);
+  useEffect( () => {
+    cargarInternos( "obtenerInternos" );
+  }, [] );
 
   const handleLogout = () => {
-    dispatch(FinalizarSesion())
+    dispatch( FinalizarSesion() )
       .unwrap()
-      .then(() => {
-        navigate("/");
-      })
-      .catch((error) => {
-        console.error("Error al cerrar sesión:", error);
-      });
+      .then( () => {
+        navigate( "/" );
+      } )
+      .catch( ( error ) => {
+        console.error( "Error al cerrar sesión:", error );
+      } );
   };
 
   return (
-    <div className="d-flex flex-column vh-100">
-      {/* Navbar Estilizada */}
-      <motion.nav 
+    <div className="d-flex flex-column min-vh-100">
+      {/* Navbar Estilizada */ }
+      <motion.nav
         className="navbar navbar-expand-lg navbar-dark"
-        style={{ backgroundColor: "#0A0A0A" }} // Color negro oscuro
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
+        style={ { backgroundColor: "#0A0A0A" } } // Color negro oscuro
+        initial={ { y: -50, opacity: 0 } }
+        animate={ { y: 0, opacity: 1 } }
+        transition={ { duration: 0.5 } }
       >
-        <div className="container">
+        <div className="container" style={{margin:'7px'}}>
           <NavLink to="/admin" className="navbar-brand fw-bold text-white">
             <i className="bi bi-shield-lock-fill me-2"></i> ADMIN PANEL
           </NavLink>
 
-          <button 
-            className="navbar-toggler" 
-            type="button" 
-            data-bs-toggle="collapse" 
-            data-bs-target="#navbarAdmin" 
-            aria-controls="navbarAdmin" 
-            aria-expanded="false" 
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarAdmin"
+            aria-controls="navbarAdmin"
+            aria-expanded="false"
             aria-label="Toggle navigation"
           >
             <span className="navbar-toggler-icon"></span>
@@ -54,22 +54,22 @@ const Admin = () => {
 
           <div className="collapse navbar-collapse" id="navbarAdmin">
             <ul className="navbar-nav ms-auto">
-              <motion.li className="nav-item" whileHover={{ scale: 1.1 }}>
+              <motion.li className="nav-item" whileHover={ { scale: 1.1 } }>
                 <NavLink to="/admin/bloque1y2" className="nav-link text-white">
                   BLOQUE 1 Y 2
                 </NavLink>
               </motion.li>
-              <motion.li className="nav-item" whileHover={{ scale: 1.1 }}>
+              <motion.li className="nav-item" whileHover={ { scale: 1.1 } }>
                 <NavLink to="/admin/bloque6" className="nav-link text-white">
                   BLOQUE 6
                 </NavLink>
               </motion.li>
               <motion.li className="nav-item">
-                <button 
-                  onClick={handleLogout} 
+                <button
+                  onClick={ handleLogout }
                   className="btn btn-outline-light ms-3"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
+                  whileHover={ { scale: 1.1 } }
+                  whileTap={ { scale: 0.9 } }
                 >
                   <i className="bi bi-box-arrow-right me-2"></i> Cerrar sesión
                 </button>
@@ -79,15 +79,21 @@ const Admin = () => {
         </div>
       </motion.nav>
 
-      {/* Contenido principal */}
-      <motion.div 
+      {/* Contenido principal */ }
+      <motion.div
         className="container-fluid p-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
+        initial={ { opacity: 0 } }
+        animate={ { opacity: 1 } }
+        transition={ { duration: 0.5 } }
+        style={ {
+          paddingTop: "0px",
+          margin: "0",
+          padding: "0",
+        } }
       >
         <Outlet />
       </motion.div>
+
     </div>
   );
 };
