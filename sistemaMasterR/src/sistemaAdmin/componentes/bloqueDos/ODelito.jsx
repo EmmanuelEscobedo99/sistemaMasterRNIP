@@ -54,45 +54,54 @@ const ODelito = ({ data, onFormChange, onValidationStatus }) => {
 
   return (
     <div className="container-fluid">
-      {odelito[0]?.map((delito, index) => (
-        <div key={index} className="mb-4 p-3 border rounded">
-          <h5>{`Delito #${index + 1}`}</h5>
-          <div className="row">
-            {fields.map((field) => (
-              <div key={field.id} className="col-md-3 form-floating mt-3 d-flex align-items-center">
-                <OverlayTrigger
-                  placement="right"
-                  overlay={errors[`${field.id}_${index}`] ? renderTooltip(errors[`${field.id}_${index}`]?.message) : <></>}
-                >
-                  <input
-                    type="text"
-                    className={`form-control ${errors[`${field.id}_${index}`] ? 'is-invalid shake' : ''}`}
-                    id={`${field.id}_${index}`}
-                    name={field.id}
-                    placeholder={field.label}
-                    value={delito[field.id] || ''}
-                    {...register(`${field.id}_${index}`, {
-                      onChange: (e) => handleChange(index, e),
-                    })}
-                    style={{ borderColor: errors[`${field.id}_${index}`] ? 'red' : '' }}
-                    readOnly
-                  />
-                </OverlayTrigger>
-                <label htmlFor={`${field.id}_${index}`} style={{ marginLeft: '10px' }}>{field.label}</label>
+      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-2">
+        {odelito[0]?.map((delito, index) => (
+          <div key={index} className="col">
+            <div className="card shadow-sm h-100">
+              <div className="card-body">
+                <h5 className="card-title">{`Delito #${index + 1}`}</h5>
+                <div className="row">
+                  {fields.map((field) => (
+                    <div key={field.id} className="col-md-12 form-floating mt-2">
+                      <OverlayTrigger
+                        placement="right"
+                        overlay={errors[`${field.id}_${index}`] ? renderTooltip(errors[`${field.id}_${index}`]?.message) : <></>}
+                      >
+                        <input
+                          type="text"
+                          className={`form-control ${errors[`${field.id}_${index}`] ? 'is-invalid shake' : ''}`}
+                          id={`${field.id}_${index}`}
+                          name={field.id}
+                          placeholder={field.label}
+                          value={delito[field.id] || ''}
+                          {...register(`${field.id}_${index}`, {
+                            onChange: (e) => handleChange(index, e),
+                          })}
+                          style={{ borderColor: errors[`${field.id}_${index}`] ? 'red' : '' }}
+                          readOnly
+                        />
+                      </OverlayTrigger>
+                      <label htmlFor={`${field.id}_${index}`} className="ms-1">{field.label}</label>
 
-                {/* Radio Button */}
-                <input
-                  type="radio"
-                  name={`radio-${field.id}-${index}`}
-                  value="Sí"
-                  className="ms-2"
-                  onChange={() => handleRadioChange(field.label, 'Sí', 'ODelito', index)}
-                />
+                      {/* Radio Button */}
+                      <div className="mt-2">
+                        <input
+                          type="radio"
+                          name={`radio-${field.id}-${index}`}
+                          value="Sí"
+                          className="ms-2"
+                          onChange={() => handleRadioChange(field.label, 'Sí', 'ODelito', index)}
+                        />
+                        <label className="ms-2">Sí</label>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       {/* Lista de campos marcados como error */}
       <div className="mt-4">
