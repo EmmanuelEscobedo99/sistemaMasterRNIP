@@ -62,7 +62,7 @@ const ODelito = ({ data, onFormChange, onValidationStatus }) => {
                 <h5 className="card-title">{`Delito #${index + 1}`}</h5>
                 <div className="row">
                   {fields.map((field) => (
-                    <div key={field.id} className="col-md-12 form-floating mt-2">
+                    <div key={field.id} className="col-md-12 form-floating mt-1">
                       <OverlayTrigger
                         placement="right"
                         overlay={errors[`${field.id}_${index}`] ? renderTooltip(errors[`${field.id}_${index}`]?.message) : <></>}
@@ -92,7 +92,7 @@ const ODelito = ({ data, onFormChange, onValidationStatus }) => {
                           className="ms-2"
                           onChange={() => handleRadioChange(field.label, 'Sí', 'ODelito', index)}
                         />
-                        <label className="ms-2">Sí</label>
+                        <label className="ms-2"></label>
                       </div>
                     </div>
                   ))}
