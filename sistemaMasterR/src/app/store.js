@@ -6,6 +6,7 @@ import verificacionIp from '../accesoLogin/reducers/slice/verificacionIp/verific
 import autenticacionLogin from '../accesoLogin/reducers/slice/loginUsuarioSlice/authSlice'
 import erroresFormulariosReducer from '../sistema/reducers/slice/erroresFormularios/ErroresFormularios'
 import erroresRegistroReducer from '../sistema/reducers/slice/erroresRegistro/ErroresRegistro'
+import idAlternaReducer from "../sistemaAdmin/reducers/slice/idAlterna/idAlternaSlice";
 
 const persistConfig = {
   key: 'root',
@@ -22,6 +23,7 @@ export const store = configureStore({
     verificacionIp: verificacionIp,
     erroresFormularios: erroresFormulariosReducer,
     erroresRegistro: erroresRegistroReducer,
+    idAlterna: idAlternaReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
