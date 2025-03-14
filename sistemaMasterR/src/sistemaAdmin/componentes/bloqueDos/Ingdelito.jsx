@@ -48,71 +48,59 @@ const Ingdelito = ( { data, onFormChange, onValidationStatus } ) => {
 
   return (
     <div className="container-fluid">
-      { ingdelito[ 0 ]?.map( ( delito, index ) => (
-        <div key={ index } className="mb-4 p-3 border rounded">
-          <h5>Delito #{ index + 1 }</h5>
-          <div className="row">
-            { fields.map( ( field ) => (
-              <div key={ field.id } className="col-md-6 form-floating mt-3 d-flex align-items-center">
-                <OverlayTrigger
-                  placement="right"
-                  overlay={ errors[ `${ field.id }_${ index }` ] ? renderTooltip( errors[ `${ field.id }_${ index }` ]?.message ) : <></> }
-                >
+      <div className="row d-flex flex-wrap gap-2">
+        { ingdelito[ 0 ]?.map( ( delito, index ) => (
+          <div key={ index } className="col-md-4 mb-4 p-3 border rounded">
+            <h5>Delito #{ index + 1 }</h5>
+            <div className="row">
+              { fields.map( ( field ) => (
+                <div key={ field.id } className="col-md-12 form-floating mt-3 d-flex align-items-center">
+                  <OverlayTrigger
+                    placement="right"
+                    overlay={ errors[ `${ field.id }_${ index }` ] ? renderTooltip( errors[ `${ field.id }_${ index }` ]?.message ) : <></> }
+                  >
+                    <input
+                      type="text"
+                      className={ `form-control ${ errors[ `${ field.id }_${ index }` ] ? 'is-invalid shake' : '' }` }
+                      id={ `${ field.id }_${ index }` }
+                      name={ `${ field.id }_${ index }` }
+                      placeholder={ errors[ `${ field.id }_${ index }` ]?.message || field.label }
+                      value={ delito[ field.id ] || '' }
+                      { ...register( `${ field.id }_${ index }`, { onChange: ( e ) => handleChange( index, e ) } ) }
+                      style={ { borderColor: errors[ `${ field.id }_${ index }` ] ? 'red' : '' } }
+                      readOnly
+                    />
+                  </OverlayTrigger>
+                  <label
+                    htmlFor={ `${ field.id }_${ index }` }
+                    title={ field.label }
+                    style={ {
+                      marginLeft: '10px',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      maxWidth: '100%'
+                    } }
+                  >
+                    { field.label }
+                  </label>
+  
                   <input
-                    type="text"
-                    className={ `form-control ${ errors[ `${ field.id }_${ index }` ] ? 'is-invalid shake' : '' }` }
-                    id={ `${ field.id }_${ index }` }
-                    name={ `${ field.id }_${ index }` }
-                    placeholder={ errors[ `${ field.id }_${ index }` ]?.message || field.label }
-                    value={ delito[ field.id ] || '' }
-                    { ...register( `${ field.id }_${ index }`, { onChange: ( e ) => handleChange( index, e ) } ) }
-                    style={ { borderColor: errors[ `${ field.id }_${ index }` ] ? 'red' : '' } }
-                    readOnly
+                    type="radio"
+                    name={ `radio-${ field.id }-${ index }` }
+                    value="Sí"
+                    className="ms-2"
+                    onChange={ () => handleRadioChange( field.label, 'Sí', 'Ingdelito', index ) }
                   />
-                </OverlayTrigger>
-                <label
-                  htmlFor={ `${ field.id }_${ index }` }
-                  title={ field.label } // Muestra el label completo al pasar el mouse
-                  style={ {
-                    marginLeft: '10px',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    maxWidth: '100%'
-                  } }
-                >
-                  { field.label }
-                </label>
-
-                {/* Radio Button para marcar campo */ }
-                <input
-                  type="radio"
-                  name={ `radio-${ field.id }-${ index }` }
-                  value="Sí"
-                  className="ms-2"
-                  onChange={ () => handleRadioChange( field.label, 'Sí', 'Ingdelito', index ) }
-                />
-              </div>
-            ) ) }
+                </div>
+              ) ) }
+            </div>
           </div>
-        </div>
-      ) ) }
-
-      {/* Lista de radio seleccionados */ }
-      {/*<div className="mt-4">
-        <h5 style={{ color: 'red' }}>Campos con errores:</h5>
-        <ul>
-          {radioSeleccionados.length > 0 ? (
-            radioSeleccionados.map((item, index) => (
-              <li key={index}>{item.nombre}</li>
-            ))
-          ) : (
-            <li>Sin campos marcados por el momento.</li>
-          )}
-        </ul>
-      </div>*/}
+        ) ) }
+      </div>
     </div>
   );
+  
 };
 
 export default Ingdelito;
