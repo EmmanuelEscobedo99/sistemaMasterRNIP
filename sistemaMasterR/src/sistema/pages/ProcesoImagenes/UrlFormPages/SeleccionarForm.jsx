@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import { limpiarHuellas } from '../../../redux/huellasSlice'; // 🔥 Agregar esto
 import useStore from "../../../../app/useStore";
 
-export const SeleccionarForm = () => {
+const SeleccionarForm = () => {
   const navigate = useNavigate();
   const { llaveSeleccionada } = useStore();
   const LLAVE = llaveSeleccionada;
@@ -204,3 +204,5 @@ export const SeleccionarForm = () => {
     </div>
   );
 };
+
+export default SeleccionarForm;
