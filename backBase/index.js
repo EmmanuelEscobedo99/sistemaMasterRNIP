@@ -7,6 +7,10 @@ const loginRouter = require('./routes/auth/authRoutes');
 const registroRoutes = require('./routes/registroUsuarios/registroUsuarios');
 const datosRoutes = require('./routes/mostrarDatos/mostrarDatos');
 const idAlternaRoutes = require('./routes/idAlterna/idAlternaRoutes');
+const editarHuellasRoutes = require('./routes/Bloque6/editarHuellasRoutes');
+const editarPrincipalesRoutes = require('./routes/Bloque6/editarPrincipalesRoutes');
+const imagenesRoutes = require('./routes/Bloque6/imagenesRoutes');
+const principalesRoutes = require('./routes/Bloque6/principalesRoutes');
 const mostrarPrincipalesRoutes = require('./routes/Bloque6/mostrarPrincipalesRoutes');
 const mostrarHuellasRoutes = require('./routes/Bloque6/mostrarHuellasRoutes');
 const mostrarDatosGenerales = require('./routes/Bloque1/DatosGenerales/DatosGeneralesRoutes');
@@ -61,6 +65,12 @@ app.use('/api/ingdelito', mostrarIngdelito);
 app.use('/api/buscarInternos', mostrarInternos);
 app.use('/api/rechazar', rechazarRoutes);
 app.use('/api/aprovar', AprovarRoutes);
+app.use('/api/imagenes', imagenesRoutes);
+app.use('/api/principales', principalesRoutes);
+app.use('/api/bloque1', bloque1Routes);
+app.use('/api/editarPrincipales', editarPrincipalesRoutes);
+app.use('/api/huellas', huellasRoutes);
+app.use('/api/editarHuellas', editarHuellasRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
