@@ -1,0 +1,49 @@
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+h1 {
+  color: #4a4a4a;
+  font-weight: 600;
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #5a5a5a;
+  margin-bottom: 1rem;
+}
+
+img {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  border-radius: 8px;
+}
+
+button:disabled {
+  background-color: #d3d3d3 !important;
+  cursor: not-allowed;
+}
+
+.spinner-border {
+  width: 2rem;
+  height: 2rem;
+}
+
+.text-center h5 {
+  color: #6c757d;
+  margin-top: 1rem;
+}
