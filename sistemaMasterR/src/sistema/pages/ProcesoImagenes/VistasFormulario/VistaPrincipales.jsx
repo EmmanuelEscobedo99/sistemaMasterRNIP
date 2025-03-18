@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { SubirPrincipales } from '../../../Componentes/ProcesoImagenes/Imagenes/Principales/SubirPrincipales';
+import { SubirPrincipales } from '../../../componentes/bloqueSeis/ProcesoImagenes/Imagenes/Principales/SubirPrincipales';
 import {
   setImagenes,
   setLoading,
@@ -14,7 +14,7 @@ import {
   agregarError2,
   limpiarError2
 } from '../../../redux/imagenesSlice';
-import useStore from '../../../zustand/useStore';
+import useStore from "../../../../app/useStore";
 
 export const VistaPrincipales = () => {
   const navigate = useNavigate();

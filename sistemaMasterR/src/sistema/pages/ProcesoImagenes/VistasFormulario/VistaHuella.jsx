@@ -13,8 +13,8 @@ import {
   agregarError2,
   limpiarError2 
 } from '../../../redux/huellasSlice';
-import { SubirHuellas } from '../../../Componentes/ProcesoImagenes/Imagenes/Huellas/SubirHuellas';
-import useStore from '../../../zustand/useStore';
+import { SubirHuellas } from "../../../componentes/bloqueSeis/ProcesoImagenes/Imagenes/Huellas/SubirHuellas";
+import useStore from "../../../../app/useStore";
 
 export const VistaHuella = () => {
   const navigate = useNavigate();

@@ -27,7 +27,7 @@ const TablaDatos = () => {
   // 🔹 Seleccionar persona y redirigir
   const seleccionarPersona = (LLAVE) => {
     setLlave(LLAVE);
-    navigate(`/formPaginas`);
+    navigate(`/capturista/formPaginas`);
   };
 
   return (
