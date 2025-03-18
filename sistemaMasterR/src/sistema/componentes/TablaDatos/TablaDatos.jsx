@@ -7,7 +7,7 @@ export const TablaDatos = () => {
 
   // 📌 Lista de reclusos
   const personas = [
-    { LLAVE: '101001_11', nombre: 'Juan', apellido: 'Pérez' },
+    { LLAVE: '101001_1', nombre: 'Juan', apellido: 'Pérez' },
     { LLAVE: '101001_2', nombre: 'Ana Gómez', apellido: 'Pérez' },
     { LLAVE: '101001_3', nombre: 'Carlos Martínez', apellido: 'Pérez' },
     { LLAVE: '101001_4', nombre: 'Lucía Rodríguez', apellido: 'Pérez' },
