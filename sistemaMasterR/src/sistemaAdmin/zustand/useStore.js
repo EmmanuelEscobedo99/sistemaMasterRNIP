@@ -141,8 +141,6 @@ const useStore = create((set) => ({
     }
   },
 
-  llaveSeleccionada: null, // Estado inicial
-  setLlave: (llave) => set({ llaveSeleccionada: llave }),
 }));
 
 export default useStore;
