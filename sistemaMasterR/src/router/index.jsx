@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { Login } from '../accesoLogin/paginas/Login';
 import OpenCapturista from '../layOut/paginas/capturista/OpenCapturista';
 import OpenAdmin from '../layOut/paginas/admin/OpenAdmin';
@@ -9,6 +9,7 @@ import Bloque6 from '../layOut/paginas/admin/Bloque6';
 import MenuVerificacion from '../sistemaAdmin/inicioVerificacion/MenuVerificacion';
 import MenuVerificacion6 from '../sistemaAdmin/inicioVerificacion/MenuVerificacion6';
 import MenuRegistro from '../sistema/inicioRegistro/MenuRegistro';
+import TablaDatos from "../sistema/componentes/TablaDatos/TablaDatos";
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +39,14 @@ export const router = createBrowserRouter([
           {
             path: "registro",
             element: <MenuRegistro />, // Registro de bloques 1 y 2
+          },
+          {
+            path: "incorporar-bloque-6",
+            element: <Navigate to="/capturista/tabladatos" replace />, // Redirige correctamente
+          },
+          {
+            path: "tabladatos",
+            element: <TablaDatos />, // Renderiza TablaDatos
           },
         ],
       },

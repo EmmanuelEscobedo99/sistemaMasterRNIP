@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Button, Container, Card, Row, Col } from 'react-bootstrap';
-import { TablaDatos } from '../../../Componentes/TablaDatos/TablaDatos';
+import { TablaDatos } from '../../../sistema/componentes/TablaDatos/TablaDatos';
 import { motion } from 'framer-motion';
 import { FaUserCircle } from 'react-icons/fa';
 
