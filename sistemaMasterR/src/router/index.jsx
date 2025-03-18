@@ -10,6 +10,7 @@ import MenuVerificacion from '../sistemaAdmin/inicioVerificacion/MenuVerificacio
 import MenuVerificacion6 from '../sistemaAdmin/inicioVerificacion/MenuVerificacion6';
 import MenuRegistro from '../sistema/inicioRegistro/MenuRegistro';
 import TablaDatos from "../sistema/componentes/TablaDatos/TablaDatos";
+import { SeleccionarForm } from '../sistema/pages/ProcesoImagenes/UrlFormPages/SeleccionarForm';
 
 export const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ export const router = createBrowserRouter([
             path: "tabladatos",
             element: <TablaDatos />, // Renderiza TablaDatos
           },
+          {
+            path: "formPaginas",
+            element: <SeleccionarForm /> // Renderiza SeleccionarForm
+          }
         ],
       },
     ],

@@ -14,7 +14,7 @@ const TablaDatos = () => {  // 🔹 Ahora es default export
 
   const seleccionarPersona = (LLAVE) => {
     setLlave(LLAVE);
-    navigate(`/formPaginas`);
+    navigate(`capturista/formPaginas`);
   };
 
   return (

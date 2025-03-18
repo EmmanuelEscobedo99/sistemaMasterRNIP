@@ -8,7 +8,7 @@ import { VistaHuella } from '../VistasFormulario/VistaHuella';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { limpiarHuellas } from '../../../redux/huellasSlice'; // 🔥 Agregar esto
-import useStore from '../../../zustand/useStore';
+import useStore from '../../../../app/useStore';
 
 export const SeleccionarForm = () => {
   const navigate = useNavigate();
