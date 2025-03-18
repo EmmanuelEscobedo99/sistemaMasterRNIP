@@ -7,10 +7,6 @@ const loginRouter = require('./routes/auth/authRoutes');
 const registroRoutes = require('./routes/registroUsuarios/registroUsuarios');
 const datosRoutes = require('./routes/mostrarDatos/mostrarDatos');
 const idAlternaRoutes = require('./routes/idAlterna/idAlternaRoutes');
-const editarHuellasRoutes = require('./routes/Bloque6/editarHuellasRoutes');
-const editarPrincipalesRoutes = require('./routes/Bloque6/editarPrincipalesRoutes');
-const imagenesRoutes = require('./routes/Bloque6/imagenesRoutes');
-const principalesRoutes = require('./routes/Bloque6/principalesRoutes');
 const mostrarPrincipalesRoutes = require('./routes/Bloque6/mostrarPrincipalesRoutes');
 const mostrarHuellasRoutes = require('./routes/Bloque6/mostrarHuellasRoutes');
 const mostrarDatosGenerales = require('./routes/Bloque1/DatosGenerales/DatosGeneralesRoutes');
@@ -26,6 +22,11 @@ const mostrarIngdelito = require('./routes/Bloque2/Ingdelito/IngdelitoRoutes');
 const mostrarInternos = require('./routes/BuscarInternos/buscarInternosRoutes');
 const rechazarRoutes = require('./routes/Rechazar/RechazarRoutes');
 const AprovarRoutes = require('./routes/Aprovar/AprovarRoutes');
+const editarHuellasRoutes = require('./routes/Bloque6/editarHuellasRoutes');
+const editarPrincipalesRoutes = require('./routes/Bloque6/editarPrincipalesRoutes');
+const huellasRoutes = require('./routes/Bloque6/huellasRoutes');
+const imagenesRoutes = require('./routes/Bloque6/imagenesRoutes');
+const principalesRoutes = require('./routes/Bloque6/principalesRoutes');
 
 const app = express();
 const PORT = 3000;
@@ -65,12 +66,11 @@ app.use('/api/ingdelito', mostrarIngdelito);
 app.use('/api/buscarInternos', mostrarInternos);
 app.use('/api/rechazar', rechazarRoutes);
 app.use('/api/aprovar', AprovarRoutes);
-app.use('/api/imagenes', imagenesRoutes);
 app.use('/api/principales', principalesRoutes);
-app.use('/api/bloque1', bloque1Routes);
 app.use('/api/editarPrincipales', editarPrincipalesRoutes);
 app.use('/api/huellas', huellasRoutes);
 app.use('/api/editarHuellas', editarHuellasRoutes);
+app.use('/api/imagenes', imagenesRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
