@@ -19,7 +19,12 @@ const SeleccionarForm = () => {
   const emisor = '33';
   const estado_emisor = '3';
 
-  const errores2 = useSelector((state) => state.imagenes.errores2);
+  const imagenesState = useSelector((state) => state.imagenes);
+  console.log("Estado de imágenes en Redux:", imagenesState);
+  
+  const errores2 = imagenesState?.errores2 || {}; // Evita el error de undefined
+  console.log("Errores 2:", errores2);
+  
   const errores3 = useSelector((state) => state.huellas.errores2);
 
   const erroresCombinados = { ...errores2, ...errores3 };
