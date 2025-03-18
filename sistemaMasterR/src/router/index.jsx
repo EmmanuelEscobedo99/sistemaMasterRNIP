@@ -1,24 +1,24 @@
-import React from 'react';
-import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { Login } from '../accesoLogin/paginas/Login';
-import OpenCapturista from '../layOut/paginas/capturista/OpenCapturista';
-import OpenAdmin from '../layOut/paginas/admin/OpenAdmin';
-import ProtectedRoute from '../router/ProtectedRoute';
-import Bloque1y2 from '../layOut/paginas/admin/Bloque1y2';
-import Bloque6 from '../layOut/paginas/admin/Bloque6';
-import MenuVerificacion from '../sistemaAdmin/inicioVerificacion/MenuVerificacion';
-import MenuVerificacion6 from '../sistemaAdmin/inicioVerificacion/MenuVerificacion6';
-import MenuRegistro from '../sistema/inicioRegistro/MenuRegistro';
+import React from "react";
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import { Login } from "../accesoLogin/paginas/Login";
+import OpenCapturista from "../layOut/paginas/capturista/OpenCapturista";
+import OpenAdmin from "../layOut/paginas/admin/OpenAdmin";
+import ProtectedRoute from "../router/ProtectedRoute";
+import Bloque1y2 from "../layOut/paginas/admin/Bloque1y2";
+import Bloque6 from "../layOut/paginas/admin/Bloque6";
+import MenuVerificacion from "../sistemaAdmin/inicioVerificacion/MenuVerificacion";
+import MenuVerificacion6 from "../sistemaAdmin/inicioVerificacion/MenuVerificacion6";
+import MenuRegistro from "../sistema/inicioRegistro/MenuRegistro";
 import TablaDatos from "../sistema/componentes/TablaDatos/TablaDatos";
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <Login />,
   },
   {
-    path: '/capturista',
-    element: <ProtectedRoute allowedRoles={['capturista']} />,
+    path: "/capturista",
+    element: <ProtectedRoute allowedRoles={["capturista"]} />,
     children: [
       {
         path: "",
@@ -42,19 +42,19 @@ export const router = createBrowserRouter([
           },
           {
             path: "incorporar-bloque-6",
-            element: <Navigate to="/capturista/tabladatos" replace />, // Redirige correctamente
+            element: <Navigate to="/capturista/tabladatos" replace />, // 🔹 Redirige correctamente a `tabladatos`
           },
           {
             path: "tabladatos",
-            element: <TablaDatos />, // Renderiza TablaDatos
+            element: <TablaDatos />, // ✅ Renderiza `TablaDatos.jsx`
           },
         ],
       },
     ],
   },
   {
-    path: '/admin',
-    element: <ProtectedRoute allowedRoles={['admin']} />,
+    path: "/admin",
+    element: <ProtectedRoute allowedRoles={["admin"]} />,
     children: [
       {
         path: "",
