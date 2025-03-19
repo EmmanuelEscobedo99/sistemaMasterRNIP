@@ -136,7 +136,7 @@ const useStore = create((set) => ({
 
   cargarInternosBloque6: async () => {
     try {
-      const response = await api.get('/buscarInternos/procesado8'); // ✅ Cambio aquí
+      const response = await api.get('/buscarInternos/procesado9'); // ✅ Cambio aquí
       set({ internosBloque6: response.data });
     } catch (error) {
       console.error('Error al cargar los datos del Bloque 6:', error);
@@ -155,10 +155,10 @@ const useStore = create((set) => ({
     // 🔹 Cargar internos del Bloque 6D (procesado 10)
     cargarInternosBloque6D: async () => {
       try {
-        const response = await api.get('/buscarInternos/procesado11');
+        const response = await api.get('/buscarInternos/procesado10');
         set({ internosBloque6D: response.data });
       } catch (error) {
-        console.error('Error al cargar los datos del Bloque 6D (procesado 11):', error);
+        console.error('Error al cargar los datos del Bloque 6D (procesado 10):', error);
       }
     },
 }));
