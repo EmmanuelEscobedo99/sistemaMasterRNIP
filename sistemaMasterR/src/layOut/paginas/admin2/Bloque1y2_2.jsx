@@ -38,7 +38,7 @@ const Bloque1y2_2 = () => {
 
   const handleSeleccionar = (idAlterna) => {
     dispatch(setIdAlterna(idAlterna));
-    navigate(`/admin/verificar`);
+    navigate(`/admin2/verificar2`);
   };
 
   return (

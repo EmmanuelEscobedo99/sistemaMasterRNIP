@@ -7,6 +7,7 @@ import ProtectedRoute from "../router/ProtectedRoute";
 import Bloque1y2 from "../layOut/paginas/admin/Bloque1y2";
 import Bloque6 from "../layOut/paginas/admin/Bloque6";
 import MenuVerificacion from "../sistemaAdmin/inicioVerificacion/MenuVerificacion";
+import MenuVerificacion2 from "../sistemaAdmin/inicioVerificacion/MenuVerificacion2";
 import MenuVerificacion6 from "../sistemaAdmin/inicioVerificacion/MenuVerificacion6";
 import MenuRegistro from "../sistema/inicioRegistro/MenuRegistro";
 import TablaDatos from "../sistema/componentes/TablaDatos/TablaDatos";
@@ -14,6 +15,7 @@ import SeleccionarForm from "../sistema/pages/ProcesoImagenes/UrlFormPages/Selec
 import OpenAdmin2 from '../layOut/paginas/admin2/OpenAdmin2';
 import Bloque1y2_2 from '../layOut/paginas/admin2/Bloque1y2_2';
 import Bloque6_2 from '../layOut/paginas/admin2/Bloque6_2';
+import MenuVerificacion6_2 from '../sistemaAdmin/inicioVerificacion/MenuVerificacion6_2';
 
 export const router = createBrowserRouter([
   {
@@ -105,12 +107,12 @@ export const router = createBrowserRouter([
             element: <Bloque6_2 />,
           },
           {
-            path: "verificar",
-            element: <MenuVerificacion />,
+            path: "verificar2",
+            element: <MenuVerificacion2 />,
           },
           {
-            path: "verificar6",
-            element: <MenuVerificacion6 />,
+            path: "verificar6_2",
+            element: <MenuVerificacion6_2 />,
           },
         ],
       },
