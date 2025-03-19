@@ -151,8 +151,8 @@ export const VistaPrincipales = () => {
           formData.append('llave', LLAVE);
   
           const url = modo === 'subir'
-            ? 'http://localhost:5000/api/principales/upload'
-            : `http://localhost:5000/api/editarPrincipales/editar/${idAlterna}`;
+            ? 'http://localhost:3000/api/principales/upload'
+            : `http://localhost:3000/api/editarPrincipales/editar/${idAlterna}`;
   
           const method = modo === 'subir' ? 'post' : 'put';
   

@@ -191,8 +191,8 @@ export const VistaHuella = () => {
   
           // 🔹 Seleccionar la URL y el método HTTP según el modo
           const url = modo === 'subir'
-            ? 'http://localhost:5000/api/huellas/upload'
-            : `http://localhost:5000/api/editarHuellas/editar/${idAlterna}`;
+            ? 'http://localhost:3000/api/huellas/upload'
+            : `http://localhost:3000/api/editarHuellas/editar/${idAlterna}`;
   
           const method = modo === 'subir' ? 'post' : 'put';
   
