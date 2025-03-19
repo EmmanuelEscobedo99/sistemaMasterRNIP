@@ -1,10 +1,10 @@
-const pool = require( '../../config/db.config' );
+const pool = require('../../config/db.config');
 
 const AprovarModel = {
-  async aprovarRegistro( idAlterna ) {
+  async aprovarRegistro(idAlterna, nuevoProcesado) {
     const result = await pool.query(
-      "UPDATE movimientos SET PROCESADO = 0 WHERE ID_ALTERNA = ? AND ID_BLOQUE_FUNCIONAL IN (1,2)",
-      [ idAlterna ]
+      "UPDATE movimientos SET PROCESADO = ? WHERE ID_ALTERNA = ? AND ID_BLOQUE_FUNCIONAL IN (1,2)",
+      [nuevoProcesado, idAlterna]
     );
     return result;
   },

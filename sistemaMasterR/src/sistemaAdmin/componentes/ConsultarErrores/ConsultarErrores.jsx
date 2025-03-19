@@ -70,45 +70,48 @@ const ConsultarErrores = () => {
   };
 
 
-  const handleAprovarRegistro = async ( event ) => {
-    event.preventDefault(); // Evita cualquier comportamiento predeterminado
+  const rolUsuario = useSelector((state) => state.auth.rol); // ✅ Obtiene el rol de Redux
 
-    Swal.fire( {
+  const handleAprovarRegistro = async (event) => {
+    event.preventDefault();
+  
+    Swal.fire({
       title: '¿Estás seguro?',
       text: 'Esta acción aprobará el registro',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, aprobar',
       cancelButtonText: 'Cancelar'
-    } ).then( async ( result ) => {
-      if ( result.isConfirmed ) {
+    }).then(async (result) => {
+      if (result.isConfirmed) {
         try {
-          // Realiza la petición a la API antes de limpiar errores
-          await api.put( `aprovar/aprovarRegistro/${ idAlterna }` );
-
+          const nuevoProcesado = rolUsuario === "admin" ? 0 : 7; // ✅ Ahora sí tiene el valor correcto
+  
+          await api.put(`aprovar/aprovarRegistro/${idAlterna}`, { procesado: nuevoProcesado });
+  
           limpiarErrores();
-
-          Swal.fire( {
+  
+          Swal.fire({
             title: 'Aprobado',
-            text: 'El registro ha sido aprobado correctamente.',
+            text: `El registro ha sido aprobado correctamente con procesado: ${nuevoProcesado}.`,
             icon: 'success',
             confirmButtonText: 'Aceptar'
-          } ).then( () => {
-            navigate( '/admin' ); // Redirige después de que se cierre el mensaje de éxito
-          } );
-
-        } catch ( error ) {
-          console.error( "Error al aprobar el registro:", error );
-          Swal.fire( {
+          }).then(() => {
+            navigate('/admin');
+          });
+  
+        } catch (error) {
+          console.error("Error al aprobar el registro:", error);
+          Swal.fire({
             title: 'Error',
             text: 'Hubo un problema al aprobar el registro.',
             icon: 'error',
             confirmButtonText: 'Aceptar'
-          } );
+          });
         }
       }
-    } );
-  };
+    });
+  };    
 
   // You can group errors by their form if needed
   const groupedErrors = radioSeleccionados.reduce( ( acc, item ) => {

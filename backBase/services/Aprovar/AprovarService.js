@@ -1,9 +1,9 @@
-const AprovarModel = require( '../../models/Aprovar/AprovarModel' );
+const AprovarModel = require('../../models/Aprovar/AprovarModel');
 
 const AprovarService = {
-  async aprovarRegistro ( idAlterna ) {
+  async aprovarRegistro(idAlterna, procesado) {
     try {
-      const result = await AprovarModel.aprovarRegistro( idAlterna );
+      const result = await AprovarModel.aprovarRegistro(idAlterna, procesado);
       return result;
     } catch (error) {
       console.error(error);
