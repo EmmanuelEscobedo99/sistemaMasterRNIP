@@ -14,6 +14,7 @@ const SeleccionarForm = () => {
   const navigate = useNavigate();
   const { llaveSeleccionada } = useStore();
   const LLAVE = llaveSeleccionada;
+  console.log("LLAVE:", LLAVE);
   const dispatch = useDispatch();
 
   const emisor = '33';
