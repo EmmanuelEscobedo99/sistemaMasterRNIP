@@ -1,15 +1,14 @@
-const RechazarModel = require( '../../models/Rechazar/RechazarModel' );
+const RechazarModel = require('../../models/Rechazar/RechazarModel');
 
 const RechazarService = {
-  async rechazarRegistro ( idAlterna ) {
+  async rechazarRegistro(idAlterna) {
     try {
-      const result = await RechazarModel.rechazarRegistro( idAlterna );
-      return result;
+      return await RechazarModel.rechazarRegistro(idAlterna);
     } catch (error) {
       console.error(error);
       throw error;
     }
-  },
+  }
 };
 
-module.exports = RechazarService;
+module.exports = RechazarService; // ✅ Asegurar que se exporta correctamente
