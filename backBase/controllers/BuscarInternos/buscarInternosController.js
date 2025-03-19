@@ -33,9 +33,9 @@ const buscarInternosController = {
   },
 
   // 🔹 Agregado: Procesado 10 (Bloque 6D)
-  async obtenerInternosProcesado10(req, res) {
+  async obtenerInternosProcesado11(req, res) {
     try {
-      const result = await buscarInternosService.obtenerInternos(10);
+      const result = await buscarInternosService.obtenerInternos(11);
       res.status(200).json(result);
     } catch (error) {
       console.error(error);

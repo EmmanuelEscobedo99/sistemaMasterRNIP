@@ -155,10 +155,10 @@ const useStore = create((set) => ({
     // 🔹 Cargar internos del Bloque 6D (procesado 10)
     cargarInternosBloque6D: async () => {
       try {
-        const response = await api.get('/buscarInternos/procesado10');
+        const response = await api.get('/buscarInternos/procesado11');
         set({ internosBloque6D: response.data });
       } catch (error) {
-        console.error('Error al cargar los datos del Bloque 6D (procesado 10):', error);
+        console.error('Error al cargar los datos del Bloque 6D (procesado 11):', error);
       }
     },
 }));
