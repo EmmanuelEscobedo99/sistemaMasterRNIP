@@ -1,17 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { FinalizarSesion } from "../../../accesoLogin/reducers/thunks/finalizarSesion/FinalizarSesion";
+import { FinalizarSesion } from '../../../accesoLogin/reducers/thunks/finalizarSesion/FinalizarSesion';
+import { motion } from 'framer-motion';
 
 const Capturista = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();  
+    const navigate = useNavigate();
 
-    const handleLogout = () => {         
+    const handleLogout = () => {
         dispatch(FinalizarSesion())
             .unwrap()
             .then(() => {
-                navigate('/'); 
+                navigate('/');
             })
             .catch((error) => {
                 console.error('Error al cerrar sesión:', error);
@@ -20,40 +21,74 @@ const Capturista = () => {
 
     return (
         <div className="d-flex flex-column vh-100">
-            <div className="bg-secondary text-light d-flex justify-content-between align-items-center p-3 shadow-sm" style={{ width: '100%', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
-                <div className="d-flex align-items-center">
-                    <i className="bi bi-person-circle fs-1 me-3"></i>
-                    <div className="sidebar-heading fw-bold fs-6"></div>
-                </div>
-                <div className="d-flex">
-                    <NavLink
-                        to="/capturista/registro"
-                        className={({ isActive }) =>
-                            `nav-link text-light ${isActive ? 'text-primary' : ''}`
-                        }
-                    >
-                        <i className="bi bi-exclamation-triangle me-4"></i>Incorporar Datos
+            {/* Navbar con animaciones */}
+            <motion.nav
+                className="navbar navbar-expand-lg navbar-dark"
+                style={{ backgroundColor: "#0A0A0A" }} // Color negro oscuro
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+            >
+                <div className="container" style={{ margin: '7px' }}>
+                    <NavLink to="/capturista" className="navbar-brand fw-bold text-white">
+                        ADMIN PANEL
                     </NavLink>
 
-                    <NavLink
-                        to="/capturista/tabladatos"  // 🔹 Cambiamos la ruta correcta
-                        className={({ isActive }) =>
-                            `nav-link text-light ${isActive ? 'text-primary' : ''}`
-                        }
+                    <button
+                        className="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarCapturista"
+                        aria-controls="navbarCapturista"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
                     >
-                        <i className="bi bi-exclamation-triangle me-4"></i>Incorporar Bloque 6
-                    </NavLink>
-                </div>
-                <button onClick={handleLogout} className="btn btn-outline-light">
-                    <i className="bi bi-box-arrow-right me-2"></i> Cerrar sesión
-                </button>
-            </div>
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
 
-            <div className="container-fluid p-4">
+                    <div className="collapse navbar-collapse" id="navbarCapturista">
+                        <ul className="navbar-nav ms-auto">
+                            <motion.li className="nav-item" whileHover={{ scale: 1.1 }}>
+                                <NavLink to="/capturista/registro" className="nav-link text-white">
+                                    Incorporar Datos
+                                </NavLink>
+                            </motion.li>
+                            <motion.li className="nav-item" whileHover={{ scale: 1.1 }}>
+                                <NavLink to="/capturista/tabladatos" className="nav-link text-white">
+                                    Incorporar Bloque 6
+                                </NavLink>
+                            </motion.li>
+                            <motion.li className="nav-item">
+                                <motion.button
+                                    onClick={handleLogout}
+                                    className="btn btn-outline-light ms-3"
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                >
+                                    Cerrar sesión
+                                </motion.button>
+                            </motion.li>
+                        </ul>
+                    </div>
+                </div>
+            </motion.nav>
+
+            {/* Contenido con animaciones */}
+            <motion.div
+                className="container-fluid p-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                style={{
+                    paddingTop: "0px",
+                    margin: "0",
+                    padding: "0",
+                }}
+            >
                 <Outlet />
-            </div>
+            </motion.div>
         </div>
     );
-}
+};
 
 export default Capturista;

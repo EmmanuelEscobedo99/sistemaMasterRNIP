@@ -81,7 +81,7 @@ const SeleccionarForm = () => {
   const handleRegresar = () => {
     dispatch(setImagenes([])); // 🔥 Limpiar imágenes principales
     dispatch(limpiarHuellas([])); // 🔥 Limpiar imágenes de huellas
-    navigate('/'); // 🔄 Redirigir a la página de inicio
+    navigate('/capturista/tabladatos'); // 🔄 Redirigir a la página de inicio
     
     setTimeout(() => {
       window.location.reload(); // 🔄 Recargar la página después de la navegación

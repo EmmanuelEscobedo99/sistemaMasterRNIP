@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useStore from "../../../app/useStore";
 import api from "../../../api/api";
+import { motion } from "framer-motion";
 
 const TablaDatos = () => {
   const navigate = useNavigate();
@@ -31,10 +32,20 @@ const TablaDatos = () => {
   };
 
   return (
-    <div className="container mt-4">
-      <h2 className="text-center">Lista de Reclusos</h2>
-      <table className="table table-striped">
-        <thead>
+    <motion.div
+      className="container mt-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <h2 className="text-center text-primary fw-bold">Lista de Reclusos</h2>
+      <motion.table
+        className="table table-striped shadow-sm"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+      >
+        <thead className="table-dark">
           <tr>
             <th>Nombre</th>
             <th>Apellido</th>
@@ -44,29 +55,35 @@ const TablaDatos = () => {
         <tbody>
           {personas.length > 0 ? (
             personas.map((persona) => (
-              <tr key={persona.LLAVE}>
+              <motion.tr
+                key={persona.LLAVE}
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.3 }}
+              >
                 <td>{persona.nombres.map(n => n.DNOMBRE).join(", ")}</td>
                 <td>{persona.nombres.map(n => `${n.DPATERNO} ${n.DMATERNO}`).join(", ")}</td>
                 <td>
-                  <button
+                  <motion.button
                     className="btn btn-primary"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => seleccionarPersona(persona.LLAVE)}
                   >
                     Subir Imágenes
-                  </button>
+                  </motion.button>
                 </td>
-              </tr>
+              </motion.tr>
             ))
           ) : (
             <tr>
-              <td colSpan="4" className="text-center text-danger">
+              <td colSpan="3" className="text-center text-danger">
                 No hay registros disponibles
               </td>
             </tr>
           )}
         </tbody>
-      </table>
-    </div>
+      </motion.table>
+    </motion.div>
   );
 };
 
