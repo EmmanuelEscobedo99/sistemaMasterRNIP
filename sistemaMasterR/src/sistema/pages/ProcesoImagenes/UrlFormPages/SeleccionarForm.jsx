@@ -62,10 +62,12 @@ const SeleccionarForm = () => {
           if (response.data && response.data.imagenes) {
             dispatch(setImagenes(response.data.imagenes));
             dispatch(setObtuveImagenes(imagenesFiltradas.length > 0));
+            console.log("entre bien")
           }
         } catch (error) {
           dispatch(setObtuveImagenes([]));
           dispatch(setObtuveImagenes(false));
+          console.log("ebtre errrir")
         }
       }
     };
