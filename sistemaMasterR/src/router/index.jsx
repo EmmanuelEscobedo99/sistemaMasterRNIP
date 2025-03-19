@@ -11,6 +11,9 @@ import MenuVerificacion6 from "../sistemaAdmin/inicioVerificacion/MenuVerificaci
 import MenuRegistro from "../sistema/inicioRegistro/MenuRegistro";
 import TablaDatos from "../sistema/componentes/TablaDatos/TablaDatos";
 import SeleccionarForm from "../sistema/pages/ProcesoImagenes/UrlFormPages/SeleccionarForm";
+import OpenAdmin2 from '../layOut/paginas/admin2/OpenAdmin2';
+import Bloque1y2_2 from '../layOut/paginas/admin2/Bloque1y2_2';
+import Bloque6_2 from '../layOut/paginas/admin2/Bloque6_2';
 
 export const router = createBrowserRouter([
   {
@@ -72,6 +75,34 @@ export const router = createBrowserRouter([
           {
             path: "bloque6",
             element: <Bloque6 />,
+          },
+          {
+            path: "verificar",
+            element: <MenuVerificacion />,
+          },
+          {
+            path: "verificar6",
+            element: <MenuVerificacion6 />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "/admin2",
+    element: <ProtectedRoute allowedRoles={["admin2"]} />,
+    children: [
+      {
+        path: "",
+        element: <OpenAdmin2 />,
+        children: [
+          {
+            path: "bloque1y2_2",
+            element: <Bloque1y2_2 />,
+          },
+          {
+            path: "bloque6_2",
+            element: <Bloque6_2 />,
           },
           {
             path: "verificar",
