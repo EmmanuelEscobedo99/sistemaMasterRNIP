@@ -8,9 +8,9 @@ import { VistaHuella } from '../VistasFormulario/VistaHuella';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { limpiarHuellas } from '../../../redux/huellasSlice'; // 🔥 Agregar esto
-import useStore from "../../../../app/useStore";
+import useStore from '../../../zustand/useStore';
 
-const SeleccionarForm = () => {
+export const SeleccionarForm = () => {
   const navigate = useNavigate();
   const { llaveSeleccionada } = useStore();
   const LLAVE = llaveSeleccionada;
@@ -19,12 +19,7 @@ const SeleccionarForm = () => {
   const emisor = '33';
   const estado_emisor = '3';
 
-  const imagenesState = useSelector((state) => state.imagenes);
-  console.log("Estado de imágenes en Redux:", imagenesState);
-  
-  const errores2 = imagenesState?.errores2 || {}; // Evita el error de undefined
-  console.log("Errores 2:", errores2);
-  
+  const errores2 = useSelector((state) => state.imagenes.errores2);
   const errores3 = useSelector((state) => state.huellas.errores2);
 
   const erroresCombinados = { ...errores2, ...errores3 };
@@ -209,5 +204,3 @@ const SeleccionarForm = () => {
     </div>
   );
 };
-
-export default SeleccionarForm;
