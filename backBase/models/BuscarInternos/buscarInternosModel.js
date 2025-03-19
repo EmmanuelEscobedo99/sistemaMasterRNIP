@@ -22,15 +22,15 @@ const buscarInternosModel = {
           LIMIT 1
         `, [LLAVE, ULTIMA_FECHA, procesado]);
 
-        return fila.length > 0 ? fila[0] : null;
+        return fila.length > 0 ? { ...fila[0], LLAVE } : null;
       }));
 
-      const idAlternas = resultados.filter(item => item !== null).map(item => item.ID_ALTERNA);
-
-      if (idAlternas.length === 0) {
+      const datosValidos = resultados.filter(item => item !== null);
+      if (datosValidos.length === 0) {
         return [];
       }
 
+      const idAlternas = datosValidos.map(item => item.ID_ALTERNA);
       const [nombres] = await pool.query(`
         SELECT ID_ALTERNA, DNOMBRE, DPATERNO, DMATERNO 
         FROM nombres 
@@ -39,7 +39,7 @@ const buscarInternosModel = {
 
       const nombresAgrupados = nombres.reduce((acc, { ID_ALTERNA, DNOMBRE, DPATERNO, DMATERNO }) => {
         if (!acc[ID_ALTERNA]) {
-          acc[ID_ALTERNA] = { ID_ALTERNA, nombres: [] };
+          acc[ID_ALTERNA] = { ID_ALTERNA, LLAVE: datosValidos.find(d => d.ID_ALTERNA === ID_ALTERNA)?.LLAVE, nombres: [] };
         }
         acc[ID_ALTERNA].nombres.push({ DNOMBRE, DPATERNO, DMATERNO });
         return acc;

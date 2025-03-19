@@ -27,6 +27,7 @@ const editarPrincipalesRoutes = require('./routes/Bloque6/editarPrincipalesRoute
 const huellasRoutes = require('./routes/Bloque6/huellasRoutes');
 const imagenesRoutes = require('./routes/Bloque6/imagenesRoutes');
 const principalesRoutes = require('./routes/Bloque6/principalesRoutes');
+const obtenerIdAlterna  = require('./routes/Bloque1/obtenerIdAlterna/obtenerIdAlternaRoutes')
 
 const app = express();
 const PORT = 3000;
@@ -71,6 +72,7 @@ app.use('/api/editarPrincipales', editarPrincipalesRoutes);
 app.use('/api/huellas', huellasRoutes);
 app.use('/api/editarHuellas', editarHuellasRoutes);
 app.use('/api/imagenes', imagenesRoutes);
+app.use('/api/bloque1', obtenerIdAlterna);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);

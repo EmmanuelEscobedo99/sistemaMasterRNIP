@@ -22,7 +22,7 @@ const SeleccionarForm = () => {
   const imagenesState = useSelector((state) => state.imagenes);
   console.log("Estado de imágenes en Redux:", imagenesState);
   
-  const errores2 = imagenesState?.errores2 || {}; // Evita el error de undefined
+  const errores2 = useSelector((state) => state.imagenes.errores2);
   console.log("Errores 2:", errores2);
   
   const errores3 = useSelector((state) => state.huellas.errores2);
@@ -40,9 +40,10 @@ const SeleccionarForm = () => {
   useEffect(() => {
     const obtenerIdAlterna = async (LLAVE) => {
       try {
-        const response = await axios.post('http://localhost:5000/api/bloque1/idAlterna', { LLAVE });
+        const response = await axios.post('http://localhost:3000/api/bloque1/idAlterna', { LLAVE });
         if (response.data && response.data[0]) {
           setIdAlterna(response.data[0].ID_ALTERNA);
+          console.log(idAlterna)
         }
       } catch (error) {
       }
@@ -57,7 +58,7 @@ const SeleccionarForm = () => {
     const obtenerImagenes = async () => {
       if (idAlterna) {
         try {
-          const response = await axios.get(`http://localhost:5000/api/mostrarPrincipales/principales/${idAlterna}`);
+          const response = await axios.get(`http://localhost:3000/api/mostrarPrincipales/principales/${idAlterna}`);
           if (response.data && response.data.imagenes) {
             dispatch(setImagenes(response.data.imagenes));
             dispatch(setObtuveImagenes(imagenesFiltradas.length > 0));
@@ -131,7 +132,7 @@ const SeleccionarForm = () => {
   
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/imagenes/upload",
+        "http://localhost:3000/api/imagenes/upload",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

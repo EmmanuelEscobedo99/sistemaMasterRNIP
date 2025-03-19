@@ -59,7 +59,7 @@ const TablaDatos = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="3" className="text-center text-danger">
+              <td colSpan="4" className="text-center text-danger">
                 No hay registros disponibles
               </td>
             </tr>
