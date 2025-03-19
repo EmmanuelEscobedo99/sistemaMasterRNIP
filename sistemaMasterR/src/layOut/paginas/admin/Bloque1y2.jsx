@@ -9,22 +9,27 @@ const Bloque1y2 = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [busqueda, setBusqueda] = useState("");
-  const { internosBloque1y2, cargarInternosBloque1y2 } = useStore();
+
+  // ⬇️ Cambiamos a la nueva función de Zustand
+  const { internosBloque1y2D, cargarInternosBloque1y2D } = useStore();
   const [resultados, setResultados] = useState([]);
 
+  // 📌 Cargar datos al montar el componente
   useEffect(() => {
-    cargarInternosBloque1y2();
+    cargarInternosBloque1y2D();
   }, []);
 
+  // 📌 Actualizar los resultados cuando los datos cambien
   useEffect(() => {
-    setResultados(internosBloque1y2);
-  }, [internosBloque1y2]);
+    setResultados(internosBloque1y2D);
+  }, [internosBloque1y2D]);
 
+  // 🔎 Buscar en la tabla
   const handleBuscar = (e) => {
     const valor = e.target.value.toLowerCase();
     setBusqueda(valor);
 
-    const filtrados = internosBloque1y2.filter((registro) =>
+    const filtrados = internosBloque1y2D.filter((registro) =>
       registro.nombres.some((n) =>
         [n.DNOMBRE, n.DPATERNO, n.DMATERNO]
           .join(" ")
@@ -36,6 +41,7 @@ const Bloque1y2 = () => {
     setResultados(filtrados);
   };
 
+  // 🔹 Seleccionar y redirigir
   const handleSeleccionar = (idAlterna) => {
     dispatch(setIdAlterna(idAlterna));
     navigate(`/admin/verificar`);
@@ -50,19 +56,18 @@ const Bloque1y2 = () => {
       style={{ color: "#E5E7EB", backgroundColor: "#0A0A0A", padding: "20px", borderRadius: "10px" }}
     >
       <h2 className="fw-bold" style={{ color: "#E5E7EB" }}>Registros del Bloque 1 y 2</h2>
-      <p style={{ color: "#D1D5DB" }}>Aquí se muestran los registros correspondientes al Bloque 1 y 2.</p>
+      <p style={{ color: "#D1D5DB" }}>Aquí se muestran los registros correspondientes al Bloque 1 y 2D.</p>
 
       <input
         type="text"
         className="form-control my-3"
-        placeholder="🔍 Escribe un nombre..."
+        placeholder="Escribe un nombre..."
         value={busqueda}
         onChange={handleBuscar}
         style={{
           backgroundColor: "#1F2937",
           color: "#E5E7EB",
           border: "1px solid #374151",
-          placeholderColor: "rgba(255,255,255,0.6)",
         }}
       />
 

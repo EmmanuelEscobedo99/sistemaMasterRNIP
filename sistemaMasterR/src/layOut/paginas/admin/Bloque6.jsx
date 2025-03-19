@@ -9,22 +9,27 @@ const Bloque6 = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [busqueda, setBusqueda] = useState("");
-  const { internosBloque6, cargarInternosBloque6 } = useStore();
+
+  // ⬇️ Cambiamos a la nueva función de Zustand
+  const { internosBloque6D, cargarInternosBloque6D } = useStore();
   const [resultados, setResultados] = useState([]);
 
+  // 📌 Cargar datos al montar el componente
   useEffect(() => {
-    cargarInternosBloque6();
+    cargarInternosBloque6D();
   }, []);
 
+  // 📌 Asegurar que resultados es un array antes de mapear
   useEffect(() => {
-    setResultados(internosBloque6);
-  }, [internosBloque6]);
+    setResultados(Array.isArray(internosBloque6D) ? internosBloque6D : []);
+  }, [internosBloque6D]);
 
+  // 🔎 Buscar en la tabla
   const handleBuscar = (e) => {
     const valor = e.target.value.toLowerCase();
     setBusqueda(valor);
 
-    const filtrados = internosBloque6.filter((registro) =>
+    const filtrados = internosBloque6D.filter((registro) =>
       registro.nombres.some((n) =>
         [n.DNOMBRE, n.DPATERNO, n.DMATERNO]
           .join(" ")
@@ -36,6 +41,7 @@ const Bloque6 = () => {
     setResultados(filtrados);
   };
 
+  // 🔹 Seleccionar y redirigir
   const handleSeleccionar = (idAlterna) => {
     dispatch(setIdAlterna(idAlterna));
     navigate(`/admin/verificar6`);
@@ -49,13 +55,13 @@ const Bloque6 = () => {
       transition={{ duration: 0.5 }}
       style={{ color: "#E5E7EB", backgroundColor: "#0A0A0A", padding: "20px", borderRadius: "10px" }}
     >
-      <h2 className="fw-bold" style={{ color: "#E5E7EB" }}>Registros del Bloque 6</h2>
-      <p style={{ color: "#D1D5DB" }}>Aquí se muestran los registros correspondientes al Bloque 6.</p>
+      <h2 className="fw-bold" style={{ color: "#E5E7EB" }}>Registros del Bloque 6D</h2>
+      <p style={{ color: "#D1D5DB" }}>Aquí se muestran los registros correspondientes al Bloque 6D.</p>
 
       <input
         type="text"
         className="form-control my-3"
-        placeholder="🔍 Escribe un nombre..."
+        placeholder="Escribe un nombre..."
         value={busqueda}
         onChange={handleBuscar}
         style={{ backgroundColor: "#1F2937", color: "white", border: "1px solid #374151" }}

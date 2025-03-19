@@ -18,6 +18,8 @@ const useStore = create((set) => ({
   internos: {}, // Estado para almacenar los internos
   internosBloque1y2: [],
   internosBloque6: [],
+  internosBloque1y2D: [],
+  internosBloque6D: [],
 
   cargarDatosFormulario: async (tabla, idAlterna) => {
     try {
@@ -140,7 +142,25 @@ const useStore = create((set) => ({
       console.error('Error al cargar los datos del Bloque 6:', error);
     }
   },
-
+    // 🔹 Cargar internos del Bloque 1 y 2D (procesado 7)
+    cargarInternosBloque1y2D: async () => {
+      try {
+        const response = await api.get('/buscarInternos/procesado7');
+        set({ internosBloque1y2D: response.data });
+      } catch (error) {
+        console.error('Error al cargar los datos del Bloque 1 y 2D (procesado 7):', error);
+      }
+    },
+  
+    // 🔹 Cargar internos del Bloque 6D (procesado 10)
+    cargarInternosBloque6D: async () => {
+      try {
+        const response = await api.get('/buscarInternos/procesado10');
+        set({ internosBloque6D: response.data });
+      } catch (error) {
+        console.error('Error al cargar los datos del Bloque 6D (procesado 10):', error);
+      }
+    },
 }));
 
 export default useStore;
