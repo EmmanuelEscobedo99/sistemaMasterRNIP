@@ -10,6 +10,15 @@ const AprovarService = {
       throw error;
     }
   },
+  async aprovarRegistro2(idAlterna, procesado) {
+    try {
+      const result = await AprovarModel.aprovarRegistro2(idAlterna, procesado);
+      return result;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
 };
 
 module.exports = AprovarService;
