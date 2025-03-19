@@ -39,7 +39,7 @@ export const VistaHuella = () => {
 
   const obtenerIdAlterna = async (LLAVE) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/bloque1/idAlterna', { LLAVE });
+      const response = await axios.post('http://localhost:3000/api/bloque1/idAlterna', { LLAVE });
       if (response.data && response.data[0]) {
         dispatch(setIdAlterna(response.data[0].ID_ALTERNA));
       }
@@ -56,7 +56,7 @@ export const VistaHuella = () => {
   const fetchImages = async () => {
     if (idAlterna) {
       try {
-        const response = await axios.get(`http://localhost:5000/api/mostrarHuellas/huellas/${idAlterna}`);
+        const response = await axios.get(`http://localhost:3000/api/mostrarHuellas/huellas/${idAlterna}`);
         dispatch(setImagenesObtenidas(response.data));
         dispatch(setObtuveImagenes(response.data.length > 0));
       } catch (error) {

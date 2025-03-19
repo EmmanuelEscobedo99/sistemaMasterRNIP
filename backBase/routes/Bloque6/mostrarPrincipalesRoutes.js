@@ -4,8 +4,8 @@ const pool = require( '../../config/db.config' );
 const router = express.Router();
 
 // Endpoint para visualizar las imagenes que se subieron
-router.post( '/principales', async ( req, res ) => {
-  const { idAlterna } = req.body;
+router.get( '/principales/:idAlterna', async ( req, res ) => {
+  const { idAlterna } = req.params;
   console.log( "idAlterna", idAlterna );
   console.log("ENTRÉ AQUI")
 
