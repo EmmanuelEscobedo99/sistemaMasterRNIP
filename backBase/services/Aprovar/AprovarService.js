@@ -10,9 +10,9 @@ const AprovarService = {
       throw error;
     }
   },
-  async aprovarRegistro2(newIdAlterna, procesado) {
+  async aprovarRegistro2(LLAVE, procesado) {
     try {
-      const result = await AprovarModel.aprovarRegistro2(newIdAlterna, procesado);
+      const result = await AprovarModel.aprovarRegistro2(LLAVE, procesado);
       return result;
     } catch (error) {
       console.error(error);

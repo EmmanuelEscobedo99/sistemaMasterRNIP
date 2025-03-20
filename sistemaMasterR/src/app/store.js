@@ -9,6 +9,7 @@ import erroresRegistroReducer from '../sistema/reducers/slice/erroresRegistro/Er
 import idAlternaReducer from "../sistemaAdmin/reducers/slice/idAlterna/idAlternaSlice";
 import imagenesReducer from '../sistema/redux/imagenesSlice'; // ✅ Añadir imágenes
 import huellasReducer from '../sistema/redux/huellasSlice'; // ✅ Añadir huellas
+import LlaveReducer from '../sistemaAdmin/reducers/slice/Llave/LlaveSlice';
 
 // Configuración para redux-persist
 const persistConfig = {
@@ -25,6 +26,7 @@ export const store = configureStore({
     erroresFormularios: erroresFormulariosReducer,
     erroresRegistro: erroresRegistroReducer,
     idAlterna: idAlternaReducer,
+    Llave: LlaveReducer,
     imagenes: imagenesReducer,  // ✅ Agregado imágenes
     huellas: huellasReducer,    // ✅ Agregado huellas
   },

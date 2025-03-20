@@ -8,10 +8,10 @@ const RechazarModel = {
     );
     return result;
   },
-  async rechazarRegistro2( newIdAlterna ) {
+  async rechazarRegistro2( LLAVE ) {
     const result = await pool.query(
-      "UPDATE movimientos SET PROCESADO = 11 WHERE ID_ALTERNA = ? AND ID_BLOQUE_FUNCIONAL IN (6)",
-      [ newIdAlterna ]
+      "UPDATE movimientos SET PROCESADO = 11 WHERE LLAVE = ? AND ID_BLOQUE_FUNCIONAL IN (6)",
+      [ LLAVE ]
     );
     return result;
   },

@@ -8,10 +8,10 @@ const AprovarModel = {
     );
     return result;
   },
-  async aprovarRegistro2(newIdAlterna, nuevoProcesado) {
+  async aprovarRegistro2(LLAVE, nuevoProcesado) {
     const result = await pool.query(
-      "UPDATE movimientos SET PROCESADO = ? WHERE ID_ALTERNA = ? AND ID_BLOQUE_FUNCIONAL IN (6)",
-      [nuevoProcesado, newIdAlterna]
+      "UPDATE movimientos SET PROCESADO = ? WHERE LLAVE = ? AND ID_BLOQUE_FUNCIONAL IN (6)",
+      [nuevoProcesado, LLAVE]
     );
     return result;
   },

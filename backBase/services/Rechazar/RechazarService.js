@@ -9,9 +9,9 @@ const RechazarService = {
       throw error;
     }
   },
-  async rechazarRegistro2 ( newIdAlterna ) {
+  async rechazarRegistro2 ( LLAVE ) {
     try {
-      const result = await RechazarModel.rechazarRegistro2( newIdAlterna );
+      const result = await RechazarModel.rechazarRegistro2( LLAVE );
       return result;
     } catch (error) {
       console.error(error);

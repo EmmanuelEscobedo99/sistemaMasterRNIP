@@ -15,10 +15,10 @@ const AprovarController = {
   },
   async aprovarRegistro2(req, res) {
     try {
-      const { newIdAlterna } = req.params;
+      const { LLAVE } = req.params;
       const { procesado } = req.body; // 📌 Recibe el procesado desde el frontend
 
-      const result = await AprovarService.aprovarRegistro2(newIdAlterna, procesado);
+      const result = await AprovarService.aprovarRegistro2(LLAVE, procesado);
       res.status(200).json(result);
     } catch (error) {
       console.error(error);

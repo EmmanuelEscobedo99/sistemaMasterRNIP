@@ -13,8 +13,8 @@ const RechazarController = {
   },
   async rechazarRegistro2( req, res ) {
     try {
-      const { newIdAlterna } = req.params;
-      const result = await RechazarService.rechazarRegistro2( newIdAlterna );
+      const { LLAVE } = req.params;
+      const result = await RechazarService.rechazarRegistro2( LLAVE );
       res.status( 200 ).json( result );
     } catch ( error ) {
       console.error( error );

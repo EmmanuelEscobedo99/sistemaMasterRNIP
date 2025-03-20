@@ -15,8 +15,10 @@ const ConsultarErrores2 = () => {
 
   //const [idAlterna, setIdAlterna] = useState(1);
   let idAlterna = useSelector( ( state ) => state.idAlterna.value );
-  idAlterna = parseInt(idAlterna, 10) || 0; // Convierte a entero y evita NaN
+  idAlterna = parseInt( idAlterna, 10 ) || 0; // Convierte a entero y evita NaN
   const newIdAlterna = idAlterna + 1;
+
+  const LLAVE = useSelector( ( state ) => state.Llave.value );
 
   const handleMessageChange = ( e ) => {
     setMensaje( e.target.value ); // Update the message as the user types
@@ -33,7 +35,7 @@ const ConsultarErrores2 = () => {
     }
   };
 
-  const handleLimpiarErrors = async (event) => {
+  const handleLimpiarErrors = async ( event ) => {
     event.preventDefault();
 
     Swal.fire( {
@@ -46,7 +48,7 @@ const ConsultarErrores2 = () => {
     } ).then( async ( result ) => {
       if ( result.isConfirmed ) {
         try {
-          await api.put( `rechazar/rechazarRegistro2/${ newIdAlterna }` );
+          await api.put( `rechazar/rechazarRegistro2/${ LLAVE }` );
           limpiarErrores();
 
           Swal.fire( {
@@ -72,50 +74,50 @@ const ConsultarErrores2 = () => {
   };
 
 
-  const rolUsuario = useSelector((state) => state.auth.rol); // ✅ Obtiene el rol de Redux
+  const rolUsuario = useSelector( ( state ) => state.auth.rol ); // ✅ Obtiene el rol de Redux
 
-  const handleAprovarRegistro = async (event) => {
+  const handleAprovarRegistro = async ( event ) => {
     event.preventDefault();
-  
-    Swal.fire({
+
+    Swal.fire( {
       title: '¿Estás seguro?',
       text: 'Esta acción aprobará el registro',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, aprobar',
       cancelButtonText: 'Cancelar'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+    } ).then( async ( result ) => {
+      if ( result.isConfirmed ) {
         try {
-          const valorProcesado = rolUsuario === "admin2" ? 10 : rolUsuario === "admin" ? [11, 0] : 11;
-          const nuevoProcesado = Array.isArray(valorProcesado) ? valorProcesado[1] : valorProcesado;
+          const valorProcesado = rolUsuario === "admin2" ? 10 : rolUsuario === "admin" ? [ 11, 0 ] : 11;
+          const nuevoProcesado = Array.isArray( valorProcesado ) ? valorProcesado[ 1 ] : valorProcesado;
 
-  
-          await api.put(`aprovar/aprovarRegistro2/${newIdAlterna}`, { procesado: nuevoProcesado });
-  
+
+          await api.put( `aprovar/aprovarRegistro2/${ LLAVE }`, { procesado: nuevoProcesado } );
+
           limpiarErrores();
-  
-          Swal.fire({
+
+          Swal.fire( {
             title: 'Aprobado',
-            text: `El registro ha sido aprobado correctamente con procesado: ${nuevoProcesado}.`,
+            text: `El registro ha sido aprobado correctamente con procesado: ${ nuevoProcesado }.`,
             icon: 'success',
             confirmButtonText: 'Aceptar'
-          }).then(() => {
-            navigate('/admin2');
-          });
-  
-        } catch (error) {
-          console.error("Error al aprobar el registro:", error);
-          Swal.fire({
+          } ).then( () => {
+            navigate( '/admin2' );
+          } );
+
+        } catch ( error ) {
+          console.error( "Error al aprobar el registro:", error );
+          Swal.fire( {
             title: 'Error',
             text: 'Hubo un problema al aprobar el registro.',
             icon: 'error',
             confirmButtonText: 'Aceptar'
-          });
+          } );
         }
       }
-    });
-  };    
+    } );
+  };
 
   // You can group errors by their form if needed
   const groupedErrors = radioSeleccionados.reduce( ( acc, item ) => {
@@ -153,7 +155,7 @@ const ConsultarErrores2 = () => {
         onClick={handleLimpiarErrors}
       >
         Limpiar Errores 
-      </button>*/} 
+      </button>*/}
 
       {/* Textarea for sending feedback .*/ }
       <div className="mt-4">
