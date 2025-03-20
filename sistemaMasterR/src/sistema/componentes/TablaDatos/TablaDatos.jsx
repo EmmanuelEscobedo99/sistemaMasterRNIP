@@ -13,7 +13,7 @@ const TablaDatos = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get("/buscarInternos/procesado8"); // 🔹 API del backend
+        const response = await api.get("/buscarInternos/procesado2"); // ✅ Ahora consulta procesado = 2
         if (response.data) {
           setPersonas(response.data);
         }
@@ -21,9 +21,10 @@ const TablaDatos = () => {
         console.error("Error al obtener datos de internos:", error);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   // 🔹 Seleccionar persona y redirigir
   const seleccionarPersona = (LLAVE) => {

@@ -41,6 +41,17 @@ const buscarInternosController = {
       console.error(error);
       res.status(500).json({ error: error.message });
     }
+  },
+
+  // 🔹 Agregado: Procesado 2 (NUEVA FUNCIÓN)
+  async obtenerInternosProcesado2(req, res) {
+    try {
+      const result = await buscarInternosService.obtenerInternos(2);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: error.message });
+    }
   }
 };
 
