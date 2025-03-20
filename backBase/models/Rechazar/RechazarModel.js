@@ -1,10 +1,10 @@
-const pool = require( '../../config/db.config' );
+const pool = require('../../config/db.config');
 
 const RechazarModel = {
-  async rechazarRegistro( idAlterna ) {
+  async rechazarRegistro(idAlterna) {
     const result = await pool.query(
-      "UPDATE movimientos SET PROCESADO = 7 WHERE ID_ALTERNA = ? AND ID_BLOQUE_FUNCIONAL IN (1,2)",
-      [ idAlterna ]
+      "UPDATE movimientos SET PROCESADO = 8 WHERE ID_ALTERNA = ? AND ID_BLOQUE_FUNCIONAL IN (1,2)",
+      [idAlterna]
     );
     return result;
   },
@@ -17,4 +17,4 @@ const RechazarModel = {
   },
 };
 
-module.exports = RechazarModel;
+module.exports = RechazarModel; // ✅ Asegurar que se exporta correctamente

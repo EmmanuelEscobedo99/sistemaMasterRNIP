@@ -33,41 +33,43 @@ const ConsultarErrores = () => {
 
   const handleLimpiarErrors = async (event) => {
     event.preventDefault();
-
-    Swal.fire( {
+  
+    Swal.fire({
       title: '¿Estás seguro?',
       text: 'Esta acción rechazará el registro',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, rechazar',
       cancelButtonText: 'Cancelar'
-    } ).then( async ( result ) => {
-      if ( result.isConfirmed ) {
+    }).then(async (result) => {
+      if (result.isConfirmed) {
         try {
-          await api.put( `rechazar/rechazarRegistro/${ idAlterna }` );
+          // ✅ No se envía el `procesado` explícitamente
+          await api.put(`rechazar/rechazarRegistro/${idAlterna}`);
+  
           limpiarErrores();
-
-          Swal.fire( {
+  
+          Swal.fire({
             title: 'Rechazado',
             text: 'El registro ha sido rechazado correctamente.',
             icon: 'success',
             confirmButtonText: 'Aceptar'
-          } ).then( () => {
-            navigate( '/admin' );
-          } );
-
-        } catch ( error ) {
-          console.error( 'Error al enviar la petición:', error );
-          Swal.fire( {
+          }).then(() => {
+            navigate('/admin');
+          });
+  
+        } catch (error) {
+          console.error('Error al enviar la petición:', error);
+          Swal.fire({
             title: 'Error',
             text: 'No se pudo rechazar el registro.',
             icon: 'error',
             confirmButtonText: 'Aceptar',
-          } );
+          });
         }
       }
-    } );
-  };
+    });
+  };    
 
 
   const rolUsuario = useSelector((state) => state.auth.rol); // ✅ Obtiene el rol de Redux
