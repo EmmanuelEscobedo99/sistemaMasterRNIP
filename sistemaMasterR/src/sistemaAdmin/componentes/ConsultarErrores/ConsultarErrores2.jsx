@@ -46,7 +46,7 @@ const ConsultarErrores2 = () => {
     } ).then( async ( result ) => {
       if ( result.isConfirmed ) {
         try {
-          await api.put( `rechazar/rechazarRegistro/${ idAlterna }` );
+          await api.put( `rechazar/rechazarRegistro2/${ newIdAlterna }` );
           limpiarErrores();
 
           Swal.fire( {
@@ -55,7 +55,7 @@ const ConsultarErrores2 = () => {
             icon: 'success',
             confirmButtonText: 'Aceptar'
           } ).then( () => {
-            navigate( '/admin' );
+            navigate( '/admin2' );
           } );
 
         } catch ( error ) {
