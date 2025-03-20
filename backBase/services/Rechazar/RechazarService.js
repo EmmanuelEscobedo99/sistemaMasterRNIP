@@ -8,7 +8,17 @@ const RechazarService = {
       console.error(error);
       throw error;
     }
-  }
+  },
+  async rechazarRegistro2 ( newIdAlterna ) {
+    try {
+      const result = await RechazarModel.rechazarRegistro2( newIdAlterna );
+      return result;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
+
 };
 
 module.exports = RechazarService; // ✅ Asegurar que se exporta correctamente

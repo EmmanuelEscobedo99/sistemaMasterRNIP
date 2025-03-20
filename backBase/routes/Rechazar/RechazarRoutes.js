@@ -3,6 +3,10 @@ const RechazarController = require('../../controllers/Rechazar/RechazarControlle
 
 const router = express.Router();
 
+
+router.put('/rechazarRegistro2/:newIdAlterna', RechazarController.rechazarRegistro2);
+
 router.put('/rechazarRegistro/:idAlterna', RechazarController.rechazarRegistro); // ✅ Asegurar que está correctamente definido
+
 
 module.exports = router;
