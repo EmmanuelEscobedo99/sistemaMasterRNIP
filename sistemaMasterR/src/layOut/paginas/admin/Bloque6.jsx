@@ -4,74 +4,75 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setIdAlterna } from "../../../sistemaAdmin/reducers/slice/idAlterna/idAlternaSlice";
 import { motion } from "framer-motion";
+import { setLlave } from '../../../sistemaAdmin/reducers/slice/Llave/LlaveSlice';
 
 const Bloque6 = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [busqueda, setBusqueda] = useState("");
+  const [ busqueda, setBusqueda ] = useState( "" );
 
   // ⬇️ Cambiamos a la nueva función de Zustand
   const { internosBloque6D, cargarInternosBloque6D } = useStore();
-  const [resultados, setResultados] = useState([]);
+  const [ resultados, setResultados ] = useState( [] );
 
   // 📌 Cargar datos al montar el componente
-  useEffect(() => {
+  useEffect( () => {
     cargarInternosBloque6D();
-  }, []);
+  }, [] );
 
   // 📌 Asegurar que resultados es un array antes de mapear
-  useEffect(() => {
-    setResultados(Array.isArray(internosBloque6D) ? internosBloque6D : []);
-  }, [internosBloque6D]);
+  useEffect( () => {
+    setResultados( Array.isArray( internosBloque6D ) ? internosBloque6D : [] );
+  }, [ internosBloque6D ] );
 
   // 🔎 Buscar en la tabla
-  const handleBuscar = (e) => {
+  const handleBuscar = ( e ) => {
     const valor = e.target.value.toLowerCase();
-    setBusqueda(valor);
+    setBusqueda( valor );
 
-    const filtrados = internosBloque6D.filter((registro) =>
-      registro.nombres.some((n) =>
-        [n.DNOMBRE, n.DPATERNO, n.DMATERNO]
-          .join(" ")
+    const filtrados = internosBloque6D.filter( ( registro ) =>
+      registro.nombres.some( ( n ) =>
+        [ n.DNOMBRE, n.DPATERNO, n.DMATERNO ]
+          .join( " " )
           .toLowerCase()
-          .includes(valor)
+          .includes( valor )
       )
     );
 
-    setResultados(filtrados);
+    setResultados( filtrados );
   };
 
   // 🔹 Seleccionar y redirigir
-  const handleSeleccionar = (idAlterna) => {
-    dispatch(setIdAlterna(idAlterna));
-    navigate(`/admin/verificar6`);
+  const handleSeleccionar = ( LLAVE ) => {
+    dispatch( setLlave( LLAVE ) );
+    navigate( `/admin/verificar6` );
   };
 
   return (
     <motion.div
       className="container mt-4"
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      style={{ color: "#E5E7EB", backgroundColor: "#0A0A0A", padding: "20px", borderRadius: "10px" }}
+      initial={ { opacity: 0, y: -10 } }
+      animate={ { opacity: 1, y: 0 } }
+      transition={ { duration: 0.5 } }
+      style={ { color: "#E5E7EB", backgroundColor: "#0A0A0A", padding: "20px", borderRadius: "10px" } }
     >
-      <h2 className="fw-bold" style={{ color: "#E5E7EB" }}>Registros del Bloque 6D</h2>
-      <p style={{ color: "#D1D5DB" }}>Aquí se muestran los registros correspondientes al Bloque 6D.</p>
+      <h2 className="fw-bold" style={ { color: "#E5E7EB" } }>Registros del Bloque 6D</h2>
+      <p style={ { color: "#D1D5DB" } }>Aquí se muestran los registros correspondientes al Bloque 6D.</p>
 
       <input
         type="text"
         className="form-control my-3"
         placeholder="Escribe un nombre..."
-        value={busqueda}
-        onChange={handleBuscar}
-        style={{ backgroundColor: "#1F2937", color: "white", border: "1px solid #374151" }}
+        value={ busqueda }
+        onChange={ handleBuscar }
+        style={ { backgroundColor: "#1F2937", color: "white", border: "1px solid #374151" } }
       />
 
       <motion.table
         className="table table-dark table-bordered"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
+        initial={ { opacity: 0 } }
+        animate={ { opacity: 1 } }
+        transition={ { duration: 0.5 } }
       >
         <thead className="table-dark">
           <tr>
@@ -80,31 +81,31 @@ const Bloque6 = () => {
           </tr>
         </thead>
         <tbody>
-          {resultados.map(({ ID_ALTERNA, nombres }) => (
-            <tr key={ID_ALTERNA}>
+          { resultados.map( ( { ID_ALTERNA, LLAVE, nombres } ) => (
+            <tr key={ ID_ALTERNA }>
               <td>
-                {nombres.map((n, i) => (
-                  <div key={i}>{n.DNOMBRE} {n.DPATERNO} {n.DMATERNO}</div>
-                ))}
+                { nombres.map( ( n, i ) => (
+                  <div key={ i }>{ n.DNOMBRE } { n.DPATERNO } { n.DMATERNO }</div>
+                ) ) }
               </td>
               <td className="text-center">
                 <motion.button
                   className="btn btn-primary btn-sm px-3"
-                  style={{ backgroundColor: "#2563EB", border: "none" }}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => handleSeleccionar(ID_ALTERNA)}
+                  style={ { backgroundColor: "#2563EB", border: "none" } }
+                  whileHover={ { scale: 1.1 } }
+                  whileTap={ { scale: 0.9 } }
+                  onClick={ () => handleSeleccionar( LLAVE ) }
                 >
                   Seleccionar
                 </motion.button>
               </td>
             </tr>
-          ))}
-          {resultados.length === 0 && (
+          ) ) }
+          { resultados.length === 0 && (
             <tr>
               <td colSpan="2" className="text-center text-danger">No se encontraron registros</td>
             </tr>
-          )}
+          ) }
         </tbody>
       </motion.table>
     </motion.div>
