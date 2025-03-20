@@ -14,7 +14,9 @@ const ConsultarErrores2 = () => {
   const [ mensaje, setMensaje ] = useState( '' ); // State to store the feedback message
 
   //const [idAlterna, setIdAlterna] = useState(1);
-  const idAlterna = useSelector( ( state ) => state.idAlterna.value );
+  let idAlterna = useSelector( ( state ) => state.idAlterna.value );
+  idAlterna = parseInt(idAlterna, 10) || 0; // Convierte a entero y evita NaN
+  const newIdAlterna = idAlterna + 1;
 
   const handleMessageChange = ( e ) => {
     setMensaje( e.target.value ); // Update the message as the user types
@@ -87,7 +89,7 @@ const ConsultarErrores2 = () => {
         try {
           const nuevoProcesado = rolUsuario === "admin2" ? 10 : 11; // ✅ Ahora sí tiene el valor correcto
   
-          await api.put(`aprovar/aprovarRegistro2/${idAlterna}`, { procesado: nuevoProcesado });
+          await api.put(`aprovar/aprovarRegistro2/${newIdAlterna}`, { procesado: nuevoProcesado });
   
           limpiarErrores();
   
