@@ -87,7 +87,9 @@ const ConsultarErrores2 = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const nuevoProcesado = rolUsuario === "admin2" ? 10 : 11; // ✅ Ahora sí tiene el valor correcto
+          const valorProcesado = rolUsuario === "admin2" ? 10 : rolUsuario === "admin" ? [11, 0] : 11;
+          const nuevoProcesado = Array.isArray(valorProcesado) ? valorProcesado[1] : valorProcesado;
+
   
           await api.put(`aprovar/aprovarRegistro2/${newIdAlterna}`, { procesado: nuevoProcesado });
   

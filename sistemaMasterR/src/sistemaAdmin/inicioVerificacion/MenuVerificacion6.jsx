@@ -3,6 +3,7 @@ import HookData from '../../sistema/hookData/HookData';
 import VistaConsultarErrores from '../componentes/vistas/ConsultarErrores/VistaConsultarErrores';
 import VistaPrincipales from '../componentes/vistas/bloqueSeis/VistaPrincipales';
 import VistaHuella from '../componentes/vistas/bloqueDos/VistaHuella';
+import VistaConsultarErrores2 from '../componentes/vistas/ConsultarErrores/VistaConsultarErrores2';
 
 const MenuVerificacion6 = () => {
   const [ activeTab, setActiveTab ] = useState( "bformularioseis" );
@@ -73,7 +74,7 @@ const MenuVerificacion6 = () => {
               </>
             ) }
 
-            { activeTab === "terminar" && <div><VistaConsultarErrores data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
+            { activeTab === "terminar" && <div><VistaConsultarErrores2 data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
             {/*{ activeTab === "finalizar" && <div><h4>Finalizar</h4></div> }*/}
           </div>
         </div>
