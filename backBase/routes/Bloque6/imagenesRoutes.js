@@ -12,29 +12,35 @@ router.post("/upload", upload.any(), async (req, res) => {
 
     const { id_alterna, estado_emisor, emisor, llave } = req.body;
 
-    if (!id_alterna || !emisor || !estado_emisor || !llave) {
+    if (!id_alterna || !estado_emisor || !emisor || !llave) {
       return res.status(400).json({ message: "Faltan campos requeridos en la solicitud." });
     }
 
-    const requiredGroups = ["A", "B", "C"];
-    for (let i = 0; i < 3; i++) {
-      const imageKey = `imagen${i + 1}`;
-      const grupoRecibido = req.body[`${imageKey}_grupo`];
+    // 📌 Obtener el último IMAKEY registrado para este ID_ALTERNA y sumarle 1
+    const [rows] = await pool.query(
+      `SELECT COALESCE(MAX(IMAKEY), 0) AS ultimo_imakey FROM imagenes WHERE ID_ALTERNA = ?`,
+      [id_alterna]
+    );
+    let ultimoImakey = parseInt(rows[0].ultimo_imakey, 10) || 0;
 
-      if (!grupoRecibido || grupoRecibido !== requiredGroups[i]) {
-        return res.status(400).json({
-          message: `Error en la imagen ${imageKey}: Debe pertenecer al grupo '${requiredGroups[i]}'`,
-        });
-      }
-    }
-
+    // 📌 Insertar cada imagen con el grupo correspondiente
     for (const file of req.files) {
       const imageData = file.buffer;
       const grupo = req.body[`${file.fieldname}_grupo`] || "A";
 
       try {
-        const query = "INSERT INTO imagenes (ID_ALTERNA, ESTADO_EMISOR, EMISOR, DESIMA, TIPO, FOLIO, GRUPO, IMAGEN) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        await pool.query(query, [id_alterna, estado_emisor, emisor, "fotos", "f", llave, grupo, imageData]);
+        ultimoImakey++; // 📌 Incrementar IMAKEY en cada iteración
+
+        const query = `
+          INSERT INTO imagenes 
+          (ID_ALTERNA, ESTADO_EMISOR, EMISOR, IMAKEY, DESIMA, TIPO, FOLIO, GRUPO, IMAGEN) 
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+        
+        await pool.query(query, [
+          id_alterna, estado_emisor, emisor, ultimoImakey, "fotos", "f", llave, grupo, imageData
+        ]);
+
       } catch (error) {
         console.error("Error al insertar imagen en la BD:", error);
         return res.status(500).json({ message: "Error al insertar una imagen", error });
@@ -42,6 +48,7 @@ router.post("/upload", upload.any(), async (req, res) => {
     }
 
     res.status(200).json({ message: "Todas las imágenes fueron subidas correctamente" });
+
   } catch (error) {
     console.error("Error al procesar la solicitud:", error);
     res.status(500).json({ message: "Error al guardar las imágenes en la base de datos", error });

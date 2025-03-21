@@ -39,21 +39,24 @@ const SeleccionarForm = () => {
   const [activeKey, setActiveKey] = useState('2');
 
   useEffect(() => {
-    const obtenerIdAlterna = async (LLAVE) => {
+    const obtenerIdAlterna = async () => {
       try {
-        const response = await axios.post('http://localhost:3000/api/bloque1/idAlterna', { LLAVE });
+        if (!llaveSeleccionada) return;
+        const response = await axios.post('http://localhost:3000/api/bloque1/idAlterna', { LLAVE: llaveSeleccionada });
         if (response.data && response.data[0]) {
           setIdAlterna(response.data[0].ID_ALTERNA);
-          console.log(idAlterna)
+          console.log("Nuevo ID_ALTERNA obtenido:", response.data[0].ID_ALTERNA);
         }
       } catch (error) {
+        console.error("Error obteniendo ID_ALTERNA:", error);
       }
     };
 
-    if (LLAVE) {
-      obtenerIdAlterna(LLAVE);
+    if (llaveSeleccionada) {
+      obtenerIdAlterna();
     }
-  }, [LLAVE]);
+  }, [llaveSeleccionada]); // ✅ Se ejecuta cuando cambia la llave seleccionada
+
 
   useEffect(() => {
     const obtenerImagenes = async () => {
@@ -89,70 +92,74 @@ const SeleccionarForm = () => {
   };    
 
   const handleSubmit = async () => {
-  
-    // 🔍 FILTRAR imágenes inválidas para evitar `undefined`
-    const imagenesValidas = imagenesFiltradas.filter((img) => img !== undefined && img !== null);
-  
-    // 🛠️ CORRECCIÓN DEL ORDEN DE IMÁGENES
-    const gruposPrincipales = ["A", "B", "C"];
-    const imagenesPrincipales = imagenesValidas.map((img, index) => ({
-      ...img,
-      key: `imagen${index + 1}`, // Evitar desfases en la numeración
-      grupo: gruposPrincipales[index] || "A" // Asegurar que las primeras sean A, B, C
-    }));
-  
-    // 🔥 VERIFICACIÓN: Imprimir imágenes antes de enviarla
-  
-    // 🔍 Asegurar que las imágenes principales estén en la posición correcta en FormData
-    imagenesPrincipales.forEach((img, index) => {
-      if (!img.file) {
-      } else {
-      }
-    });
-  
-    // 📌 CONTINÚA CON LO QUE YA TENÍAS (huellas, creación de FormData y envío)
-    const imagenesHuellas = huellasFiltradas.map((img, index) => ({
-      ...img,
-      key: `imagen${index + 1 + imagenesPrincipales.length}`, // Evitar superposición
-      grupo: (index + 1) % 10
-    }));
-  
-    const imagenesFinales = [...imagenesPrincipales, ...imagenesHuellas];
-  
-    const formData = new FormData();
-    
-    imagenesFinales.forEach((img) => {
-      if (img?.file) {
-        formData.append(img.key, img.file);
-        formData.append(`${img.key}_grupo`, img.grupo);
-      }
-    });
-  
-    formData.append("id_alterna", idAlterna);
-    formData.append("emisor", emisor);
-    formData.append("estado_emisor", estado_emisor);
-    formData.append("llave", LLAVE);
-  
     try {
-      const response = await axios.post(
+      // Paso 1: Generar nuevo ID_ALTERNA desde el backend, con base en un registro con PROCESADO = 2
+      const responseMovimientos = await axios.post("http://localhost:3000/api/movimientos/generar-id-alterna", {
+        llave: llaveSeleccionada,
+      });
+  
+      if (responseMovimientos.status !== 200 || !responseMovimientos.data.id_alterna) {
+        return Swal.fire("Error", "No se pudo generar el nuevo ID_ALTERNA en movimientos.", "error");
+      }
+  
+      const nuevoIdAlterna = responseMovimientos.data.id_alterna;
+      console.log("✅ Nuevo ID_ALTERNA generado:", nuevoIdAlterna);
+  
+      // Paso 2: Preparar imágenes para enviar
+      const formData = new FormData();
+  
+      const gruposPrincipales = ["A", "B", "C"];
+      const imagenesValidas = imagenesFiltradas.filter((img) => img !== undefined && img !== null);
+      const imagenesPrincipales = imagenesValidas.map((img, index) => ({
+        ...img,
+        key: `imagen${index + 1}`,
+        grupo: gruposPrincipales[index] || "A"
+      }));
+  
+      const imagenesHuellas = huellasFiltradas.map((img, index) => ({
+        ...img,
+        key: `imagen${index + 1 + imagenesPrincipales.length}`,
+        grupo: (index + 1) % 10
+      }));
+  
+      const imagenesFinales = [...imagenesPrincipales, ...imagenesHuellas];
+  
+      imagenesFinales.forEach((img) => {
+        if (img?.file) {
+          formData.append(img.key, img.file);
+          formData.append(`${img.key}_grupo`, img.grupo);
+        }
+      });
+  
+      formData.append("id_alterna", nuevoIdAlterna);
+      formData.append("estado_emisor", estado_emisor);
+      formData.append("emisor", emisor);
+      formData.append("llave", llaveSeleccionada);
+      formData.append("folio", "101001"); // Valor fijo
+  
+      // Paso 3: Enviar imágenes al backend
+      const responseImagenes = await axios.post(
         "http://localhost:3000/api/imagenes/upload",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-      if (response.status === 200) {
+  
+      if (responseImagenes.status === 200) {
         Swal.fire("¡Éxito!", "Las imágenes se enviaron correctamente.", "success").then(() => {
-          navigate('/');  // 🔄 Redirigir al inicio
+          navigate('/');
           setTimeout(() => {
-            window.location.reload(); // 🔄 Recargar la página después de la navegación
+            window.location.reload();
           }, 100);
         });
       } else {
         Swal.fire("Error", "No se pudieron enviar las imágenes.", "error");
-      }      
+      }
+  
     } catch (error) {
+      console.error("❌ Error en handleSubmit:", error);
       Swal.fire("Error", "Hubo un problema al conectar con el servidor.", "error");
     }
-  };
+  };        
   
 
   return (

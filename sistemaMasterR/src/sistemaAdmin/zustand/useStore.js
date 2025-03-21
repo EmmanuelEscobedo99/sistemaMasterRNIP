@@ -20,6 +20,7 @@ const useStore = create((set) => ({
   internosBloque6: [],
   internosBloque1y2D: [],
   internosBloque6D: [],
+  llaveSeleccionada: "", // 🔥 Agregar estado de la llave seleccionada
 
   cargarDatosFormulario: async (tabla, idAlterna) => {
     try {
@@ -29,6 +30,8 @@ const useStore = create((set) => ({
       console.error('Error al cargar los datos:', error);
     }
   },
+  setLlaveSeleccionada: (llave) => set({ llaveSeleccionada: llave }),
+
   cargarDatosHuellas: async (tabla, idAlterna) => {
     try {
       const response = await api.get(`/mostrarHuellas/${tabla}/${idAlterna}`);
@@ -161,6 +164,24 @@ const useStore = create((set) => ({
         console.error('Error al cargar los datos del Bloque 6D (procesado 10):', error);
       }
     },
+    cargarNuevoIdAlterna: async (estado_emisor, emisor, llave, operacion, estatus) => {
+      try {
+        console.log("Llamando a la API para generar nuevo ID_ALTERNA...");
+        console.log("Parámetros enviados:", { estado_emisor, emisor, llave, operacion, estatus });
+
+        const response = await api.post('/movimientos/generar-id-alterna', { 
+          estado_emisor, emisor, llave, operacion, estatus 
+        });
+
+        console.log("Respuesta de la API:", response.data);
+
+        return response.data.id_alterna;  // 🔥 Retorna el nuevo ID para usarlo en imágenes
+
+      } catch (error) {
+        console.error('Error al generar nuevo ID_ALTERNA:', error);
+        return null;
+      }
+    },    
 }));
 
 export default useStore;
