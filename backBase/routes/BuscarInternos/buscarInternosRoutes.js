@@ -9,5 +9,6 @@ router.get('/procesado7', buscarInternosController.obtenerInternosProcesado7); /
 router.get('/procesado10', buscarInternosController.obtenerInternosProcesado10); // ✅ Asegurar la ruta correcta
 router.get('/procesado2', buscarInternosController.obtenerInternosProcesado2);
 router.get('/nombresBloque6', buscarInternosController.obtenerNombresPorBloques6);
+router.get('/nombresBloque6D', buscarInternosController.obtenerNombresPorBloques6D);
 
 module.exports = router;

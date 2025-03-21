@@ -20,6 +20,15 @@ const buscarInternosService = {
       throw error;
     }
   },
+  async obtenerNombresPorBloques6D() {
+    try {
+      const result = await buscarInternosModel.obtenerNombresPorBloques6D();
+      return result;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
 };
 
 module.exports = buscarInternosService;

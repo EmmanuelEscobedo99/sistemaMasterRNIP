@@ -18,6 +18,7 @@ const useStore = create((set) => ({
   internos: {}, // Estado para almacenar los internos
   internosBloque1y2: [],
   internosNombresBloque6: [],
+  internosNombresBloque6D: [],
   internosBloque6: [],
   internosBloque1y2D: [],
   internosBloque6D: [],
@@ -151,6 +152,14 @@ const useStore = create((set) => ({
     try {
       const response = await api.get('/buscarInternos/nombresBloque6'); // ✅ Cambio aquí
       set({ internosNombresBloque6: response.data });
+    } catch (error) {
+      console.error('Error al cargar los datos de Nombres Bloque 6:', error);
+    }
+  },
+  cargarInternosNombresBloque6D: async () => {
+    try {
+      const response = await api.get('/buscarInternos/nombresBloque6D'); // ✅ Cambio aquí
+      set({ internosNombresBloque6D: response.data });
     } catch (error) {
       console.error('Error al cargar los datos de Nombres Bloque 6:', error);
     }

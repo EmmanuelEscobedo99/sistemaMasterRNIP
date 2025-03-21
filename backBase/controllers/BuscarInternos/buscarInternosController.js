@@ -63,6 +63,16 @@ const buscarInternosController = {
       console.error(error);
       res.status(500).json({ error: error.message });
     }
+  },
+
+  async obtenerNombresPorBloques6D(req, res) {
+    try {
+      const result = await buscarInternosService.obtenerNombresPorBloques6D();
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: error.message });
+    }
   }
 };
 
