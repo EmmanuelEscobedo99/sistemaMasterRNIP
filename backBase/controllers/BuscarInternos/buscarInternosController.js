@@ -52,6 +52,17 @@ const buscarInternosController = {
       console.error(error);
       res.status(500).json({ error: error.message });
     }
+  },
+
+   // 🔹 NUEVO: Función para obtener los nombres según bloques funcionales
+   async obtenerNombresPorBloques6(req, res) {
+    try {
+      const result = await buscarInternosService.obtenerNombresPorBloques6();
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: error.message });
+    }
   }
 };
 

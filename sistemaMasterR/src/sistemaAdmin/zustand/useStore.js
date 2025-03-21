@@ -17,6 +17,7 @@ const useStore = create((set) => ({
   ingdelito: {}, // Estado para almacenar el ingelito
   internos: {}, // Estado para almacenar los internos
   internosBloque1y2: [],
+  internosNombresBloque6: [],
   internosBloque6: [],
   internosBloque1y2D: [],
   internosBloque6D: [],
@@ -140,9 +141,18 @@ const useStore = create((set) => ({
   cargarInternosBloque6: async () => {
     try {
       const response = await api.get('/buscarInternos/procesado9'); // ✅ Cambio aquí
+      console.log(response.data)
       set({ internosBloque6: response.data });
     } catch (error) {
       console.error('Error al cargar los datos del Bloque 6:', error);
+    }
+  },
+  cargarInternosNombresBloque6: async () => {
+    try {
+      const response = await api.get('/buscarInternos/nombresBloque6'); // ✅ Cambio aquí
+      set({ internosNombresBloque6: response.data });
+    } catch (error) {
+      console.error('Error al cargar los datos de Nombres Bloque 6:', error);
     }
   },
     // 🔹 Cargar internos del Bloque 1 y 2D (procesado 7)
