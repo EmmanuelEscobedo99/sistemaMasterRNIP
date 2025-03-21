@@ -11,6 +11,8 @@ const Bloque1y2_2 = () => {
   const [busqueda, setBusqueda] = useState("");
   const { internosBloque1y2, cargarInternosBloque1y2 } = useStore();
   const [resultados, setResultados] = useState([]);
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [resultadosPorPagina] = useState(10); // Número de resultados por página
 
   useEffect(() => {
     cargarInternosBloque1y2();
@@ -41,16 +43,43 @@ const Bloque1y2_2 = () => {
     navigate(`/admin2/verificar2`);
   };
 
+  // Lógica para calcular los índices de los resultados para la página actual
+  const indiceFinal = paginaActual * resultadosPorPagina;
+  const indiceInicial = indiceFinal - resultadosPorPagina;
+  const resultadosPaginados = resultados.slice(indiceInicial, indiceFinal);
+
+  // Funciones para manejar la paginación
+  const handleSiguiente = () => {
+    if (paginaActual < Math.ceil(resultados.length / resultadosPorPagina)) {
+      setPaginaActual(paginaActual + 1);
+    }
+  };
+
+  const handleAnterior = () => {
+    if (paginaActual > 1) {
+      setPaginaActual(paginaActual - 1);
+    }
+  };
+
   return (
     <motion.div
       className="container mt-4"
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      style={{ color: "#E5E7EB", backgroundColor: "#0A0A0A", padding: "20px", borderRadius: "10px" }}
+      style={{
+        color: "#E5E7EB",
+        backgroundColor: "#0A0A0A",
+        padding: "20px",
+        borderRadius: "10px",
+      }}
     >
-      <h2 className="fw-bold" style={{ color: "#E5E7EB" }}>Registros del Bloque 1 y 2</h2>
-      <p style={{ color: "#D1D5DB" }}>Aquí se muestran los registros correspondientes al Bloque 1 y 2.</p>
+      <h2 className="fw-bold" style={{ color: "#E5E7EB" }}>
+        Registros del Bloque 1 y 2
+      </h2>
+      <p style={{ color: "#D1D5DB" }}>
+        Aquí se muestran los registros correspondientes al Bloque 1 y 2.
+      </p>
 
       <input
         type="text"
@@ -79,11 +108,13 @@ const Bloque1y2_2 = () => {
           </tr>
         </thead>
         <tbody>
-          {resultados.map(({ ID_ALTERNA, nombres }) => (
+          {resultadosPaginados.map(({ ID_ALTERNA, nombres }) => (
             <tr key={ID_ALTERNA}>
               <td>
                 {nombres.map((n, i) => (
-                  <div key={i}>{n.DNOMBRE} {n.DPATERNO} {n.DMATERNO}</div>
+                  <div key={i}>
+                    {n.DNOMBRE} {n.DPATERNO} {n.DMATERNO}
+                  </div>
                 ))}
               </td>
               <td className="text-center">
@@ -99,13 +130,33 @@ const Bloque1y2_2 = () => {
               </td>
             </tr>
           ))}
-          {resultados.length === 0 && (
+          {resultadosPaginados.length === 0 && (
             <tr>
-              <td colSpan="2" className="text-center text-danger">No se encontraron registros</td>
+              <td colSpan="2" className="text-center text-danger">
+                No se encontraron registros
+              </td>
             </tr>
           )}
         </tbody>
       </motion.table>
+
+      {/* Paginación */}
+      <div className="d-flex justify-content-between mt-3">
+        <button
+          className="btn btn-secondary btn-sm"
+          onClick={handleAnterior}
+          disabled={paginaActual === 1}
+        >
+          Anterior
+        </button>
+        <button
+          className="btn btn-secondary btn-sm"
+          onClick={handleSiguiente}
+          disabled={paginaActual === Math.ceil(resultados.length / resultadosPorPagina)}
+        >
+          Siguiente
+        </button>
+      </div>
     </motion.div>
   );
 };

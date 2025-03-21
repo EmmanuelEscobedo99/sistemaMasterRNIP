@@ -11,6 +11,8 @@ const Bloque6_2 = () => {
   const [busqueda, setBusqueda] = useState("");
   const { internosNombresBloque6, cargarInternosNombresBloque6 } = useStore();
   const [resultados, setResultados] = useState([]);
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [resultadosPorPagina] = useState(10); // Número de registros por página
 
   useEffect(() => {
     cargarInternosNombresBloque6();
@@ -48,6 +50,24 @@ const Bloque6_2 = () => {
   const handleSeleccionar = (LLAVE) => {
     dispatch(setLlave(LLAVE));
     navigate(`/admin2/verificar6_2`);
+  };
+
+  // Lógica para calcular los índices de los resultados para la página actual
+  const indiceFinal = paginaActual * resultadosPorPagina;
+  const indiceInicial = indiceFinal - resultadosPorPagina;
+  const resultadosPaginados = resultados.slice(indiceInicial, indiceFinal);
+
+  // Funciones para manejar la paginación
+  const handleSiguiente = () => {
+    if (paginaActual < Math.ceil(resultados.length / resultadosPorPagina)) {
+      setPaginaActual(paginaActual + 1);
+    }
+  };
+
+  const handleAnterior = () => {
+    if (paginaActual > 1) {
+      setPaginaActual(paginaActual - 1);
+    }
   };
 
   return (
@@ -96,7 +116,7 @@ const Bloque6_2 = () => {
           </tr>
         </thead>
         <tbody>
-          {resultados.map(({ nombres, LLAVE, ID_ALTERNA }) => (
+          {resultadosPaginados.map(({ nombres, LLAVE, ID_ALTERNA }) => (
             <tr key={ID_ALTERNA}>
               <td>{nombres.join(", ")}</td>
               <td className="text-center">
@@ -112,15 +132,33 @@ const Bloque6_2 = () => {
               </td>
             </tr>
           ))}
-          {resultados.length === 0 && (
+          {resultadosPaginados.length === 0 && (
             <tr>
-              <td colSpan="3" className="text-center text-danger">
+              <td colSpan="2" className="text-center text-danger">
                 No se encontraron registros
               </td>
             </tr>
           )}
         </tbody>
       </motion.table>
+
+      {/* Paginación */}
+      <div className="d-flex justify-content-between mt-3">
+        <button
+          className="btn btn-secondary btn-sm"
+          onClick={handleAnterior}
+          disabled={paginaActual === 1}
+        >
+          Anterior
+        </button>
+        <button
+          className="btn btn-secondary btn-sm"
+          onClick={handleSiguiente}
+          disabled={paginaActual === Math.ceil(resultados.length / resultadosPorPagina)}
+        >
+          Siguiente
+        </button>
+      </div>
     </motion.div>
   );
 };

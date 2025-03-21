@@ -13,6 +13,9 @@ const Bloque6 = () => {
   // ⬇️ Cambiamos a la nueva función de Zustand
   const { internosNombresBloque6D, cargarInternosNombresBloque6D } = useStore();
   const [resultados, setResultados] = useState([]);
+  const [resultadosFiltrados, setResultadosFiltrados] = useState([]);
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [resultadosPorPagina] = useState(10); // Número de registros por página
 
   // 📌 Cargar datos al montar el componente
   useEffect(() => {
@@ -35,6 +38,7 @@ const Bloque6 = () => {
     // Convertir el objeto de agrupados en un array para que lo podamos usar en el estado
     const resultadosAgrupados = Object.values(agrupados);
     setResultados(resultadosAgrupados);
+    setResultadosFiltrados(resultadosAgrupados); // Inicialmente, los resultados no están filtrados
   }, [internosNombresBloque6D]);
 
   // 🔎 Buscar en la tabla
@@ -49,13 +53,32 @@ const Bloque6 = () => {
         .some((nombre) => nombre.includes(valor))
     );
 
-    setResultados(filtrados);
+    setResultadosFiltrados(filtrados);
+    setPaginaActual(1); // Resetear la paginación cuando se cambia la búsqueda
   };
 
   // 🔹 Seleccionar y redirigir
   const handleSeleccionar = (LLAVE) => {
     dispatch(setLlave(LLAVE));
     navigate(`/admin/verificar6`);
+  };
+
+  // Lógica para calcular los índices de los resultados para la página actual
+  const indiceFinal = paginaActual * resultadosPorPagina;
+  const indiceInicial = indiceFinal - resultadosPorPagina;
+  const resultadosPaginados = resultadosFiltrados.slice(indiceInicial, indiceFinal);
+
+  // Funciones para manejar la paginación
+  const handleSiguiente = () => {
+    if (paginaActual < Math.ceil(resultadosFiltrados.length / resultadosPorPagina)) {
+      setPaginaActual(paginaActual + 1);
+    }
+  };
+
+  const handleAnterior = () => {
+    if (paginaActual > 1) {
+      setPaginaActual(paginaActual - 1);
+    }
   };
 
   return (
@@ -95,7 +118,7 @@ const Bloque6 = () => {
           </tr>
         </thead>
         <tbody>
-          {resultados.map(({ nombres, LLAVE, ID_ALTERNA }) => (
+          {resultadosPaginados.map(({ nombres, LLAVE, ID_ALTERNA }) => (
             <tr key={ID_ALTERNA}>
               <td>
                 {nombres.map((n, i) => (
@@ -117,7 +140,7 @@ const Bloque6 = () => {
               </td>
             </tr>
           ))}
-          {resultados.length === 0 && (
+          {resultadosPaginados.length === 0 && (
             <tr>
               <td colSpan="2" className="text-center text-danger">
                 No se encontraron registros
@@ -126,6 +149,24 @@ const Bloque6 = () => {
           )}
         </tbody>
       </motion.table>
+
+      {/* Paginación */}
+      <div className="d-flex justify-content-between mt-3">
+        <button
+          className="btn btn-secondary btn-sm"
+          onClick={handleAnterior}
+          disabled={paginaActual === 1}
+        >
+          Anterior
+        </button>
+        <button
+          className="btn btn-secondary btn-sm"
+          onClick={handleSiguiente}
+          disabled={paginaActual === Math.ceil(resultadosFiltrados.length / resultadosPorPagina)}
+        >
+          Siguiente
+        </button>
+      </div>
     </motion.div>
   );
 };

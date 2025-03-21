@@ -13,6 +13,8 @@ const Bloque1y2 = () => {
   // ⬇️ Cambiamos a la nueva función de Zustand
   const { internosBloque1y2D, cargarInternosBloque1y2D } = useStore();
   const [resultados, setResultados] = useState([]);
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [resultadosPorPagina] = useState(10); // Número de registros por página
 
   // 📌 Cargar datos al montar el componente
   useEffect(() => {
@@ -45,6 +47,24 @@ const Bloque1y2 = () => {
   const handleSeleccionar = (idAlterna) => {
     dispatch(setIdAlterna(idAlterna));
     navigate(`/admin/verificar`);
+  };
+
+  // Lógica para calcular los índices de los resultados para la página actual
+  const indiceFinal = paginaActual * resultadosPorPagina;
+  const indiceInicial = indiceFinal - resultadosPorPagina;
+  const resultadosPaginados = resultados.slice(indiceInicial, indiceFinal);
+
+  // Funciones para manejar la paginación
+  const handleSiguiente = () => {
+    if (paginaActual < Math.ceil(resultados.length / resultadosPorPagina)) {
+      setPaginaActual(paginaActual + 1);
+    }
+  };
+
+  const handleAnterior = () => {
+    if (paginaActual > 1) {
+      setPaginaActual(paginaActual - 1);
+    }
   };
 
   return (
@@ -84,7 +104,7 @@ const Bloque1y2 = () => {
           </tr>
         </thead>
         <tbody>
-          {resultados.map(({ ID_ALTERNA, nombres }) => (
+          {resultadosPaginados.map(({ ID_ALTERNA, nombres }) => (
             <tr key={ID_ALTERNA}>
               <td>
                 {nombres.map((n, i) => (
@@ -104,13 +124,31 @@ const Bloque1y2 = () => {
               </td>
             </tr>
           ))}
-          {resultados.length === 0 && (
+          {resultadosPaginados.length === 0 && (
             <tr>
               <td colSpan="2" className="text-center text-danger">No se encontraron registros</td>
             </tr>
           )}
         </tbody>
       </motion.table>
+
+      {/* Paginación */}
+      <div className="d-flex justify-content-between mt-3">
+        <button
+          className="btn btn-secondary btn-sm"
+          onClick={handleAnterior}
+          disabled={paginaActual === 1}
+        >
+          Anterior
+        </button>
+        <button
+          className="btn btn-secondary btn-sm"
+          onClick={handleSiguiente}
+          disabled={paginaActual === Math.ceil(resultados.length / resultadosPorPagina)}
+        >
+          Siguiente
+        </button>
+      </div>
     </motion.div>
   );
 };
