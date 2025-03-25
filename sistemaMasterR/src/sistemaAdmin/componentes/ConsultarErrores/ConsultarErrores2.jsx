@@ -48,7 +48,7 @@ const ConsultarErrores2 = () => {
     } ).then( async ( result ) => {
       if ( result.isConfirmed ) {
         try {
-          await api.put( `rechazar/rechazarRegistro2/${ LLAVE }` );
+          await rechazarRegistro2( LLAVE, radioSeleccionados[ 0 ]?.formulario, radioSeleccionados[ 0 ]?.nombre, mensaje );
           limpiarErrores();
 
           Swal.fire( {
@@ -71,6 +71,16 @@ const ConsultarErrores2 = () => {
         }
       }
     } );
+  };
+
+  // Función para rechazar el registro y enviar los datos al backend
+  const rechazarRegistro2 = async ( LLAVE, FORMULARIO, CAMPO, DESCRIPCION ) => {
+    try {
+      // Realizas la solicitud PUT aquí, pasando los datos necesarios
+      await api.put( `rechazar/rechazarRegistro2/${ LLAVE }/${ FORMULARIO }/${ CAMPO }/${ DESCRIPCION }` );
+    } catch ( error ) {
+      throw new Error( 'Error al rechazar el registro' );
+    }
   };
 
 
