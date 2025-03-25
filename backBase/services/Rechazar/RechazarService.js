@@ -1,9 +1,9 @@
 const RechazarModel = require( '../../models/Rechazar/RechazarModel' );
 
 const RechazarService = {
-  async rechazarRegistro( idAlterna ) {
+  async rechazarRegistro( ID_ALTERNA, LLAVE, FORMULARIO, CAMPO, DESCRIPCION  ) {
     try {
-      return await RechazarModel.rechazarRegistro( idAlterna );
+      return await RechazarModel.rechazarRegistro( ID_ALTERNA, LLAVE, FORMULARIO, CAMPO, DESCRIPCION );
     } catch ( error ) {
       console.error( error );
       throw error;

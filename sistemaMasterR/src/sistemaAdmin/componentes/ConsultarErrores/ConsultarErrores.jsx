@@ -15,6 +15,7 @@ const ConsultarErrores = () => {
 
   //const [idAlterna, setIdAlterna] = useState(1);
   const idAlterna = useSelector( ( state ) => state.idAlterna.value );
+  const LLAVE = useSelector( ( state ) => state.Llave.value );
 
   const handleMessageChange = ( e ) => {
     setMensaje( e.target.value ); // Update the message as the user types
@@ -31,89 +32,114 @@ const ConsultarErrores = () => {
     }
   };
 
-  const handleLimpiarErrors = async (event) => {
+  const handleLimpiarErrors = async ( event ) => {
     event.preventDefault();
-  
-    Swal.fire({
+
+    Swal.fire( {
       title: '¿Estás seguro?',
       text: 'Esta acción rechazará el registro',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, rechazar',
       cancelButtonText: 'Cancelar'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+    } ).then( async ( result ) => {
+      if ( result.isConfirmed ) {
         try {
-          // ✅ No se envía el `procesado` explícitamente
-          await api.put(`rechazar/rechazarRegistro/${idAlterna}`);
-  
+          // Agrupar los errores por formulario
+          const erroresAgrupados = radioSeleccionados.reduce( ( acc, item ) => {
+            const formName = item.formulario || 'Desconocido'; // Usamos un nombre predeterminado si no existe 'formulario'
+            if ( !acc[ formName ] ) {
+              acc[ formName ] = [];
+            }
+            acc[ formName ].push( item );
+            return acc;
+          }, {} );
+
+          // Iterar sobre cada formulario y rechazar los registros
+          for ( const [ formName, items ] of Object.entries( erroresAgrupados ) ) {
+            for ( const item of items ) {
+              await rechazarRegistro(idAlterna, LLAVE, formName, item.nombre, mensaje );
+            }
+          }
+
+          // Limpiar errores una vez que se complete el proceso
           limpiarErrores();
-  
-          Swal.fire({
+
+          Swal.fire( {
             title: 'Rechazado',
-            text: 'El registro ha sido rechazado correctamente.',
+            text: 'Los registros han sido rechazados correctamente.',
             icon: 'success',
             confirmButtonText: 'Aceptar'
-          }).then(() => {
-            navigate('/admin');
-          });
-  
-        } catch (error) {
-          console.error('Error al enviar la petición:', error);
-          Swal.fire({
+          } ).then( () => {
+            navigate( '/admin' );
+          } );
+
+        } catch ( error ) {
+          console.error( 'Error al enviar la petición:', error );
+          Swal.fire( {
             title: 'Error',
-            text: 'No se pudo rechazar el registro.',
+            text: 'No se pudo rechazar los registros.',
             icon: 'error',
             confirmButtonText: 'Aceptar',
-          });
+          } );
         }
       }
-    });
-  };    
+    } );
+  };
+
+  // Función para rechazar el registro y enviar los datos al backend
+  const rechazarRegistro = async (ID_ALTERNA, LLAVE, FORMULARIO, CAMPO, DESCRIPCION ) => {
+    try {
+      // Realizas la solicitud PUT aquí, pasando los datos necesarios
+      await api.put( `rechazar/rechazarRegistro/${ ID_ALTERNA }/${ LLAVE }/${ FORMULARIO }/${ CAMPO }/${ DESCRIPCION }` );
+    } catch ( error ) {
+      throw new Error( 'Error al rechazar el registro' );
+    }
+  };
 
 
-  const rolUsuario = useSelector((state) => state.auth.rol); // ✅ Obtiene el rol de Redux
+  const rolUsuario = useSelector( ( state ) => state.auth.rol ); // ✅ Obtiene el rol de Redux
 
-  const handleAprovarRegistro = async (event) => {
+  const handleAprovarRegistro = async ( event ) => {
     event.preventDefault();
-  
-    Swal.fire({
+
+    Swal.fire( {
       title: '¿Estás seguro?',
       text: 'Esta acción aprobará el registro',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, aprobar',
       cancelButtonText: 'Cancelar'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+    } ).then( async ( result ) => {
+      if ( result.isConfirmed ) {
         try {
           const nuevoProcesado = rolUsuario === "admin" ? 0 : 7; // ✅ Ahora sí tiene el valor correcto
-  
-          await api.put(`aprovar/aprovarRegistro/${idAlterna}`, { procesado: nuevoProcesado });
-  
+
+          await api.put( `aprovar/aprovarRegistro/${ idAlterna }`, { procesado: nuevoProcesado } );
+
           limpiarErrores();
-  
-          Swal.fire({
+
+          Swal.fire( {
             title: 'Aprobado',
-            text: `El registro ha sido aprobado correctamente con procesado: ${nuevoProcesado}.`,
+            text: `El registro ha sido aprobado correctamente con procesado: ${ nuevoProcesado }.`,
             icon: 'success',
             confirmButtonText: 'Aceptar'
-          }).then(() => {
-            navigate('/admin');
-          });
-  
-        } catch (error) {
-          console.error("Error al aprobar el registro:", error);
-          Swal.fire({
+          } ).then( () => {
+            navigate( '/admin' );
+          } );
+
+        } catch ( error ) {
+          console.error( "Error al aprobar el registro:", error );
+          Swal.fire( {
             title: 'Error',
             text: 'Hubo un problema al aprobar el registro.',
             icon: 'error',
             confirmButtonText: 'Aceptar'
-          });
+          } );
         }
       }
-    });
-  };    
+    } );
+  };
 
   // You can group errors by their form if needed
   const groupedErrors = radioSeleccionados.reduce( ( acc, item ) => {
@@ -151,7 +177,7 @@ const ConsultarErrores = () => {
         onClick={handleLimpiarErrors}
       >
         Limpiar Errores 
-      </button>*/} 
+      </button>*/}
 
       {/* Textarea for sending feedback .*/ }
       <div className="mt-4">
