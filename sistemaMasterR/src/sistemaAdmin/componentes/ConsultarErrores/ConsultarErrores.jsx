@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 import api from '../../../api/api';
+import useStore from '../../../app/useStore';
 
 const ConsultarErrores = () => {
 
@@ -44,8 +45,31 @@ const ConsultarErrores = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          // ✅ No se envía el `procesado` explícitamente
+          // 1️⃣ Cambia el procesado a 8
           await api.put(`rechazar/rechazarRegistro/${idAlterna}`);
+  
+          console.log('Errores seleccionados:', radioSeleccionados);
+  
+          // 2️⃣ Inserta cada error en la tabla errores_formulario
+          const { llaveSeleccionada } = useStore.getState(); // ✅ Traer desde Zustand
+  
+          for (const error of radioSeleccionados) {
+            const llave = error.LLAVE || error.llave || llaveSeleccionada;
+  
+            if (!llave) {
+              console.warn("⚠️ No se encontró la llave ni en el error ni en Zustand:", error);
+              continue; // Saltar si sigue sin llave
+            }
+  
+            await api.post(`rechazar/erroresFormulario`, {
+              LLAVE: llave,
+              FORMULARIO: error.formulario || 'Sin formulario',
+              CAMPO: error.nombre || 'Campo sin nombre',
+              DESCRIPCION: mensaje || 'Sin descripción'
+            });
+  
+            console.log(`✅ Error registrado: ${llave} - ${error.formulario} - ${error.nombre}`);
+          }
   
           limpiarErrores();
   
@@ -59,7 +83,7 @@ const ConsultarErrores = () => {
           });
   
         } catch (error) {
-          console.error('Error al enviar la petición:', error);
+          console.error('Error al rechazar:', error);
           Swal.fire({
             title: 'Error',
             text: 'No se pudo rechazar el registro.',
@@ -69,8 +93,7 @@ const ConsultarErrores = () => {
         }
       }
     });
-  };    
-
+  };         
 
   const rolUsuario = useSelector((state) => state.auth.rol); // ✅ Obtiene el rol de Redux
 

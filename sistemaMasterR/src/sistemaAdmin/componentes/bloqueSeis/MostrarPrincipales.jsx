@@ -11,7 +11,7 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { datosFormulario, cargarDatosFormulario } = useStore();
   
-  const [idAlterna, setIdAlterna] = useState(1); // Simulación de ID alterna, debe obtenerse dinámicamente
+  const [idAlterna, setIdAlterna] = useState(5); // Simulación de ID alterna, debe obtenerse dinámicamente
 
   const obtenerIdAlterna = async ( LLAVE ) => {
     try {

@@ -3,12 +3,10 @@ const RechazarController = require('../../controllers/Rechazar/RechazarControlle
 
 const router = express.Router();
 
+// ✅ Rechazar un registro por ID_ALTERNA (bloques 1 y 2)
+router.put('/rechazarRegistro/:idAlterna', RechazarController.rechazarRegistro);
 
-// routes/rechazar.js
-router.put('/rechazarRegistro2/:LLAVE/:FORMULARIO/:CAMPO/:DESCRIPCION', RechazarController.rechazarRegistro2);
-
-
-router.put('/rechazarRegistro/:idAlterna', RechazarController.rechazarRegistro); // ✅ Asegurar que está correctamente definido
-
+// ✅ Insertar error de formulario (llave, formulario, campo, descripcion)
+router.post('/erroresFormulario', RechazarController.rechazarRegistro2);
 
 module.exports = router;
