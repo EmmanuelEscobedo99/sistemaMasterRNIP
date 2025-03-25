@@ -46,13 +46,13 @@ const buscarInternosController = {
   // 🔹 Agregado: Procesado 2 (NUEVA FUNCIÓN)
   async obtenerInternosProcesado2(req, res) {
     try {
-      const result = await buscarInternosService.obtenerInternos(2);
+      const result = await buscarInternosService.obtenerInternosProcesado2(); // ✅ función especializada
       res.status(200).json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: error.message });
     }
-  },
+  },  
 
    // 🔹 NUEVO: Función para obtener los nombres según bloques funcionales
    async obtenerNombresPorBloques6(req, res) {

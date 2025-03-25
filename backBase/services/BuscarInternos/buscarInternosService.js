@@ -10,8 +10,18 @@ const buscarInternosService = {
       throw error;
     }
   },
-   // Nueva función que obtiene los nombres con la ID_ALTERNA basada en los bloques funcionales
-   async obtenerNombresPorBloques6() {
+
+  async obtenerInternosProcesado2() {
+    try {
+      const result = await buscarInternosModel.obtenerInternosProcesado2();
+      return result;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
+
+  async obtenerNombresPorBloques6() {
     try {
       const result = await buscarInternosModel.obtenerNombresPorBloques6();
       return result;
@@ -20,6 +30,7 @@ const buscarInternosService = {
       throw error;
     }
   },
+
   async obtenerNombresPorBloques6D() {
     try {
       const result = await buscarInternosModel.obtenerNombresPorBloques6D();
