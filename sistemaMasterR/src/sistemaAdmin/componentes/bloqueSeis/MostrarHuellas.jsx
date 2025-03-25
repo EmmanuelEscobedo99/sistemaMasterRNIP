@@ -6,13 +6,17 @@ import '../../../sistema/css/estilo.css';
 import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1/ValidacionBloqueUno';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
 import useStore from '../../zustand/useStore';
+import { useSelector } from 'react-redux';
 
 const MostrarHuellas = ({ data, onFormChange, onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { datosHuellas, cargarDatosHuellas } = useStore();
 
-  const [idAlterna, setIdAlterna] = useState(1); // Simulación de ID alterna
+  //const [idAlterna, setIdAlterna] = useState(1); // Simulación de ID alterna
+
+  const idAlterna = useSelector( ( state ) => state.idAlterna.value );
+  console.log(idAlterna)
 
   useEffect(() => {
     if (idAlterna) {

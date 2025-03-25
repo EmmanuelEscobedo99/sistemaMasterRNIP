@@ -5,13 +5,16 @@ import { Card } from 'react-bootstrap';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
 import useStore from '../../zustand/useStore';
 import api from '../../../api/api';
+import { useSelector } from 'react-redux';
 
 const MostrarPrincipales = ({ data, onValidationStatus }) => {
   const { register, formState: { errors } } = useFormContext();
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { datosFormulario, cargarDatosFormulario } = useStore();
   
-  const [idAlterna, setIdAlterna] = useState(2); // Simulación de ID alterna, debe obtenerse dinámicamente
+  //const [idAlterna, setIdAlterna] = useState(2); // Simulación de ID alterna, debe obtenerse dinámicamente
+
+  const idAlterna = useSelector( ( state ) => state.idAlterna.value );
 
   const obtenerIdAlterna = async ( LLAVE ) => {
     try {
