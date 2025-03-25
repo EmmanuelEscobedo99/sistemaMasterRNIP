@@ -49,6 +49,7 @@ const Bloque6_2 = () => {
 
   const handleSeleccionar = (LLAVE) => {
     dispatch(setLlave(LLAVE));
+    console.log(LLAVE)
     navigate(`/admin2/verificar6_2`);
   };
 
