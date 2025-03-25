@@ -1,14 +1,15 @@
 const express = require('express');
-const RechazarController = require('../../controllers/Rechazar/RechazarController'); // ✅ Asegurar la ruta correcta
+const RechazarController = require('../../controllers/Rechazar/RechazarController');
 
 const router = express.Router();
 
+// Rechazo de registros con ID_ALTERNA, sin enviar LLAVE
+router.put('/rechazarRegistro/:ID_ALTERNA/:FORMULARIO/:CAMPO/:DESCRIPCION', RechazarController.rechazarRegistro);
 
-// routes/rechazar.js
+// Rechazo por LLAVE directo
 router.put('/rechazarRegistro2/:LLAVE/:FORMULARIO/:CAMPO/:DESCRIPCION', RechazarController.rechazarRegistro2);
 
-
-router.put('/rechazarRegistro/:ID_ALTERNA/:LLAVE/:FORMULARIO/:CAMPO/:DESCRIPCION', RechazarController.rechazarRegistro); // ✅ Asegurar que está correctamente definido
-
+// Obtener LLAVE automáticamente desde ID_ALTERNA
+router.get('/llavePorIdAlterna/:idAlterna', RechazarController.obtenerLlaveDesdeIdAlterna);
 
 module.exports = router;

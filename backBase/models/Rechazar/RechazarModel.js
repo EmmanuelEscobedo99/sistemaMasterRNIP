@@ -1,75 +1,77 @@
-const pool = require( '../../config/db.config' );
+const pool = require('../../config/db.config');
 
 const RechazarModel = {
-  async rechazarRegistro(ID_ALTERNA, LLAVE, FORMULARIO, CAMPO, DESCRIPCION ) {
+  async rechazarRegistro(ID_ALTERNA, FORMULARIO, CAMPO, DESCRIPCION) {
     const connection = await pool.getConnection();
     try {
-      await connection.beginTransaction(); // Inicia la transacción
+      await connection.beginTransaction();
 
-      // Realizar el UPDATE en la tabla movimientos
+      // Obtener LLAVE automáticamente
+      const [rows] = await connection.query(
+        'SELECT LLAVE FROM movimientos WHERE ID_ALTERNA = ? LIMIT 1',
+        [ID_ALTERNA]
+      );
+      if (rows.length === 0 || !rows[0].LLAVE) {
+        throw new Error('No se encontró LLAVE para el ID_ALTERNA proporcionado');
+      }
+      const LLAVE = rows[0].LLAVE;
+
       const resultUpdate = await connection.query(
         "UPDATE movimientos SET PROCESADO = 8 WHERE ID_ALTERNA = ? AND ID_BLOQUE_FUNCIONAL IN (1,2)",
-        [ ID_ALTERNA ]
+        [ID_ALTERNA]
       );
 
-      // Verificar que el UPDATE se haya realizado correctamente
-      if ( resultUpdate.affectedRows === 0 ) {
-        throw new Error( 'No se encontró el registro para actualizar' );
-      }
-
-      // Insertar en la tabla errores_formulario
       const resultInsert = await connection.query(
         "INSERT INTO errores_formulario (LLAVE, FORMULARIO, CAMPO, DESCRIPCION) VALUES (?, ?, ?, ?)",
-        [ LLAVE, FORMULARIO, CAMPO, DESCRIPCION ]
+        [LLAVE, FORMULARIO, CAMPO, DESCRIPCION]
       );
 
-      // Confirmar la transacción
       await connection.commit();
       return { resultUpdate, resultInsert };
-    } catch ( error ) {
-      // En caso de error, revertir la transacción
+    } catch (error) {
       await connection.rollback();
       throw error;
     } finally {
-      // Liberar la conexión
       connection.release();
     }
   },
-  async rechazarRegistro2( LLAVE, FORMULARIO, CAMPO, DESCRIPCION ) {
+
+  async rechazarRegistro2(LLAVE, FORMULARIO, CAMPO, DESCRIPCION) {
     const connection = await pool.getConnection();
     try {
-      await connection.beginTransaction(); // Inicia la transacción
+      await connection.beginTransaction();
 
-      // Realizar el UPDATE en la tabla movimientos
       const resultUpdate = await connection.query(
         "UPDATE movimientos SET PROCESADO = 11 WHERE LLAVE = ? AND ID_BLOQUE_FUNCIONAL IN (6)",
-        [ LLAVE ]
+        [LLAVE]
       );
 
-      // Verificar que el UPDATE se haya realizado correctamente
-      if ( resultUpdate.affectedRows === 0 ) {
-        throw new Error( 'No se encontró el registro para actualizar' );
-      }
-
-      // Insertar en la tabla errores_formulario
       const resultInsert = await connection.query(
         "INSERT INTO errores_formulario (LLAVE, FORMULARIO, CAMPO, DESCRIPCION) VALUES (?, ?, ?, ?)",
-        [ LLAVE, FORMULARIO, CAMPO, DESCRIPCION ]
+        [LLAVE, FORMULARIO, CAMPO, DESCRIPCION]
       );
 
-      // Confirmar la transacción
       await connection.commit();
       return { resultUpdate, resultInsert };
-    } catch ( error ) {
-      // En caso de error, revertir la transacción
+    } catch (error) {
       await connection.rollback();
       throw error;
     } finally {
-      // Liberar la conexión
       connection.release();
     }
-  }
+  },
 
+  async obtenerLlaveDesdeIdAlterna(idAlterna) {
+    try {
+      const [rows] = await pool.query(
+        'SELECT LLAVE FROM movimientos WHERE ID_ALTERNA = ? LIMIT 1',
+        [idAlterna]
+      );
+      return rows.length > 0 ? rows[0].LLAVE : null;
+    } catch (error) {
+      throw error;
+    }
+  }
 };
 
-module.exports = RechazarModel; // ✅ Asegurar que se exporta correctamente
+module.exports = RechazarModel;

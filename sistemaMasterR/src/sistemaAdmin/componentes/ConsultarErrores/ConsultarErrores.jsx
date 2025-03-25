@@ -15,7 +15,7 @@ const ConsultarErrores = () => {
 
   //const [idAlterna, setIdAlterna] = useState(1);
   const idAlterna = useSelector( ( state ) => state.idAlterna.value );
-  const LLAVE = useSelector( ( state ) => state.Llave.value );
+
 
   const handleMessageChange = ( e ) => {
     setMensaje( e.target.value ); // Update the message as the user types
@@ -32,6 +32,17 @@ const ConsultarErrores = () => {
     }
   };
 
+  const obtenerLlaveDesdeIdAlterna = async (idAlterna) => {
+    try {
+      const response = await api.get(`/movimientos/llavePorIdAlterna/${idAlterna}`);
+      return response.data.LLAVE;
+    } catch (error) {
+      console.error("❌ Error al obtener la llave por ID_ALTERNA:", error);
+      return null;
+    }
+  };
+  
+  
   const handleLimpiarErrors = async ( event ) => {
     event.preventDefault();
 
@@ -58,9 +69,16 @@ const ConsultarErrores = () => {
           // Iterar sobre cada formulario y rechazar los registros
           for ( const [ formName, items ] of Object.entries( erroresAgrupados ) ) {
             for ( const item of items ) {
-              await rechazarRegistro(idAlterna, LLAVE, formName, item.nombre, mensaje );
+              const llaveFinal = item.LLAVE || item.llave || await obtenerLlaveDesdeIdAlterna(idAlterna);
+          
+              if ( !llaveFinal ) {
+                console.warn("⚠️ No se encontró la LLAVE:", item);
+                continue;
+              }
+          
+              await rechazarRegistro(idAlterna, llaveFinal, formName, item.nombre, mensaje);
             }
-          }
+          }          
 
           // Limpiar errores una vez que se complete el proceso
           limpiarErrores();
