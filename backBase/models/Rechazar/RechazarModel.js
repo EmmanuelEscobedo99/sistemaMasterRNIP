@@ -9,7 +9,7 @@ const RechazarModel = {
       // Realizar el UPDATE en la tabla movimientos
       const resultUpdate = await connection.query(
         "UPDATE movimientos SET PROCESADO = 8 WHERE ID_ALTERNA = ? AND ID_BLOQUE_FUNCIONAL IN (1,2)",
-        [ LLAVE ]
+        [ ID_ALTERNA ]
       );
 
       // Verificar que el UPDATE se haya realizado correctamente
