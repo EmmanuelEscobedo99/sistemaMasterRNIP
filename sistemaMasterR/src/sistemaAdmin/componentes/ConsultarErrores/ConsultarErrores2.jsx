@@ -48,12 +48,29 @@ const ConsultarErrores2 = () => {
     } ).then( async ( result ) => {
       if ( result.isConfirmed ) {
         try {
-          await rechazarRegistro2( LLAVE, radioSeleccionados[ 0 ]?.formulario, radioSeleccionados[ 0 ]?.nombre, mensaje );
+          // Agrupar los errores por formulario
+          const erroresAgrupados = radioSeleccionados.reduce( ( acc, item ) => {
+            const formName = item.formulario || 'Desconocido'; // Usamos un nombre predeterminado si no existe 'formulario'
+            if ( !acc[ formName ] ) {
+              acc[ formName ] = [];
+            }
+            acc[ formName ].push( item );
+            return acc;
+          }, {} );
+
+          // Iterar sobre cada formulario y rechazar los registros
+          for ( const [ formName, items ] of Object.entries( erroresAgrupados ) ) {
+            for ( const item of items ) {
+              await rechazarRegistro2( LLAVE, formName, item.nombre, mensaje );
+            }
+          }
+
+          // Limpiar errores una vez que se complete el proceso
           limpiarErrores();
 
           Swal.fire( {
             title: 'Rechazado',
-            text: 'El registro ha sido rechazado correctamente.',
+            text: 'Los registros han sido rechazados correctamente.',
             icon: 'success',
             confirmButtonText: 'Aceptar'
           } ).then( () => {
@@ -64,7 +81,7 @@ const ConsultarErrores2 = () => {
           console.error( 'Error al enviar la petición:', error );
           Swal.fire( {
             title: 'Error',
-            text: 'No se pudo rechazar el registro.',
+            text: 'No se pudo rechazar los registros.',
             icon: 'error',
             confirmButtonText: 'Aceptar',
           } );
