@@ -15,7 +15,8 @@ const MostrarHuellas = ({ data, onFormChange, onValidationStatus }) => {
 
   //const [idAlterna, setIdAlterna] = useState(1); // Simulación de ID alterna
 
-  const idAlterna = useSelector( ( state ) => state.idAlterna.value );
+  const idAlternas = useSelector( ( state ) => state.idAlterna.value );
+  const idAlterna = isNaN(parseInt(idAlternas, 10)) ? 0 : parseInt(idAlternas, 10) + 1;
   console.log(idAlterna)
 
   useEffect(() => {

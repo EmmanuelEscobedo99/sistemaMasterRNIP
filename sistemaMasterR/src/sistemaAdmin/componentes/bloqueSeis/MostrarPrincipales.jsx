@@ -14,7 +14,9 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
   
   //const [idAlterna, setIdAlterna] = useState(2); // Simulación de ID alterna, debe obtenerse dinámicamente
 
-  const idAlterna = useSelector( ( state ) => state.idAlterna.value );
+  const idAlternas = useSelector( ( state ) => state.idAlterna.value );
+  const idAlterna = isNaN(parseInt(idAlternas, 10)) ? 0 : parseInt(idAlternas, 10) + 1;
+  console.log(idAlterna)
 
   const obtenerIdAlterna = async ( LLAVE ) => {
     try {

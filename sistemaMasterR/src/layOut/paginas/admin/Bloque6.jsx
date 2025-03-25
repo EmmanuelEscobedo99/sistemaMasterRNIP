@@ -3,6 +3,7 @@ import useStore from "../../../sistemaAdmin/zustand/useStore";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLlave } from "../../../sistemaAdmin/reducers/slice/Llave/LlaveSlice";
+import { setIdAlterna } from "../../../sistemaAdmin/reducers/slice/IdAlterna/IdAlternaSlice"; // Importa la acción setIdAlterna
 import { motion } from "framer-motion";
 
 const Bloque6 = () => {
@@ -58,8 +59,10 @@ const Bloque6 = () => {
   };
 
   // 🔹 Seleccionar y redirigir
-  const handleSeleccionar = (LLAVE) => {
+  const handleSeleccionar = (LLAVE, ID_ALTERNA) => {
+    // Disparar el dispatch para guardar tanto LLAVE como ID_ALTERNA
     dispatch(setLlave(LLAVE));
+    dispatch(setIdAlterna(ID_ALTERNA)); // Dispara el dispatch con el ID_ALTERNA
     navigate(`/admin/verificar6`);
   };
 
@@ -133,7 +136,7 @@ const Bloque6 = () => {
                   style={{ backgroundColor: "#2563EB", border: "none" }}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  onClick={() => handleSeleccionar(LLAVE)}
+                  onClick={() => handleSeleccionar(LLAVE, ID_ALTERNA)} // Pasa tanto LLAVE como ID_ALTERNA
                 >
                   Seleccionar
                 </motion.button>

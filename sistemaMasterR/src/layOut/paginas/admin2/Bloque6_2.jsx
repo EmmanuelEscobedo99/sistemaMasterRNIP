@@ -3,6 +3,7 @@ import useStore from "../../../sistemaAdmin/zustand/useStore";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLlave } from "../../../sistemaAdmin/reducers/slice/Llave/LlaveSlice";
+import { setIdAlterna } from "../../../sistemaAdmin/reducers/slice/IdAlterna/IdAlternaSlice"; // Importa la acción para el ID_ALTERNA
 import { motion } from "framer-motion";
 
 const Bloque6_2 = () => {
@@ -47,9 +48,11 @@ const Bloque6_2 = () => {
     setResultados(filtrados);
   };
 
-  const handleSeleccionar = (LLAVE) => {
+  const handleSeleccionar = (LLAVE, ID_ALTERNA) => {
+    // Hacer dispatch de ambos valores (LLAVE y ID_ALTERNA)
     dispatch(setLlave(LLAVE));
-    console.log(LLAVE)
+    dispatch(setIdAlterna(ID_ALTERNA)); // Disparar el dispatch con el ID_ALTERNA
+    console.log("LLAVE:", LLAVE, "ID_ALTERNA:", ID_ALTERNA); // Verifica que se envíen correctamente
     navigate(`/admin2/verificar6_2`);
   };
 
@@ -113,6 +116,7 @@ const Bloque6_2 = () => {
         <thead className="table-dark">
           <tr>
             <th>Nombre(s)</th>
+            <th>ID ALTERNA</th> {/* Nueva columna para mostrar ID_ALTERNA */}
             <th className="text-center">Acción</th>
           </tr>
         </thead>
@@ -120,13 +124,14 @@ const Bloque6_2 = () => {
           {resultadosPaginados.map(({ nombres, LLAVE, ID_ALTERNA }) => (
             <tr key={ID_ALTERNA}>
               <td>{nombres.join(", ")}</td>
+              <td>{ID_ALTERNA}</td> {/* Mostrar ID_ALTERNA en la fila */}
               <td className="text-center">
                 <motion.button
                   className="btn btn-primary btn-sm px-3"
                   style={{ backgroundColor: "#2563EB", border: "none" }}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  onClick={() => handleSeleccionar(LLAVE)}
+                  onClick={() => handleSeleccionar(LLAVE, ID_ALTERNA)} // Pasa el ID_ALTERNA también
                 >
                   Seleccionar
                 </motion.button>
@@ -135,7 +140,7 @@ const Bloque6_2 = () => {
           ))}
           {resultadosPaginados.length === 0 && (
             <tr>
-              <td colSpan="2" className="text-center text-danger">
+              <td colSpan="3" className="text-center text-danger"> {/* Ajuste para tres columnas */}
                 No se encontraron registros
               </td>
             </tr>
