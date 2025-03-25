@@ -8,7 +8,7 @@ const router = express.Router();
 router.put('/rechazarRegistro2/:LLAVE/:FORMULARIO/:CAMPO/:DESCRIPCION', RechazarController.rechazarRegistro2);
 
 
-router.put('/rechazarRegistro/:ID_ALTERNA/:LLAVE/:FORMULARIO/:CAMPO/:DESCRIPCION', RechazarController.rechazarRegistro); // ✅ Asegurar que está correctamente definido
+router.put('/rechazarRegistro/:idAlterna', RechazarController.rechazarRegistro); // ✅ Asegurar que está correctamente definido
 
 
 module.exports = router;

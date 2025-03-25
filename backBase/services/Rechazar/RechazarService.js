@@ -18,7 +18,6 @@ const RechazarService = {
       throw error;
     }
   },
-
 };
 
 module.exports = RechazarService; // ✅ Asegurar que se exporta correctamente
