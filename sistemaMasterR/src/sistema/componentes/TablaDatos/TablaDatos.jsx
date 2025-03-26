@@ -8,10 +8,10 @@ const TablaDatos = () => {
   const navigate = useNavigate();
   const setLlave = useStore((state) => state.setLlave);
   const [personas, setPersonas] = useState([]);
+  const [busqueda, setBusqueda] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // 🔹 Número de elementos por página
+  const itemsPerPage = 5;
 
-  // 🚀 Cargar datos desde la API
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -26,17 +26,27 @@ const TablaDatos = () => {
     fetchData();
   }, []);
 
-  // 🔹 Calcular los elementos a mostrar en la página actual
+  const handleBuscar = (e) => {
+    const valor = e.target.value.toLowerCase();
+    setBusqueda(valor);
+    setCurrentPage(1); // Reinicia a la primera página si se busca
+  };
+
+  const personasFiltradas = personas.filter((persona) =>
+    persona.nombres
+      .map((n) => `${n.DNOMBRE} ${n.DPATERNO} ${n.DMATERNO}`.toLowerCase())
+      .join(" ")
+      .includes(busqueda)
+  );
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = personas.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = personasFiltradas.slice(indexOfFirstItem, indexOfLastItem);
 
-  // 🔹 Cambiar de página
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  // 🔹 Seleccionar persona y redirigir
   const seleccionarPersona = (LLAVE) => {
     setLlave(LLAVE);
     navigate(`/capturista/formPaginas`);
@@ -48,11 +58,35 @@ const TablaDatos = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
+      style={{
+        backgroundColor: "#0A0A0A",
+        color: "#E5E7EB",
+        padding: "20px",
+        borderRadius: "10px"
+      }}
     >
-      <h2 className="text-center text-primary fw-bold">Lista de Reclusos</h2>
+      <h2 className="fw-bold" style={{ color: "#FFFFFF", textAlign: "left" }}>
+        Lista de Reclusos
+      </h2>
+      <p style={{ color: "#D1D5DB", textAlign: "left" }}>
+        Aquí se muestran los registros correspondientes al sistema.
+      </p>
+
+      <input
+        type="text"
+        className="form-control my-3"
+        placeholder="🔍 Escribe un nombre..."
+        value={busqueda}
+        onChange={handleBuscar}
+        style={{
+          backgroundColor: "#1F2937",
+          color: "white",
+          border: "1px solid #374151"
+        }}
+      />
 
       <motion.table
-        className="table table-striped shadow-sm"
+        className="table table-dark table-bordered"
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6 }}
@@ -61,12 +95,12 @@ const TablaDatos = () => {
           <tr>
             <th>Nombre</th>
             <th>Apellido</th>
-            <th>Acción</th>
+            <th className="text-center">Acción</th>
           </tr>
         </thead>
         <AnimatePresence mode="wait">
           <motion.tbody
-            key={currentPage} // 🔹 Clave para animaciones entre páginas
+            key={currentPage}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -74,19 +108,19 @@ const TablaDatos = () => {
           >
             {currentItems.length > 0 ? (
               currentItems.map((persona) => (
-                <motion.tr
-                  key={persona.LLAVE}
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 0.3 }}
-                >
+                <motion.tr key={persona.LLAVE}>
                   <td>{persona.nombres.map(n => n.DNOMBRE).join(", ")}</td>
                   <td>{persona.nombres.map(n => `${n.DPATERNO} ${n.DMATERNO}`).join(", ")}</td>
-                  <td>
+                  <td className="text-center">
                     <motion.button
-                      className="btn btn-primary"
+                      className="btn btn-primary btn-sm"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => seleccionarPersona(persona.LLAVE)}
+                      style={{
+                        backgroundColor: "#2563EB",
+                        border: "none"
+                      }}
                     >
                       Subir Imágenes
                     </motion.button>
@@ -96,7 +130,7 @@ const TablaDatos = () => {
             ) : (
               <tr>
                 <td colSpan="3" className="text-center text-danger">
-                  No hay registros disponibles
+                  No se encontraron registros
                 </td>
               </tr>
             )}
@@ -104,27 +138,24 @@ const TablaDatos = () => {
         </AnimatePresence>
       </motion.table>
 
-      {/* 🔹 Paginación */}
-      <div className="d-flex justify-content-center mt-3">
-        <motion.button
-          className="btn btn-outline-primary mx-2"
-          disabled={currentPage === 1}
+      <div className="d-flex justify-content-between mt-3">
+        <button
+          className="btn btn-secondary btn-sm"
           onClick={() => paginate(currentPage - 1)}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+          disabled={currentPage === 1}
         >
           Anterior
-        </motion.button>
-        <span className="fw-bold mx-3">Página {currentPage} de {Math.ceil(personas.length / itemsPerPage)}</span>
-        <motion.button
-          className="btn btn-outline-primary mx-2"
-          disabled={indexOfLastItem >= personas.length}
+        </button>
+        <span className="fw-bold text-white">
+          Página {currentPage} de {Math.ceil(personasFiltradas.length / itemsPerPage)}
+        </span>
+        <button
+          className="btn btn-secondary btn-sm"
           onClick={() => paginate(currentPage + 1)}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+          disabled={indexOfLastItem >= personasFiltradas.length}
         >
           Siguiente
-        </motion.button>
+        </button>
       </div>
     </motion.div>
   );
