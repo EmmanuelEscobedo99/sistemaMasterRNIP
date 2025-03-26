@@ -65,15 +65,22 @@ const Alias = ({ data, onFormChange, onValidationStatus }) => {
             />
           </OverlayTrigger>
           <label htmlFor={`ALIAS_${index}`} style={{ marginLeft: '10px' }}>{`Alias ${index + 1}`}</label>
-
-          {/* Radio Button */}
-          <input
-            type="radio"
-            name={`radio-ALIAS_${index}`}
-            value="Sí"
-            className="ms-2"
-            onChange={() => handleRadioChange(`Alias ${index + 1}`, 'Sí', 'Alias')}
-          />
+            {/* Checkbox toggleable */}
+            <input
+              type="checkbox"
+              name={`checkbox-ALIAS_${index}`}
+              value="Sí"
+              className="ms-2"
+              checked={radioSeleccionados.some(item => item.nombre === `Alias ${index + 1}` && item.valor === 'Sí')}
+              onChange={() => {
+                const nombreCompleto = `Alias ${index + 1}`;
+                if (radioSeleccionados.some(item => item.nombre === nombreCompleto && item.valor === 'Sí')) {
+                  seleccionarRadio(nombreCompleto, null, 'Alias');
+                } else {
+                  seleccionarRadio(nombreCompleto, 'Sí', 'Alias');
+                }
+              }}
+            />
         </div>
       ))}
 
