@@ -32,7 +32,8 @@ const useStore = create((set) => ({
   internosBloque1y2D: [],
   internosBloque6D: [],
   llaveSeleccionada: "", // 🔥 Agregar estado de la llave seleccionada
-
+  imagenesPorLlave: [],
+  
   cargarDatosFormulario: async (tabla, idAlterna) => {
     try {
       const response = await api.get(`/mostrarPrincipales/${tabla}/${idAlterna}`);
@@ -192,7 +193,15 @@ const useStore = create((set) => ({
         console.error('Error al generar nuevo ID_ALTERNA:', error);
         return null;
       }
-    },   
+    },  
+    cargarImagenesPorLlave: async (llave) => {
+      try {
+        const response = await api.get(`/imagenesPorLlave/${llave}`);
+        set({ imagenesPorLlave: response.data });
+      } catch (error) {
+        console.error('Error al cargar imágenes por llave:', error);
+      }
+    },    
 }));
 
 export default useStore;

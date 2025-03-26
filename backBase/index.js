@@ -29,6 +29,7 @@ const imagenesRoutes = require('./routes/Bloque6/imagenesRoutes');
 const principalesRoutes = require('./routes/Bloque6/principalesRoutes');
 const obtenerIdAlterna  = require('./routes/Bloque1/obtenerIdAlterna/obtenerIdAlternaRoutes')
 const movimientosRoutes = require('./routes/Bloque6/movimientosRoutes'); // ✅ Corregido
+const traerImagenesRoutes = require('./routes/TraerImagenes/TraerImagenesRoutes');
 
 const app = express();
 const PORT = 3000;
@@ -75,6 +76,8 @@ app.use('/api/editarHuellas', editarHuellasRoutes);
 app.use('/api/imagenes', imagenesRoutes);
 app.use('/api/bloque1', obtenerIdAlterna);
 app.use('/api/movimientos', movimientosRoutes);
+app.use('/api/imagenesPorLlave', traerImagenesRoutes);
+
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });

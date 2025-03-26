@@ -3,6 +3,7 @@ import useStore from "../../../sistemaAdmin/zustand/useStore";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setIdAlterna } from "../../../sistemaAdmin/reducers/slice/idAlterna/idAlternaSlice";
+import { setLlave } from "../../../sistemaAdmin/reducers/slice/Llave/LlaveSlice"; // ✅ Importar LLAVE
 import { motion } from "framer-motion";
 
 const Bloque1y2_2 = () => {
@@ -12,7 +13,7 @@ const Bloque1y2_2 = () => {
   const { internosBloque1y2, cargarInternosBloque1y2 } = useStore();
   const [resultados, setResultados] = useState([]);
   const [paginaActual, setPaginaActual] = useState(1);
-  const [resultadosPorPagina] = useState(10); // Número de resultados por página
+  const [resultadosPorPagina] = useState(10);
 
   useEffect(() => {
     cargarInternosBloque1y2();
@@ -38,17 +39,17 @@ const Bloque1y2_2 = () => {
     setResultados(filtrados);
   };
 
-  const handleSeleccionar = (idAlterna) => {
+  const handleSeleccionar = (idAlterna, llave) => {
+    console.log("Seleccionado → ID_ALTERNA:", idAlterna, "LLAVE:", llave); // ✅ Log de prueba
     dispatch(setIdAlterna(idAlterna));
+    dispatch(setLlave(llave)); // ✅ Guardar la LLAVE en Redux
     navigate(`/admin2/verificar2`);
   };
 
-  // Lógica para calcular los índices de los resultados para la página actual
   const indiceFinal = paginaActual * resultadosPorPagina;
   const indiceInicial = indiceFinal - resultadosPorPagina;
   const resultadosPaginados = resultados.slice(indiceInicial, indiceFinal);
 
-  // Funciones para manejar la paginación
   const handleSiguiente = () => {
     if (paginaActual < Math.ceil(resultados.length / resultadosPorPagina)) {
       setPaginaActual(paginaActual + 1);
@@ -91,7 +92,6 @@ const Bloque1y2_2 = () => {
           backgroundColor: "#1F2937",
           color: "#E5E7EB",
           border: "1px solid #374151",
-          placeholderColor: "rgba(255,255,255,0.6)",
         }}
       />
 
@@ -108,7 +108,7 @@ const Bloque1y2_2 = () => {
           </tr>
         </thead>
         <tbody>
-          {resultadosPaginados.map(({ ID_ALTERNA, nombres }) => (
+          {resultadosPaginados.map(({ ID_ALTERNA, LLAVE, nombres }) => (
             <tr key={ID_ALTERNA}>
               <td>
                 {nombres.map((n, i) => (
@@ -123,7 +123,7 @@ const Bloque1y2_2 = () => {
                   style={{ backgroundColor: "#2563EB", border: "none" }}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  onClick={() => handleSeleccionar(ID_ALTERNA)}
+                  onClick={() => handleSeleccionar(ID_ALTERNA, LLAVE)} // ✅ Ahora con LLAVE
                 >
                   Seleccionar
                 </motion.button>
@@ -140,7 +140,6 @@ const Bloque1y2_2 = () => {
         </tbody>
       </motion.table>
 
-      {/* Paginación */}
       <div className="d-flex justify-content-between mt-3">
         <button
           className="btn btn-secondary btn-sm"

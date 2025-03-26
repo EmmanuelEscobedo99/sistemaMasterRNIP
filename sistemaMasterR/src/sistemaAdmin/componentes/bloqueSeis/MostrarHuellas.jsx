@@ -11,7 +11,6 @@ import { useSelector } from 'react-redux';
 const MostrarHuellas = ({ data, onFormChange, onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
-  const { datosHuellas, cargarDatosHuellas } = useStore();
 
   //const [idAlterna, setIdAlterna] = useState(1); // Simulación de ID alterna
 
@@ -19,11 +18,18 @@ const MostrarHuellas = ({ data, onFormChange, onValidationStatus }) => {
   const idAlterna = isNaN(parseInt(idAlternas, 10)) ? 0 : parseInt(idAlternas, 10) + 1;
   console.log(idAlterna)
 
+  const { imagenesPorLlave, cargarImagenesPorLlave } = useStore();
+  const LLAVE = useSelector((state) => state.Llave.value);
+  
   useEffect(() => {
-    if (idAlterna) {
-      cargarDatosHuellas('huellas', idAlterna);
+    if (LLAVE) {
+      cargarImagenesPorLlave(LLAVE); // ✅ mismo cambio
     }
-  }, [idAlterna]);
+  }, [LLAVE]);  
+  
+  const datosHuellas = imagenesPorLlave.filter(img =>
+    ['1','2','3','4','5','6','7','8','9','0'].includes(img.grupo)
+  );  
 
   /*useEffect(() => {
     console.log("Datos Huellas:", datosHuellas);

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setIdAlterna } from "../../../sistemaAdmin/reducers/slice/IdAlterna/IdAlternaSlice";
 import { motion } from "framer-motion";
+import { setLlave } from "../../../sistemaAdmin/reducers/slice/Llave/LlaveSlice"; // ✅ NUEVO
 
 const Bloque1y2 = () => {
   const dispatch = useDispatch();
@@ -43,11 +44,12 @@ const Bloque1y2 = () => {
     setResultados(filtrados);
   };
 
-  // 🔹 Seleccionar y redirigir
-  const handleSeleccionar = (idAlterna) => {
+  const handleSeleccionar = (idAlterna, llave) => {
     dispatch(setIdAlterna(idAlterna));
+    dispatch(setLlave(llave)); // ✅ Guarda la LLAVE en Redux
     navigate(`/admin/verificar`);
   };
+  
 
   // Lógica para calcular los índices de los resultados para la página actual
   const indiceFinal = paginaActual * resultadosPorPagina;
@@ -104,7 +106,7 @@ const Bloque1y2 = () => {
           </tr>
         </thead>
         <tbody>
-          {resultadosPaginados.map(({ ID_ALTERNA, nombres }) => (
+          {resultadosPaginados.map(({ ID_ALTERNA, LLAVE, nombres }) => (
             <tr key={ID_ALTERNA}>
               <td>
                 {nombres.map((n, i) => (
@@ -117,7 +119,7 @@ const Bloque1y2 = () => {
                   style={{ backgroundColor: "#2563EB", border: "none" }}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  onClick={() => handleSeleccionar(ID_ALTERNA)}
+                  onClick={() => handleSeleccionar(ID_ALTERNA, LLAVE)}
                 >
                   Seleccionar
                 </motion.button>
