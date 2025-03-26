@@ -8,74 +8,95 @@ import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
 import useStore from '../../zustand/useStore';
 import { useSelector } from 'react-redux';
 
-const MostrarHuellas = ({ data, onFormChange, onValidationStatus }) => {
+const MostrarHuellas = ( { data, onFormChange, onValidationStatus } ) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
 
   //const [idAlterna, setIdAlterna] = useState(1); // Simulación de ID alterna
 
   const idAlternas = useSelector( ( state ) => state.idAlterna.value );
-  const idAlterna = isNaN(parseInt(idAlternas, 10)) ? 0 : parseInt(idAlternas, 10) + 1;
-  console.log(idAlterna)
+  const idAlterna = isNaN( parseInt( idAlternas, 10 ) ) ? 0 : parseInt( idAlternas, 10 ) + 1;
+  console.log( idAlterna );
 
   const { imagenesPorLlave, cargarImagenesPorLlave } = useStore();
-  const LLAVE = useSelector((state) => state.Llave.value);
-  
-  useEffect(() => {
-    if (LLAVE) {
-      cargarImagenesPorLlave(LLAVE); // ✅ mismo cambio
+  const LLAVE = useSelector( ( state ) => state.Llave.value );
+
+  // Manejo de selección/deselección de radio buttons
+  const handleCheckboxChange = ( grupo, valor ) => {
+    // Si el valor ya está seleccionado, desmarcarlo (eliminando de la lista)
+    if ( radioSeleccionados.some( item => item.nombre === grupo && item.valor === valor ) ) {
+      seleccionarRadio( grupo, null, 'Imagenes Principales' ); // Pasamos null para indicar que se deselecciona
+    } else {
+      // Si no está seleccionado, marcarlo
+      seleccionarRadio( grupo, valor, 'Imagenes Principales' );
     }
-  }, [LLAVE]);  
-  
-  const datosHuellas = imagenesPorLlave.filter(img =>
-    ['1','2','3','4','5','6','7','8','9','0'].includes(img.grupo)
-  );  
+  };
+
+  useEffect( () => {
+    if ( LLAVE ) {
+      cargarImagenesPorLlave( LLAVE ); // ✅ mismo cambio
+    }
+  }, [ LLAVE ] );
+
+  const datosHuellas = imagenesPorLlave.filter( img =>
+    [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' ].includes( img.grupo )
+  );
 
   /*useEffect(() => {
     console.log("Datos Huellas:", datosHuellas);
   }, [datosHuellas]);*/
 
-  useEffect(() => {
-    onValidationStatus(errors);
-  }, [errors, onValidationStatus]);
+  useEffect( () => {
+    onValidationStatus( errors );
+  }, [ errors, onValidationStatus ] );
 
-  const handleRadioChange = (nombre, valor) => {
-    seleccionarRadio(nombre, valor, 'Huellas');
+  const handleRadioChange = ( nombre, valor ) => {
+    seleccionarRadio( nombre, valor, 'Huellas' );
   };
 
   return (
     <form className="row">
       <div className="col-12 d-flex justify-content-around mt-3">
-        {datosHuellas.length > 0 ? (
-          datosHuellas.map((img, index) => (
-            <Card key={index} style={{ width: '18rem' }}>
-              <Card.Img variant="top" src={img.imagen} alt={`Imagen ${index}`} />
+        { datosHuellas.length > 0 ? (
+          datosHuellas.map( ( img, index ) => (
+            <Card key={ index } style={ { width: '18rem' } }>
+              <Card.Img variant="top" src={ img.imagen } alt={ `Imagen ${ index }` } />
               <Card.Body>
-                <Card.Title>Grupo {img.grupo}</Card.Title>
+                <Card.Title>Grupo { img.grupo }</Card.Title>
                 <div className="d-flex justify-content-center">
+                  {/* Usamos checkboxes en vez de radio buttons */ }
                   <input
-                    type="radio"
-                    name={`radio-${index}`}
+                    type="checkbox"
+                    name={ `checkbox-${ index }` }
                     value="Sí"
+                    checked={ radioSeleccionados.some( item => item.nombre === img.grupo && item.valor === 'Sí' ) }
                     className="ms-2"
-                    onChange={() => handleRadioChange(img.grupo, 'Sí')}
+                    onChange={ () => handleCheckboxChange( img.grupo, 'Sí' ) }
                   />
+                  {/*<input
+                    type="checkbox"
+                    name={`checkbox-${index}`}
+                    value="No"
+                    checked={radioSeleccionados.some(item => item.nombre === img.grupo && item.valor === 'No')}
+                    className="ms-2"
+                    onChange={() => handleCheckboxChange(img.grupo, 'No')}
+                  />*/}
                 </div>
               </Card.Body>
             </Card>
-          ))
+          ) )
         ) : (
           <p>No hay imágenes disponibles.</p>
-        )}
+        ) }
       </div>
 
-      {/* Lista de radio seleccionados */}
+      {/* Lista de radio seleccionados */ }
       <div className="mt-4">
-        <h5 style={{ color: 'red' }}>Campos con errores:</h5>
+        <h5 style={ { color: 'red' } }>Campos con errores:</h5>
         <ul>
-          {radioSeleccionados.map((item, index) => (
-            <li key={index}>{item.nombre}</li>
-          ))}
+          { radioSeleccionados.map( ( item, index ) => (
+            <li key={ index }>{ item.nombre }</li>
+          ) ) }
         </ul>
       </div>
     </form>
