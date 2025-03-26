@@ -15,7 +15,6 @@ const DatosGenerales = ({ onValidationStatus }) => {
 
   const { datosGenerales, cargarDatosGenerales, cargarNombres, cargarDomicilio, cargarAlias, cargarSituacion, cargarJuridicos, cargarEjecucion, cargarODelito, cargarIngresos, cargarIngDelito } = useStore();
 
-  //const [idAlterna, setIdAlterna] = useState(1);
   const idAlterna = useSelector((state) => state.idAlterna.value);
 
   const handleChange = (e) => {
@@ -29,17 +28,6 @@ const DatosGenerales = ({ onValidationStatus }) => {
     }
 
     actualizarDato(name, value);
-  };
-
-  const obtenerIdAlterna = async (LLAVE) => {
-    try {
-      const response = await api.post('obtenerIdAlterna/idAlterna', { LLAVE });
-      if (response && response.data.status !== 404) {
-        setIdAlterna(response.data[0].ID_ALTERNA);
-      }
-    } catch (error) {
-      console.error('Error al obtener el ID alterna:', error);
-    }
   };
 
   useEffect(() => {
@@ -63,22 +51,16 @@ const DatosGenerales = ({ onValidationStatus }) => {
 
   const datosGeneralesObtenidos = datosGenerales?.[0] || {};
 
-  const handleRadioChange = (nombre, valor, formulario) => {
-    seleccionarRadio(nombre, valor, formulario);
-  };
-
   const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
   const renderTooltip = (message) => <Tooltip>{message}</Tooltip>;
 
-  // Función para formatear fechas YYYY-MM-DD
   const formatFecha = (fechaISO) => {
     if (!fechaISO) return '';
     const fecha = new Date(fechaISO);
     return fecha.toISOString().split('T')[0];
   };
 
-  // Función para mapear valores correctos (incluye SEXO y FECHAS)
   const getFieldValue = (fieldId) => {
     switch (fieldId) {
       case "EST_CIV":
@@ -101,67 +83,71 @@ const DatosGenerales = ({ onValidationStatus }) => {
     }
   };
 
-  const fields = [
-    { id: "FECHA_CAP", label: "Fecha de captura" },
-    { id: "SEXO", label: "Sexo del individuo" },
-    { id: "EDAD", label: "Edad del individuo" },
-    { id: "ESTATURA", label: "Estatura del individuo" },
-    { id: "PESO", label: "Peso del individuo" },
-    { id: "EST_CIV", label: "Estado civil del individuo" },
-    { id: "FEC_NAC", label: "Fecha de nacimiento" },
-    { id: "NENTID", label: "Entidad de nacimiento" },
-    { id: "NMUNIC", label: "Municipio de nacimiento" },
-    { id: "NPAIS", label: "País de nacimiento" },
-    { id: "NNACIONA", label: "Nacionalidad" },
-    { id: "TIP_SAN", label: "Tipo de sangre" },
-    { id: "TIP_SAN1", label: "Factor RH" },
-    { id: "USO_ANT", label: "Usa anteojos" },
-    { id: "RFC", label: "RFC" },
-    { id: "OFICIO_DES", label: "Oficio del individuo" }
-  ];
+  // Mapeo de campos con sus nombres descriptivos y etiquetas
+  const fieldNames = {
+    "FECHA_CAP": { label: "Fecha de captura", field: "FECHA_CAP" },
+    "SEXO": { label: "Sexo del individuo", field: "SEXO" },
+    "EDAD": { label: "Edad del individuo", field: "EDAD" },
+    "ESTATURA": { label: "Estatura del individuo", field: "ESTATURA" },
+    "PESO": { label: "Peso del individuo", field: "PESO" },
+    "EST_CIV": { label: "Estado civil del individuo", field: "EST_CIV" },
+    "FEC_NAC": { label: "Fecha de nacimiento", field: "FEC_NAC" },
+    "NENTID": { label: "Entidad de nacimiento", field: "NENTID" },
+    "NMUNIC": { label: "Municipio de nacimiento", field: "NMUNIC" },
+    "NPAIS": { label: "País de nacimiento", field: "NPAIS" },
+    "NNACIONA": { label: "Nacionalidad", field: "NNACIONA" },
+    "TIP_SAN": { label: "Tipo de sangre", field: "TIP_SAN" },
+    "TIP_SAN1": { label: "Factor RH", field: "TIP_SAN1" },
+    "USO_ANT": { label: "Usa anteojos", field: "USO_ANT" },
+    "RFC": { label: "RFC", field: "RFC" },
+    "OFICIO_DES": { label: "Oficio del individuo", field: "OFICIO_DES" }
+  };
+
+  // Manejo de selección/deselección de checkboxes
+  const handleCheckboxChange = (label, valor) => {
+    if (radioSeleccionados.some(item => item.nombre === label && item.valor === valor)) {
+      seleccionarRadio(label, null, 'Datos Generales P1');
+    } else {
+      seleccionarRadio(label, valor, 'Campos Generales');
+    }
+  };
 
   return (
     <div className="row">
-      {fields.map((field, index) => (
-        <div key={field.id} className="col-md-3 form-floating mt-3 d-flex align-items-center">
+      {Object.keys(fieldNames).map((fieldId, index) => (
+        <div key={fieldId} className="col-md-3 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
             placement="right"
-            overlay={errors[field.id] ? renderTooltip(errors[field.id].message) : <></>}
+            overlay={errors[fieldId] ? renderTooltip(errors[fieldId].message) : <></>}
           >
             <input
               type="text"
-              className={`form-control ${errors[field.id] ? 'is-invalid shake' : ''}`}
-              id={field.id}
-              name={field.id}
-              placeholder={errors[field.id] ? errors[field.id].message : field.label}
-              {...register(field.id, { onChange: handleChange })}
-              value={getFieldValue(field.id)}
-              style={{ borderColor: errors[field.id] ? 'red' : '' }}
+              className={`form-control ${errors[fieldId] ? 'is-invalid shake' : ''}`}
+              id={fieldId}
+              name={fieldNames[fieldId].field}
+              placeholder={errors[fieldId] ? errors[fieldId].message : fieldNames[fieldId].label}
+              {...register(fieldNames[fieldId].field, { onChange: handleChange })}
+              value={getFieldValue(fieldNames[fieldId].field)}
+              style={{ borderColor: errors[fieldId] ? 'red' : '' }}
             />
           </OverlayTrigger>
-          <label htmlFor={field.id} style={{ marginLeft: '10px' }}>{field.label}</label>
+          <label htmlFor={fieldId} style={{ marginLeft: '10px' }}>
+            {fieldNames[fieldId].label}
+          </label>
 
-          {/* Radio Button */}
-          <div className="ms-2">
+          {/* Checkbox para Selección */}
+          <div className="d-flex justify-content-center">
             <input
-              type="radio"
-              name={`radio-${field.id}`}
+              type="checkbox"
+              name={`checkbox-${index}`}
               value="Sí"
-              onChange={() => handleRadioChange(field.label, "Sí", "Datos Generales PT1")}
+              checked={radioSeleccionados.some(item => item.nombre === fieldNames[fieldId].label && item.valor === 'Sí')}
+              className="ms-2"
+              onChange={() => handleCheckboxChange(fieldNames[fieldId].label, 'Sí')}
             />
           </div>
         </div>
       ))}
-
-      {/* Lista de radio seleccionados */}
-      {/*<div className="mt-4">
-        <h5 style={{ color: 'red' }}>Campos con errores:</h5>
-        <ul>
-          {radioSeleccionados.map((item, index) => (
-            <li key={index}>{item.nombre}</li>
-          ))}
-        </ul>
-      </div>*/}
     </div>
   );
 };
