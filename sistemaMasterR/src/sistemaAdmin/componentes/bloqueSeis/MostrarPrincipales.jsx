@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { set, useFormContext } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card } from 'react-bootstrap';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
 import useStore from '../../zustand/useStore';
-import api from '../../../api/api';
 import { useSelector } from 'react-redux';
 
 const MostrarPrincipales = ({ data, onValidationStatus }) => {
@@ -12,31 +11,8 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { datosFormulario, cargarDatosFormulario } = useStore();
   
-  //const [idAlterna, setIdAlterna] = useState(2); // Simulación de ID alterna, debe obtenerse dinámicamente
-
-  const idAlternas = useSelector( ( state ) => state.idAlterna.value );
+  const idAlternas = useSelector((state) => state.idAlterna.value);
   const idAlterna = isNaN(parseInt(idAlternas, 10)) ? 0 : parseInt(idAlternas, 10) + 1;
-  console.log(idAlterna)
-
-  const obtenerIdAlterna = async ( LLAVE ) => {
-    try {
-      const response = await api.post( 'obtenerIdAlterna/idAlterna', { LLAVE } );
-      if ( response && response.data.status !== 404 ) {
-        //dispatch( setIdAlterna( response.data[ 0 ].ID_ALTERNA ) );
-        //dispatch( setEnviando( false ) );
-        setIdAlterna( response.data[ 0 ].ID_ALTERNA );
-      } else {
-        //dispatch( setEnviando( true ) );
-        //dispatch( agregarError2( 'Error al obtener el ID alterna.' ) );
-      }
-    } catch ( error ) {
-      console.error( 'Error al obtener el ID alterna:', error );
-    }
-  };
-
-  /*useEffect(() => {
-    obtenerIdAlterna( LLAVE );
-  }, [ LLAVE ]);*/ //SE DESBLOQUEA CUANDO YA TENGAMOS LA TABLA DE MOVIMIENTOS CORRECTA
 
   useEffect(() => {
     if (idAlterna) {
@@ -44,15 +20,17 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
     }
   }, [idAlterna, cargarDatosFormulario]);
 
-  /*useEffect(() => {
-    console.log("Datos del formulario:", datosFormulario);
-  }, [datosFormulario]);*/
-
-  // ✅ Corregido: Ahora accede a `imagenes`, no `imagenesPrincipales`
   const imagenesPrincipales = datosFormulario.imagenes || [];
 
-  const handleRadioChange = (nombre, valor) => {
-    seleccionarRadio(nombre, valor, 'Imagenes Principales');
+  // Manejo de selección/deselección de radio buttons
+  const handleCheckboxChange = (grupo, valor) => {
+    // Si el valor ya está seleccionado, desmarcarlo (eliminando de la lista)
+    if (radioSeleccionados.some(item => item.nombre === grupo && item.valor === valor)) {
+      seleccionarRadio(grupo, null, 'Imagenes Principales'); // Pasamos null para indicar que se deselecciona
+    } else {
+      // Si no está seleccionado, marcarlo
+      seleccionarRadio(grupo, valor, 'Imagenes Principales');
+    }
   };
 
   return (
@@ -65,13 +43,23 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
               <Card.Body>
                 <Card.Title>Grupo {img.grupo}</Card.Title>
                 <div className="d-flex justify-content-center">
+                  {/* Usamos checkboxes en vez de radio buttons */}
                   <input
-                    type="radio"
-                    name={`radio-${index}`}
+                    type="checkbox"
+                    name={`checkbox-${index}`}
                     value="Sí"
+                    checked={radioSeleccionados.some(item => item.nombre === img.grupo && item.valor === 'Sí')}
                     className="ms-2"
-                    onChange={() => handleRadioChange(img.grupo, 'Sí')}
+                    onChange={() => handleCheckboxChange(img.grupo, 'Sí')}
                   />
+                  {/*<input
+                    type="checkbox"
+                    name={`checkbox-${index}`}
+                    value="No"
+                    checked={radioSeleccionados.some(item => item.nombre === img.grupo && item.valor === 'No')}
+                    className="ms-2"
+                    onChange={() => handleCheckboxChange(img.grupo, 'No')}
+                  />*/}
                 </div>
               </Card.Body>
             </Card>

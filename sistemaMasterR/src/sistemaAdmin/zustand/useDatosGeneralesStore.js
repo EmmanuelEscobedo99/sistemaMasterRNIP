@@ -13,17 +13,22 @@ const useDatosGeneralesStore = create((set) => ({
   // Función para manejar los radio buttons
   seleccionarRadio: (nombre, valor, formulario) =>
     set((state) => {
-      // Verifica si el radio ya está en la lista
-      const existe = state.radioSeleccionados.some((item) => item.nombre === nombre);
+      if (valor === null) {
+        // Si el valor es null, eliminarlo de la lista (deselección)
+        const nuevaLista = state.radioSeleccionados.filter(item => item.nombre !== nombre);
+        return { radioSeleccionados: nuevaLista };
+      } else {
+        // Si no es null, agregarlo o actualizarlo
+        const existe = state.radioSeleccionados.some((item) => item.nombre === nombre);
 
-      // Si ya existe, actualiza el valor. Si no, agrégalo a la lista
-      const nuevaLista = existe
-        ? state.radioSeleccionados.map((item) =>
-            item.nombre === nombre ? { ...item, valor, formulario } : item
-          )
-        : [...state.radioSeleccionados, { nombre, valor, formulario }];
+        const nuevaLista = existe
+          ? state.radioSeleccionados.map((item) =>
+              item.nombre === nombre ? { ...item, valor, formulario } : item
+            )
+          : [...state.radioSeleccionados, { nombre, valor, formulario }];
 
-      return { radioSeleccionados: nuevaLista };
+        return { radioSeleccionados: nuevaLista };
+      }
     }),
 
   // Función para limpiar los errores seleccionados
