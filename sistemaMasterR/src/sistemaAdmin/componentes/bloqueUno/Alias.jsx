@@ -65,6 +65,7 @@ const Alias = ({ data, onFormChange, onValidationStatus }) => {
             />
           </OverlayTrigger>
           <label htmlFor={`ALIAS_${index}`} style={{ marginLeft: '10px' }}>{`Alias ${index + 1}`}</label>
+
             {/* Checkbox toggleable */}
             <input
               type="checkbox"
@@ -81,6 +82,7 @@ const Alias = ({ data, onFormChange, onValidationStatus }) => {
                 }
               }}
             />
+
         </div>
       ))}
 
