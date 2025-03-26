@@ -66,6 +66,7 @@ const DatosGeneralesP2 = ({ data, onFormChange, onValidationStatus }) => {
     }
   };
 
+  // Mapeo de campos con sus nombres descriptivos y etiquetas
   const fields = [
     { id: "TELEFONO", label: "Teléfono del individuo" },
     { id: "FORMULA", label: "Fórmula" },
@@ -84,6 +85,15 @@ const DatosGeneralesP2 = ({ data, onFormChange, onValidationStatus }) => {
     { id: "ID_SENTENCIA_ABSOLUTORIA", label: "Leyenda de sentencia" },
     { id: "ID_ANALFABETA", label: "Es analfabeta el individuo" },
   ];
+
+  // Manejo de selección/deselección de checkboxes
+  const handleCheckboxChange = (label, valor) => {
+    if (radioSeleccionados.some(item => item.nombre === label && item.valor === valor)) {
+      seleccionarRadio(label, null, 'Datos Generales P2');
+    } else {
+      seleccionarRadio(label, valor, 'Datos Generales P2');
+    }
+  };
 
   return (
     <div className="row">
@@ -105,25 +115,20 @@ const DatosGeneralesP2 = ({ data, onFormChange, onValidationStatus }) => {
             />
           </OverlayTrigger>
           <label htmlFor={field.id} style={{ marginLeft: '10px' }}>{field.label}</label>
-          <input
-            type="radio"
-            name={`radio-${field.id}`}
-            value="Sí"
-            className="ms-2"
-            onChange={() => handleRadioChange(field.label, 'Sí', 'Datos Generales PT2')}
-          />
+          
+          {/* Checkbox para Selección */}
+          <div className="d-flex justify-content-center">
+            <input
+              type="checkbox"
+              name={`checkbox-${field.id}`}
+              value="Sí"
+              checked={radioSeleccionados.some(item => item.nombre === field.label && item.valor === 'Sí')}
+              className="ms-2"
+              onChange={() => handleCheckboxChange(field.label, 'Sí')}
+            />
+          </div>
         </div>
       ))}
-
-      {/* Lista de radio seleccionados */}
-      {/*<div className="mt-4">
-        <h5 style={{ color: 'red' }}>Campos con errores:</h5>
-        <ul>
-          {radioSeleccionados.map((item, index) => (
-            <li key={index}>{item.nombre}</li>
-          ))}
-        </ul>
-      </div>*/}
     </div>
   );
 };

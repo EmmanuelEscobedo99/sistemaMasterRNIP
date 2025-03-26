@@ -108,7 +108,7 @@ const DatosGenerales = ({ onValidationStatus }) => {
     if (radioSeleccionados.some(item => item.nombre === label && item.valor === valor)) {
       seleccionarRadio(label, null, 'Datos Generales P1');
     } else {
-      seleccionarRadio(label, valor, 'Campos Generales');
+      seleccionarRadio(label, valor, 'Datos Generales P1');
     }
   };
 
