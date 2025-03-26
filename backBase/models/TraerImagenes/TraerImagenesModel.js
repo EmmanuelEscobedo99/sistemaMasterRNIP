@@ -6,7 +6,7 @@ const TraerImagenesModel = {
     try {
       console.log('🔍 Buscando ID_ALTERNA con LLAVE:', llave);
 
-      // Buscar el ID_ALTERNA con ID_BLOQUE_FUNCIONAL = 6
+      // 1. Buscar el ID_ALTERNA más reciente con ID_BLOQUE_FUNCIONAL = 6
       const [idResult] = await connection.query(`
         SELECT ID_ALTERNA
         FROM movimientos
@@ -22,17 +22,27 @@ const TraerImagenesModel = {
       }
 
       const idAlternaBloque6 = idResult[0].ID_ALTERNA;
-      console.log(`✅ ID_ALTERNA encontrado para LLAVE ${llave}: ${idAlternaBloque6}`);
+      console.log(`✅ ID_ALTERNA encontrado: ${idAlternaBloque6}`);
 
-      // Traer imágenes de ese ID_ALTERNA
+      // 2. Obtener las imágenes
       const [imagenes] = await connection.query(`
-        SELECT *
+        SELECT IMAGEN, GRUPO
         FROM imagenes
         WHERE ID_ALTERNA = ?
       `, [idAlternaBloque6]);
 
       console.log(`🖼️ Total de imágenes encontradas: ${imagenes.length}`);
-      return imagenes;
+
+      // 3. Convertir las imágenes a base64
+      const imagenesConvertidas = imagenes.map((row) => {
+        const base64 = Buffer.from(row.IMAGEN).toString('base64');
+        return {
+          grupo: row.GRUPO,
+          imagen: `data:image/jpeg;base64,${base64}`
+        };
+      });
+
+      return imagenesConvertidas;
 
     } catch (error) {
       console.error('❌ Error en TraerImagenesModel:', error);
