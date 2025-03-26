@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useStore from "../../../sistemaAdmin/zustand/useStore";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setIdAlterna } from "../../../sistemaAdmin/reducers/slice/idAlterna/idAlternaSlice";
+import { setIdAlterna } from "../../../sistemaAdmin/reducers/slice/IdAlterna/IdAlternaSlice";
 import { motion } from "framer-motion";
 
 const Bloque1y2 = () => {
