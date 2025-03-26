@@ -81,7 +81,7 @@ const ConsultarErrores2 = () => {
           console.error( 'Error al enviar la petición:', error );
           Swal.fire( {
             title: 'Error',
-            text: 'No se pudo rechazar los registros.',
+            text: 'Porfavor ingrese un mensaje sobre los errores.',
             icon: 'error',
             confirmButtonText: 'Aceptar',
           } );

@@ -38,24 +38,18 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
     obtenerIdAlterna( LLAVE );
   }, [ LLAVE ]);*/ //SE DESBLOQUEA CUANDO YA TENGAMOS LA TABLA DE MOVIMIENTOS CORRECTA
 
-  const { imagenesPorLlave, cargarImagenesPorLlave } = useStore();
-  const LLAVE = useSelector((state) => state.Llave.value);
-
   useEffect(() => {
-    if (LLAVE) {
-      cargarImagenesPorLlave(LLAVE); // ✅ ya usa el endpoint correcto con /api/imagenesPorLlave
+    if (idAlterna) {
+      cargarDatosFormulario('principales', idAlterna);
     }
-  }, [LLAVE]);
-  
-  const imagenesPrincipales = imagenesPorLlave.filter(img =>
-    ['A', 'B', 'C'].includes(img.grupo)
-  );  
+  }, [idAlterna, cargarDatosFormulario]);
 
   /*useEffect(() => {
     console.log("Datos del formulario:", datosFormulario);
   }, [datosFormulario]);*/
 
   // ✅ Corregido: Ahora accede a `imagenes`, no `imagenesPrincipales`
+  const imagenesPrincipales = datosFormulario.imagenes || [];
 
   const handleRadioChange = (nombre, valor) => {
     seleccionarRadio(nombre, valor, 'Imagenes Principales');
