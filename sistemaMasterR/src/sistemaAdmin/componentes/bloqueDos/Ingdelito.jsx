@@ -84,14 +84,21 @@ const Ingdelito = ( { data, onFormChange, onValidationStatus } ) => {
                   >
                     { field.label }
                   </label>
-  
                   <input
-                    type="radio"
-                    name={ `radio-${ field.id }-${ index }` }
-                    value="Sí"
-                    className="ms-2"
-                    onChange={ () => handleRadioChange( field.label, 'Sí', 'Ingdelito', index ) }
-                  />
+                      type="checkbox"
+                      name={`checkbox-${field.id}-${index}`}
+                      value="Sí"
+                      className="ms-2"
+                      checked={radioSeleccionados.some(item => item.nombre === `${field.label} - Ingdelito ${index + 1}` && item.valor === 'Sí')}
+                      onChange={() => {
+                        const nombreCompleto = `${field.label} - Ingdelito ${index + 1}`;
+                        if (radioSeleccionados.some(item => item.nombre === nombreCompleto && item.valor === 'Sí')) {
+                          seleccionarRadio(nombreCompleto, null, 'Ingdelito');
+                        } else {
+                          seleccionarRadio(nombreCompleto, 'Sí', 'Ingdelito');
+                        }
+                      }}
+                    />
                 </div>
               ) ) }
             </div>

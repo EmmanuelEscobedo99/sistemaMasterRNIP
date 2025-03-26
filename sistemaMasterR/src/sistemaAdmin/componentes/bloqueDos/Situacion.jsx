@@ -25,8 +25,13 @@ const Domicilio = ({ data, onFormChange, onValidationStatus }) => {
     onFormChange(name, value);
   };
 
-  const handleRadioChange = (nombre, valor, formulario) => {
-    seleccionarRadio(nombre, valor, formulario);
+  // Lógica nueva para manejar checkbox toggleables
+  const handleCheckboxChange = (label, valor) => {
+    if (radioSeleccionados.some(item => item.nombre === label && item.valor === valor)) {
+      seleccionarRadio(label, null, 'Situación');
+    } else {
+      seleccionarRadio(label, valor, 'Situación');
+    }
   };
 
   const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
@@ -39,13 +44,11 @@ const Domicilio = ({ data, onFormChange, onValidationStatus }) => {
 
   const situacionObtenida = situacion?.[0] || {};
 
-  // Función para formatear fechas (de ISO a YYYY-MM-DD)
   const formatFecha = (fecha) => {
     if (!fecha) return '';
-    return fecha.split('T')[0];  // Separa por la 'T' y toma solo la parte de la fecha
+    return fecha.split('T')[0];
   };
 
-  // Mapeo para mostrar descripción en vez de clave
   const getFieldValue = (fieldId) => {
     switch (fieldId) {
       case "CLASIFICA":
@@ -58,7 +61,7 @@ const Domicilio = ({ data, onFormChange, onValidationStatus }) => {
         return situacionObtenida.delito_descripcion || situacionObtenida.DELITO || '';
       case "FEC_ACT":
       case "FECHAAVERI":
-        return formatFecha(situacionObtenida[fieldId]) || '';  // Aquí aplicamos la función para formatear fechas
+        return formatFecha(situacionObtenida[fieldId]) || '';
       default:
         return situacionObtenida[fieldId] || '';
     }
@@ -83,7 +86,7 @@ const Domicilio = ({ data, onFormChange, onValidationStatus }) => {
 
   return (
     <div className="row">
-      {fields.map((field) => (
+      {fields.map((field, index) => (
         <div key={field.id} className="col-md-3 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
             placement="right"
@@ -102,26 +105,20 @@ const Domicilio = ({ data, onFormChange, onValidationStatus }) => {
           </OverlayTrigger>
           <label htmlFor={field.id} style={{ marginLeft: '10px' }}>{field.label}</label>
 
-          {/* Radio Button */}
+          {/* Checkbox Toggle (con apariencia de botón redondo) */}
+          <div className="d-flex justify-content-center">
           <input
-            type="radio"
-            name={`radio-${field.id}`}
+            type="checkbox"
+            name={`checkbox-${index}`}
             value="Sí"
+            checked={radioSeleccionados.some(item => item.nombre === field.label && item.valor === 'Sí')}
             className="ms-2"
-            onChange={() => handleRadioChange(field.label, 'Sí', 'Situación')}
+            onChange={() => handleCheckboxChange(field.label, 'Sí')}
           />
+
+          </div>
         </div>
       ))}
-
-      {/* Lista de radio seleccionados */}
-      {/*<div className="mt-4">
-        <h5 style={{ color: 'red' }}>Campos con errores:</h5>
-        <ul>
-          {radioSeleccionados.map((item, index) => (
-            <li key={index}>{item.nombre}</li>
-          ))}
-        </ul>
-      </div>*/}
     </div>
   );
 };

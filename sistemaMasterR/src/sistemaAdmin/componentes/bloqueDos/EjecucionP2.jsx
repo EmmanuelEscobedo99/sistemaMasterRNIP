@@ -95,15 +95,21 @@ const EjecucionP2 = ( { data, onFormChange, onValidationStatus } ) => {
             />
           </OverlayTrigger>
           <label htmlFor={ field.id } style={ { marginLeft: '10px' } }>{ field.label }</label>
-
-          {/* Radio Button */ }
-          <input
-            type="radio"
-            name={ `radio-${ field.id }` }
-            value="Sí"
-            className="ms-2"
-            onChange={ () => handleRadioChange( field.label, 'Sí', 'Ejecución PT2' ) }
-          />
+            {/* Checkbox toggleable */}
+            <input
+              type="checkbox"
+              name={`checkbox-${field.id}`}
+              value="Sí"
+              checked={radioSeleccionados.some(item => item.nombre === field.label && item.valor === 'Sí')}
+              className="ms-2"
+              onChange={() => {
+                if (radioSeleccionados.some(item => item.nombre === field.label && item.valor === 'Sí')) {
+                  seleccionarRadio(field.label, null, 'Ejecución PT2');
+                } else {
+                  seleccionarRadio(field.label, 'Sí', 'Ejecución PT2');
+                }
+              }}
+            />
         </div>
       ) ) }
       {/* Lista de radio seleccionados */ }

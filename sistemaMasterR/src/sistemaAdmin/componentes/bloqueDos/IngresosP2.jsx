@@ -105,16 +105,23 @@ const IngresosP2 = ( { data, onFormChange, onValidationStatus } ) => {
                 </OverlayTrigger>
                 <label htmlFor={ `${ field.id }_${ index }` } style={ { marginLeft: '10px' } }>{ field.label }</label>
 
-                {/* Radio Button - Marca el campo como error */ }
-                <input
-                  type="radio"
-                  name={ `radio-${ field.id }-${ index }` }
-                  value="Sí"
-                  className="ms-2"
-                  onChange={ () =>
-                    handleRadioChange( field.label, 'Sí', 'Ingresos PT2', index )
-                  }
-                />
+                  {/* Checkbox toggleable */}
+                  <input
+                    type="checkbox"
+                    name={`checkbox-${field.id}-${index}`}
+                    value="Sí"
+                    className="ms-2"
+                    checked={radioSeleccionados.some(item => item.nombre === `${field.label} Ingreso ${index + 1}` && item.valor === 'Sí')}
+                    onChange={() => {
+                      const nombreCompleto = `${field.label} Ingreso ${index + 1}`;
+                      if (radioSeleccionados.some(item => item.nombre === nombreCompleto && item.valor === 'Sí')) {
+                        seleccionarRadio(nombreCompleto, null, 'Ingresos PT2');
+                      } else {
+                        seleccionarRadio(nombreCompleto, 'Sí', 'Ingresos PT2');
+                      }
+                    }}
+                  />
+
               </div>
             ) ) }
           </div>

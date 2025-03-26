@@ -82,17 +82,23 @@ const ODelito = ({ data, onFormChange, onValidationStatus }) => {
                         />
                       </OverlayTrigger>
                       <label htmlFor={`${field.id}_${index}`} className="ms-1">{field.label}</label>
-
-                      {/* Radio Button */}
+                      {/* Checkbox toggleable */}
                       <div className="mt-2">
                         <input
-                          type="radio"
-                          name={`radio-${field.id}-${index}`}
+                          type="checkbox"
+                          name={`checkbox-${field.id}-${index}`}
                           value="Sí"
                           className="ms-2"
-                          onChange={() => handleRadioChange(field.label, 'Sí', 'ODelito', index)}
+                          checked={radioSeleccionados.some(item => item.nombre === `${field.label} Delito ${index + 1}` && item.valor === 'Sí')}
+                          onChange={() => {
+                            const nombreCompleto = `${field.label} Delito ${index + 1}`;
+                            if (radioSeleccionados.some(item => item.nombre === nombreCompleto && item.valor === 'Sí')) {
+                              seleccionarRadio(nombreCompleto, null, 'ODelito');
+                            } else {
+                              seleccionarRadio(nombreCompleto, 'Sí', 'ODelito');
+                            }
+                          }}
                         />
-                        <label className="ms-2"></label>
                       </div>
                     </div>
                   ))}
