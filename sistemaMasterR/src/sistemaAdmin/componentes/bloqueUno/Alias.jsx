@@ -9,7 +9,7 @@ import useStore from '../../zustand/useStore';
 
 const Alias = ({ data, onFormChange, onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
-  const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
+  const { seleccionarCheckbox, checkboxSeleccionados = [] } = useDatosGeneralesStore();  // Aseguramos que checkboxSeleccionados sea un array
   const { alias } = useStore();
 
   useEffect(() => {
@@ -29,8 +29,17 @@ const Alias = ({ data, onFormChange, onValidationStatus }) => {
     onFormChange(name, value);
   };
 
-  const handleRadioChange = (nombre, valor, formulario) => {
-    seleccionarRadio(nombre, valor, formulario);
+  const handleCheckboxChange = (label, index) => {
+    const nombreCompleto = `${label} Alias ${index + 1}`;
+    const isChecked = checkboxSeleccionados.some(item => item.nombre === nombreCompleto && item.valor === 'Sí');
+
+    if (isChecked) {
+      // Desmarcar checkbox
+      seleccionarCheckbox(nombreCompleto, null);  // El valor nulo indica que desmarcamos
+    } else {
+      // Marcar checkbox
+      seleccionarCheckbox(nombreCompleto, 'Sí');  // Marcamos el checkbox con el valor 'Sí'
+    }
   };
 
   const capitalizeFirstLetter = (string) => {
@@ -41,9 +50,7 @@ const Alias = ({ data, onFormChange, onValidationStatus }) => {
     <Tooltip>{message}</Tooltip>
   );
 
-  const aliasObtenidos = alias?.[0] || [];  // Aquí nos aseguramos de que sea un array de alias
-
-  console.log('Alias obtenidos:', aliasObtenidos);
+  const aliasObtenidos = alias?.[0] || [];  // Nos aseguramos de que sea un array de alias
 
   return (
     <div className="row">
@@ -51,7 +58,7 @@ const Alias = ({ data, onFormChange, onValidationStatus }) => {
         <div key={index} className="col-md-3 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
             placement="right"
-            overlay={errors[`ALIAS_${index}`] ? renderTooltip(errors[`ALIAS_${index}`].message) : <></>}
+            overlay={errors[`ALIAS_${index}`] ? renderTooltip(errors[`ALIAS_${index}`]?.message) : <></>}
           >
             <input
               type="text"
@@ -64,28 +71,21 @@ const Alias = ({ data, onFormChange, onValidationStatus }) => {
               style={{ borderColor: errors[`ALIAS_${index}`] ? 'red' : '' }}
             />
           </OverlayTrigger>
-          <label htmlFor={`ALIAS_${index}`} style={{ marginLeft: '10px' }}>{`Alias ${index + 1}`}</label>
+          <label htmlFor={`ALIAS_${index}`} className="ms-1">{`Alias ${index + 1}`}</label>
 
-          {/* Radio Button */}
-          <input
-            type="radio"
-            name={`radio-ALIAS_${index}`}
-            value="Sí"
-            className="ms-2"
-            onChange={() => handleRadioChange(`Alias ${index + 1}`, 'Sí', 'Alias')}
-          />
+          {/* Checkbox toggleable */}
+          <div className="mt-2">
+            <input
+              type="checkbox"
+              name={`checkbox-ALIAS-${index}`}
+              value="Sí"
+              className="ms-2"
+              checked={checkboxSeleccionados.some(item => item.nombre === `Alias ${index + 1}` && item.valor === 'Sí')}
+              onChange={() => handleCheckboxChange(`Alias ${index + 1}`, index)}  // Control de cambio
+            />
+          </div>
         </div>
       ))}
-
-      {/* Lista de radio seleccionados */}
-      {/*<div className="mt-4">
-        <h5 style={{ color: 'red' }}>Campos con errores:</h5>
-        <ul>
-          {radioSeleccionados.map((item, index) => (
-            <li key={index}>{item.nombre}</li>
-          ))}
-        </ul>
-      </div>*/}
     </div>
   );
 };
