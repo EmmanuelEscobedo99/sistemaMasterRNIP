@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Tooltip, OverlayTrigger } from 'react-bootstrap';
@@ -6,44 +6,55 @@ import '../../../sistema/css/estilo.css';
 import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1/ValidacionBloqueUno';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
 import useStore from '../../zustand/useStore';
+import { motion } from 'framer-motion';
 
-const JuridicosP2 = ( { data, onFormChange, onValidationStatus } ) => {
+const JuridicosP2 = ({ data, onFormChange, onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { juridicos } = useStore();
 
-  const handleChange = ( e ) => {
+  // Estado de carga
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulamos la carga de datos
+    setTimeout(() => {
+      setLoading(false); // Cambiar el estado de carga después de 2 segundos
+    }, 2000);
+  }, []);
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
     const lowercaseName = name.toLowerCase();
-    const validationResult = ValidacionBloqueUno[ `validacion${ capitalizeFirstLetter( lowercaseName ) }` ]( value );
+    const validationResult = ValidacionBloqueUno[`validacion${capitalizeFirstLetter(lowercaseName)}`](value);
 
-    if ( validationResult !== true ) {
-      setError( name, { type: 'formulario 1', message: validationResult } );
+    if (validationResult !== true) {
+      setError(name, { type: 'formulario 1', message: validationResult });
     } else {
-      clearErrors( name );
+      clearErrors(name);
     }
-    onFormChange( name, value );
+    onFormChange(name, value);
   };
 
-  const handleRadioChange = ( nombre, valor, formulario ) => {
-    seleccionarRadio( nombre, valor, formulario );
+  const handleRadioChange = (nombre, valor, formulario) => {
+    seleccionarRadio(nombre, valor, formulario);
   };
 
-  const capitalizeFirstLetter = ( string ) => string.charAt( 0 ).toUpperCase() + string.slice( 1 );
+  const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
-  useEffect( () => {
-    onValidationStatus( errors );
-  }, [ errors, onValidationStatus ] );
+  useEffect(() => {
+    onValidationStatus(errors);
+  }, [errors, onValidationStatus]);
 
-  const renderTooltip = ( message ) => (
-    <Tooltip>{ message }</Tooltip>
+  const renderTooltip = (message) => (
+    <Tooltip>{message}</Tooltip>
   );
 
-  const juridicosObtenidos = juridicos?.[ 0 ] || {};
+  const juridicosObtenidos = juridicos?.[0] || {};
 
   // Función para mapear valores especiales (con descripción de catálogo)
-  const getFieldValue = ( fieldId ) => {
-    switch ( fieldId ) {
+  const getFieldValue = (fieldId) => {
+    switch (fieldId) {
       case "CALIDAD":
         return juridicosObtenidos.calidad_descripcion || juridicosObtenidos.CALIDAD || '';
       case "AUTOR":
@@ -57,15 +68,15 @@ const JuridicosP2 = ( { data, onFormChange, onValidationStatus } ) => {
       case "FECHAAMPARO":
       case "FECHAAMPARO2":
       case "FCUMPLIMIENTOS":
-        return formatFecha( juridicosObtenidos[ fieldId ] );  // Formato de fecha
+        return formatFecha(juridicosObtenidos[fieldId]);  // Formato de fecha
       default:
-        return juridicosObtenidos[ fieldId ] || '';
+        return juridicosObtenidos[fieldId] || '';
     }
   };
 
-  const formatFecha = ( fechaISO ) => {
-    if ( !fechaISO ) return '';
-    return fechaISO.split( 'T' )[ 0 ];  // Convierte '2025-03-02T06:00:00.000Z' a '2025-03-02'
+  const formatFecha = (fechaISO) => {
+    if (!fechaISO) return '';
+    return fechaISO.split('T')[0];  // Convierte '2025-03-02T06:00:00.000Z' a '2025-03-02'
   };
 
   const fields = [
@@ -86,51 +97,70 @@ const JuridicosP2 = ( { data, onFormChange, onValidationStatus } ) => {
     { id: "FCUMPLIMIENTOS", label: "Fecha de cumplimiento de sentencia" },
   ];
 
+  // Si el estado de carga es verdadero, mostramos la pantalla de carga
+  if (loading) {
+    return (
+      <motion.div
+        className="d-flex justify-content-center align-items-center"
+        style={{
+          height: '50vh',
+          backgroundColor: 'transparent',
+          flexDirection: 'column',
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <img
+          src="../../../../public/ssp.jpeg" // Ruta de tu imagen de carga
+          alt="Cargando..."
+          width="200px"
+        />
+        <p style={{ color: 'black', marginTop: '20px', fontSize: '24px', fontWeight: 'bold' }}>
+          Cargando Juridicos PT2...
+        </p>
+      </motion.div>
+    );
+  }
+
   return (
     <div className="row">
-      { fields.map( ( field ) => (
-        <div key={ field.id } className="col-md-3 form-floating mt-3 d-flex align-items-center">
+      {fields.map((field) => (
+        <div key={field.id} className="col-md-3 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
             placement="right"
-            overlay={ errors[ field.id ] ? renderTooltip( errors[ field.id ].message ) : <></> }
+            overlay={errors[field.id] ? renderTooltip(errors[field.id].message) : <></>}
           >
             <input
               type="text"
-              className={ `form-control ${ errors[ field.id ] ? 'is-invalid shake' : '' }` }
-              id={ field.id }
-              name={ field.id }
-              placeholder={ errors[ field.id ] ? errors[ field.id ].message : field.label }
-              value={ getFieldValue( field.id ) }
-              { ...register( field.id, { onChange: handleChange } ) }
-              style={ { borderColor: errors[ field.id ] ? 'red' : '' } }
+              className={`form-control ${errors[field.id] ? 'is-invalid shake' : ''}`}
+              id={field.id}
+              name={field.id}
+              placeholder={errors[field.id] ? errors[field.id].message : field.label}
+              value={getFieldValue(field.id)}
+              {...register(field.id, { onChange: handleChange })}
+              style={{ borderColor: errors[field.id] ? 'red' : '' }}
             />
           </OverlayTrigger>
-          <label htmlFor={ field.id } style={ { marginLeft: '10px' } }>{ field.label }</label>
-            {/* Checkbox toggleable */}
-            <input
-              type="checkbox"
-              name={`checkbox-${field.id}`}
-              value="Sí"
-              checked={radioSeleccionados.some(item => item.nombre === field.label && item.valor === 'Sí')}
-              className="ms-2"
-              onChange={() => {
-                if (radioSeleccionados.some(item => item.nombre === field.label && item.valor === 'Sí')) {
-                  seleccionarRadio(field.label, null, 'Juridicos PT2');
-                } else {
-                  seleccionarRadio(field.label, 'Sí', 'Juridicos PT2');
-                }
-              }}
-            />
+          <label htmlFor={field.id} style={{ marginLeft: '10px' }}>{field.label}</label>
+
+          {/* Checkbox toggleable */}
+          <input
+            type="checkbox"
+            name={`checkbox-${field.id}`}
+            value="Sí"
+            checked={radioSeleccionados.some(item => item.nombre === field.label && item.valor === 'Sí')}
+            className="ms-2"
+            onChange={() => {
+              if (radioSeleccionados.some(item => item.nombre === field.label && item.valor === 'Sí')) {
+                seleccionarRadio(field.label, null, 'Juridicos PT2');
+              } else {
+                seleccionarRadio(field.label, 'Sí', 'Juridicos PT2');
+              }
+            }}
+          />
         </div>
-      ) ) }
-      {/*<div className="mt-4">
-        <h5 style={{ color: 'red' }}>Campos con errores:</h5>
-        <ul>
-          {radioSeleccionados.map((item, index) => (
-            <li key={index}>{item.nombre}</li>
-          ))}
-        </ul>
-      </div>*/}
+      ))}
     </div>
   );
 };

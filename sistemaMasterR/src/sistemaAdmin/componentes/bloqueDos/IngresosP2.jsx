@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Tooltip, OverlayTrigger } from 'react-bootstrap';
@@ -6,46 +6,57 @@ import '../../../sistema/css/estilo.css';
 import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1/ValidacionBloqueUno';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
 import useStore from '../../zustand/useStore';
+import { motion } from 'framer-motion';
 
-const IngresosP2 = ( { data, onFormChange, onValidationStatus } ) => {
+const IngresosP2 = ({ data, onFormChange, onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { ingresos } = useStore();
 
-  useEffect( () => {
-    onValidationStatus( errors );
-  }, [ errors, onValidationStatus ] );
+  // Estado de carga
+  const [loading, setLoading] = useState(true);
 
-  const handleChange = ( index, e ) => {
+  useEffect(() => {
+    // Simulamos la carga de datos
+    setTimeout(() => {
+      setLoading(false); // Cambiar el estado de carga después de 2 segundos
+    }, 2000);
+  }, []);
+
+  useEffect(() => {
+    onValidationStatus(errors);
+  }, [errors, onValidationStatus]);
+
+  const handleChange = (index, e) => {
     const { name, value } = e.target;
     const lowercaseName = name.toLowerCase();
-    const validationResult = ValidacionBloqueUno[ `validacion${ capitalizeFirstLetter( lowercaseName ) }` ]?.( value );
+    const validationResult = ValidacionBloqueUno[`validacion${capitalizeFirstLetter(lowercaseName)}`]?.(value);
 
-    if ( validationResult !== true ) {
-      setError( `${ name }_${ index }`, { type: 'formulario 1', message: validationResult } );
+    if (validationResult !== true) {
+      setError(`${name}_${index}`, { type: 'formulario 1', message: validationResult });
     } else {
-      clearErrors( `${ name }_${ index }` );
+      clearErrors(`${name}_${index}`);
     }
-    onFormChange( `${ name }_${ index }`, value );
+    onFormChange(`${name}_${index}`, value);
   };
 
-  const handleRadioChange = ( nombre, valor, formulario, index ) => {
-    const nombreCompleto = `${ nombre } Ingreso ${ index + 1 }`;
-    seleccionarRadio( nombreCompleto, valor, formulario );
+  const handleRadioChange = (nombre, valor, formulario, index) => {
+    const nombreCompleto = `${nombre} Ingreso ${index + 1}`;
+    seleccionarRadio(nombreCompleto, valor, formulario);
   };
 
-  const capitalizeFirstLetter = ( string ) =>
-    string.charAt( 0 ).toUpperCase() + string.slice( 1 );
+  const capitalizeFirstLetter = (string) =>
+    string.charAt(0).toUpperCase() + string.slice(1);
 
-  const formatFecha = ( fecha ) => {
-    if ( !fecha ) return '';
-    if ( fecha.includes( 'T' ) ) {
-      return fecha.split( 'T' )[ 0 ]; // YYYY-MM-DD
+  const formatFecha = (fecha) => {
+    if (!fecha) return '';
+    if (fecha.includes('T')) {
+      return fecha.split('T')[0]; // YYYY-MM-DD
     }
     return fecha;
   };
 
-  const renderTooltip = ( message ) => <Tooltip>{ message }</Tooltip>;
+  const renderTooltip = (message) => <Tooltip>{message}</Tooltip>;
 
   const fields = [
     { id: "PENAMES", label: "Pena en meses" },
@@ -68,79 +79,90 @@ const IngresosP2 = ( { data, onFormChange, onValidationStatus } ) => {
     { id: "FECHA_INGRESO", label: "Fecha de ingreso del interno", isDate: true },
   ];
 
-  const fieldLabels = fields.reduce( ( acc, field ) => {
-    acc[ field.id ] = field.label;
+  const fieldLabels = fields.reduce((acc, field) => {
+    acc[field.id] = field.label;
     return acc;
-  }, {} );
+  }, {});
 
-  const getFieldLabel = ( fieldId ) => fieldLabels[ fieldId ] || fieldId;
+  const getFieldLabel = (fieldId) => fieldLabels[fieldId] || fieldId;
+
+  // Si el estado de carga es verdadero, mostramos la pantalla de carga
+  if (loading) {
+    return (
+      <motion.div
+        className="d-flex justify-content-center align-items-center"
+        style={{
+          height: '50vh',
+          backgroundColor: 'transparent',
+          flexDirection: 'column',
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <img
+          src="../../../../public/ssp.jpeg" // Ruta de tu imagen de carga
+          alt="Cargando..."
+          width="200px"
+        />
+        <p style={{ color: 'black', marginTop: '20px', fontSize: '24px', fontWeight: 'bold' }}>
+          Cargando Ingresos PT2...
+        </p>
+      </motion.div>
+    );
+  }
 
   return (
     <div className="container-fluid">
-      { ingresos.map( ( ingreso, index ) => (
-        <div key={ index } className="mb-4 p-3 border rounded">
-          <h5>{ `Ingreso #${ index + 1 }` }</h5>
+      {ingresos.map((ingreso, index) => (
+        <div key={index} className="mb-4 p-3 border rounded">
+          <h5>{`Ingreso #${index + 1}`}</h5>
           <div className="row">
-            { fields.map( ( field ) => (
-              <div key={ field.id } className="col-md-3 form-floating mt-3 d-flex align-items-center">
+            {fields.map((field) => (
+              <div key={field.id} className="col-md-3 form-floating mt-3 d-flex align-items-center">
                 <OverlayTrigger
                   placement="right"
                   overlay={
-                    errors[ `${ field.id }_${ index }` ]
-                      ? renderTooltip( errors[ `${ field.id }_${ index }` ].message )
+                    errors[`${field.id}_${index}`]
+                      ? renderTooltip(errors[`${field.id}_${index}`]?.message)
                       : <></>
                   }
                 >
                   <input
                     type="text"
-                    className={ `form-control ${ errors[ `${ field.id }_${ index }` ] ? 'is-invalid shake' : '' }` }
-                    id={ `${ field.id }_${ index }` }
-                    name={ field.id }
-                    placeholder={ errors[ `${ field.id }_${ index }` ]?.message || field.label }
-                    value={ field.isDate ? formatFecha( ingreso[ field.id ] ) : ( ingreso[ field.id ] || '' ) }
-                    { ...register( `${ field.id }_${ index }`, { onChange: ( e ) => handleChange( index, e ) } ) }
-                    style={ { borderColor: errors[ `${ field.id }_${ index }` ] ? 'red' : '' } }
+                    className={`form-control ${errors[`${field.id}_${index}`] ? 'is-invalid shake' : ''}`}
+                    id={`${field.id}_${index}`}
+                    name={field.id}
+                    placeholder={errors[`${field.id}_${index}`]?.message || field.label}
+                    value={field.isDate ? formatFecha(ingreso[field.id]) : (ingreso[field.id] || '')}
+                    {...register(`${field.id}_${index}`, { onChange: (e) => handleChange(index, e) })}
+                    style={{ borderColor: errors[`${field.id}_${index}`] ? 'red' : '' }}
                     readOnly
                   />
                 </OverlayTrigger>
-                <label htmlFor={ `${ field.id }_${ index }` } style={ { marginLeft: '10px' } }>{ field.label }</label>
+                <label htmlFor={`${field.id}_${index}`} style={{ marginLeft: '10px' }}>{field.label}</label>
 
-                  {/* Checkbox toggleable */}
-                  <input
-                    type="checkbox"
-                    name={`checkbox-${field.id}-${index}`}
-                    value="Sí"
-                    className="ms-2"
-                    checked={radioSeleccionados.some(item => item.nombre === `${field.label} Ingreso ${index + 1}` && item.valor === 'Sí')}
-                    onChange={() => {
-                      const nombreCompleto = `${field.label} Ingreso ${index + 1}`;
-                      if (radioSeleccionados.some(item => item.nombre === nombreCompleto && item.valor === 'Sí')) {
-                        seleccionarRadio(nombreCompleto, null, 'Ingresos PT2');
-                      } else {
-                        seleccionarRadio(nombreCompleto, 'Sí', 'Ingresos PT2');
-                      }
-                    }}
-                  />
-
+                {/* Checkbox toggleable */}
+                <input
+                  type="checkbox"
+                  name={`checkbox-${field.id}-${index}`}
+                  value="Sí"
+                  className="ms-2"
+                  checked={radioSeleccionados.some(item => item.nombre === `${field.label} Ingreso ${index + 1}` && item.valor === 'Sí')}
+                  onChange={() => {
+                    const nombreCompleto = `${field.label} Ingreso ${index + 1}`;
+                    if (radioSeleccionados.some(item => item.nombre === nombreCompleto && item.valor === 'Sí')) {
+                      seleccionarRadio(nombreCompleto, null, 'Ingresos PT2');
+                    } else {
+                      seleccionarRadio(nombreCompleto, 'Sí', 'Ingresos PT2');
+                    }
+                  }}
+                />
               </div>
-            ) ) }
+            ))}
           </div>
         </div>
-      ) ) }
-
-      {/* Lista de campos marcados como error */ }
-      {/*<div className="mt-4">
-        <h5 style={{ color: 'red' }}>Campos con errores:</h5>
-        {radioSeleccionados.length > 0 ? (
-          <ul>
-            {radioSeleccionados.map((item, index) => (
-              <li key={index}>{item.nombre}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>Sin campos marcados por el momento.</p>
-        )}
-      </div>*/}
+      ))}
     </div>
   );
 };
