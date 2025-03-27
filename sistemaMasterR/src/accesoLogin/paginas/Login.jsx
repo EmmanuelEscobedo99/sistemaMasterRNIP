@@ -10,6 +10,7 @@ import { loginUsuario } from "../reducers/thunks/loginUsuario/thunksLogin";
 import { verificarCorreo } from "../reducers/thunks/usuarioHistorico/usuarioHistorico";
 import { setUser } from "../reducers/slice/loginUsuarioSlice/authSlice";
 import { obtenerToken } from "../reducers/thunks/auth/authUsuario";
+import { FaLaptopCode, FaLock } from "react-icons/fa";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -38,7 +39,6 @@ export const Login = () => {
       dispatch(verificarCorreo(email))
         .unwrap()
         .then((data) => {
-          console.log("Clave encontrada:", data.clave);
           setStoredClave(data.clave);
         })
         .catch((error) => {
@@ -54,16 +54,14 @@ export const Login = () => {
   const onSubmit = async (data) => {
     try {
       const { correo, clave } = data;
+
       if (storedClave === clave && storedEmail === correo) {
-        console.log("Las credenciales coinciden.");
         const storedRol = localStorage.getItem("rol");
         dispatch(setUser({ rol: storedRol, email: correo }));
 
         try {
-          console.log("maquina:", maquina);
           const datos = { correo, maquina };
           const tokenResponse = await dispatch(obtenerToken(datos)).unwrap();
-          console.log("Token obtenido:", tokenResponse.token);
           navigate(`/${storedRol}`);
         } catch (tokenError) {
           Swal.fire({
@@ -74,7 +72,6 @@ export const Login = () => {
           navigate("/");
         }
       } else {
-        console.log("Las credenciales no coinciden, enviando al backend.");
         const resultAction = await dispatch(
           loginUsuario({ data, maquina, storedEmail })
         ).unwrap();
@@ -82,11 +79,8 @@ export const Login = () => {
         navigate(`/${rol}`);
       }
     } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: error.message || "Error al iniciar sesión",
-      });
+      // ❌ Ya no mostramos Swal aquí porque el thunk loginUsuario lo muestra
+      console.error("Error capturado en Login.jsx:", error);
     }
   };
 
@@ -97,43 +91,70 @@ export const Login = () => {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        background: "#0A0A0A", // Negro oscuro
+        background: "linear-gradient(to right, #0f0f0f, #1a1a1a)",
         position: "relative",
+        overflow: "hidden",
       }}
     >
-      {/* Información de la máquina (IP) en la parte superior izquierda */}
+      {/* Fondo decorativo con animación */}
+      <motion.div
+        style={{
+          position: "absolute",
+          width: "500px",
+          height: "500px",
+          borderRadius: "50%",
+          background: "rgba(16, 185, 129, 0.2)",
+          top: "-100px",
+          left: "-100px",
+          filter: "blur(100px)",
+        }}
+        animate={{ scale: [1, 1.2, 1] }}
+        transition={{ repeat: Infinity, duration: 8 }}
+      />
+
+      {/* IP arriba a la izquierda */}
       <div
         style={{
           position: "absolute",
           top: "20px",
           left: "20px",
-          color: "white",
-          fontSize: "16px",
-          background: "#1F1F1F", // Fondo oscuro
-          padding: "10px",
-          borderRadius: "5px",
-          boxShadow: "0px 2px 5px rgba(255, 255, 255, 0.2)",
+          color: "#ffffff",
+          background: "#111827",
+          padding: "12px 20px",
+          borderRadius: "10px",
+          fontWeight: "500",
+          boxShadow: "0 0 10px rgba(0, 255, 100, 0.3)",
         }}
       >
-        {maquina ? <p>IP: {maquina}</p> : <p>Cargando IP...</p>}
-        {error && <p style={{ color: "#D9534F", fontWeight: "bold" }}>Error: {error}</p>}
+        <FaLaptopCode className="me-2 text-success" />{" "}
+        {maquina ? `IP: ${maquina}` : "Cargando IP..."}
+        {error && (
+          <div style={{ color: "#ef4444", fontWeight: "bold" }}>
+            Error: {error}
+          </div>
+        )}
       </div>
 
-      {/* Formulario de Login */}
+      {/* Login Box */}
       <motion.div
         style={{
-          background: "#1F1F1F",
-          padding: "25px",
-          borderRadius: "10px",
-          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)",
+          background: "#111827",
+          padding: "35px",
+          borderRadius: "12px",
+          boxShadow: "0px 0px 30px rgba(16, 185, 129, 0.3)",
           textAlign: "center",
-          width: "400px",
-          color: "white",
+          width: "420px",
+          color: "#F9FAFB",
         }}
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.5 }}
+        initial={{ y: -30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
       >
+        <h3 className="mb-4 fw-bold">
+          <FaLock className="text-success me-2" />
+          Iniciar Sesión
+        </h3>
+
         <FormularioLogin
           handleSubmit={handleSubmit(onSubmit)}
           register={register}
