@@ -13,6 +13,7 @@ const Bloque6_2 = () => {
   const [busqueda, setBusqueda] = useState("");
   const { internosNombresBloque6, cargarInternosNombresBloque6 } = useStore();
   const [resultados, setResultados] = useState([]);
+  const [resultadosFiltrados, setResultadosFiltrados] = useState([]);
   const [paginaActual, setPaginaActual] = useState(1);
   const [resultadosPorPagina] = useState(10);
 
@@ -25,22 +26,23 @@ const Bloque6_2 = () => {
       if (!acc[LLAVE]) {
         acc[LLAVE] = { nombres: [], LLAVE, ID_ALTERNA };
       }
-      acc[LLAVE].nombres.push(`${DNOMBRE} ${DPATERNO} ${DMATERNO}`);
+      acc[LLAVE].nombres.push({ DNOMBRE, DPATERNO, DMATERNO });
       return acc;
     }, {});
     const resultadosAgrupados = Object.values(agrupados);
     setResultados(resultadosAgrupados);
+    setResultadosFiltrados(resultadosAgrupados);
   }, [internosNombresBloque6]);
 
   const handleBuscar = (e) => {
     const valor = e.target.value.toLowerCase();
     setBusqueda(valor);
-
     const filtrados = resultados.filter((registro) =>
-      registro.nombres.join(" ").toLowerCase().includes(valor)
+      registro.nombres
+        .map((n) => [n.DNOMBRE, n.DPATERNO, n.DMATERNO].join(" ").toLowerCase())
+        .some((nombre) => nombre.includes(valor))
     );
-
-    setResultados(filtrados);
+    setResultadosFiltrados(filtrados);
     setPaginaActual(1);
   };
 
@@ -52,10 +54,10 @@ const Bloque6_2 = () => {
 
   const indiceFinal = paginaActual * resultadosPorPagina;
   const indiceInicial = indiceFinal - resultadosPorPagina;
-  const resultadosPaginados = resultados.slice(indiceInicial, indiceFinal);
+  const resultadosPaginados = resultadosFiltrados.slice(indiceInicial, indiceFinal);
 
   const handleSiguiente = () => {
-    if (paginaActual < Math.ceil(resultados.length / resultadosPorPagina)) {
+    if (paginaActual < Math.ceil(resultadosFiltrados.length / resultadosPorPagina)) {
       setPaginaActual(paginaActual + 1);
     }
   };
@@ -68,64 +70,78 @@ const Bloque6_2 = () => {
 
   return (
     <motion.div
-      className="container-fluid mt-4"
+      className="container-fluid mt-4 position-relative overflow-hidden"
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       style={{
+        background: "linear-gradient(to bottom right, #0A0A0A, #111827)",
         color: "#E5E7EB",
-        backgroundColor: "#0A0A0A",
-        padding: "30px",
-        borderRadius: "10px",
+        padding: "35px",
+        borderRadius: "12px",
+        boxShadow: "0 0 25px rgba(16, 185, 129, 0.25)",
+        minHeight: "85vh",
       }}
     >
-      <h2 className="fw-bold mb-1">Registros del Bloque 6</h2>
-      <p className="text-secondary mb-4">Aquí se muestran los registros correspondientes al Bloque 6.</p>
-
-      <input
-        type="text"
-        className="form-control mb-4"
-        placeholder="🔍 Escribe un nombre..."
-        value={busqueda}
-        onChange={handleBuscar}
+      {/* Fondo animado tipo burbuja verde */}
+      <motion.div
         style={{
-          backgroundColor: "#1F2937",
-          color: "#E5E7EB",
-          border: "1px solid #374151",
-          padding: "12px",
+          position: "absolute",
+          width: "500px",
+          height: "500px",
+          borderRadius: "50%",
+          background: "rgba(16, 185, 129, 0.15)",
+          top: "-120px",
+          left: "-120px",
+          zIndex: 0,
+          filter: "blur(120px)",
         }}
+        animate={{ scale: [1, 1.2, 1] }}
+        transition={{ repeat: Infinity, duration: 10 }}
       />
 
-      <div className="table-responsive">
+      {/* Contenido principal */}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <h2 className="fw-bold mb-2 text-white">📂 Registros del Bloque 6</h2>
+        <p className="text-secondary mb-4">Aquí se muestran los registros correspondientes al Bloque 6.</p>
+
+        <input
+          type="text"
+          className="form-control mb-4"
+          placeholder="🔍 Escribe un nombre..."
+          value={busqueda}
+          onChange={handleBuscar}
+          style={{
+            backgroundColor: "#1F2937",
+            color: "#E5E7EB",
+            border: "1px solid #10B981",
+            padding: "12px",
+          }}
+        />
+
         <motion.table
-          className="table table-dark table-hover align-middle w-100"
+          className="table table-dark table-hover align-middle w-100 border border-success"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <thead className="bg-dark text-uppercase">
-            <tr>
-              <th className="px-3">Nombre(s)</th>
-              <th className="text-center px-3">Acción</th>
+          <thead style={{ backgroundColor: "#0F172A", color: "#10B981" }}>
+            <tr className="text-uppercase text-center">
+              <th>Nombre(s)</th>
+              <th>Acción</th>
             </tr>
           </thead>
           <tbody>
             {resultadosPaginados.map(({ nombres, LLAVE, ID_ALTERNA }) => (
-              <motion.tr
-                key={ID_ALTERNA}
-                whileHover={{ scale: 1.01 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <td className="px-3">
+              <tr key={ID_ALTERNA}>
+                <td>
                   {nombres.map((n, i) => (
-                    <div key={i} className="py-1">
-                      {n}
-                    </div>
+                    <div key={i} className="py-1">{n.DNOMBRE} {n.DPATERNO} {n.DMATERNO}</div>
                   ))}
                 </td>
-                <td className="text-center px-3">
+                <td className="text-center">
                   <motion.button
-                    className="btn btn-outline-info btn-sm d-flex align-items-center justify-content-center gap-2"
+                    className="btn btn-outline-success btn-sm d-flex align-items-center gap-2 justify-content-center"
                     style={{ minWidth: "120px" }}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
@@ -134,7 +150,7 @@ const Bloque6_2 = () => {
                     <FaSearch /> Ver
                   </motion.button>
                 </td>
-              </motion.tr>
+              </tr>
             ))}
             {resultadosPaginados.length === 0 && (
               <tr>
@@ -145,28 +161,27 @@ const Bloque6_2 = () => {
             )}
           </tbody>
         </motion.table>
-      </div>
 
-      {/* Paginación */}
-      <div className="d-flex justify-content-center mt-4 gap-3">
-        <motion.button
-          className="btn btn-outline-light btn-sm px-4"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleAnterior}
-          disabled={paginaActual === 1}
-        >
-          ◀ Anterior
-        </motion.button>
-        <motion.button
-          className="btn btn-outline-light btn-sm px-4"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleSiguiente}
-          disabled={paginaActual === Math.ceil(resultados.length / resultadosPorPagina)}
-        >
-          Siguiente ▶
-        </motion.button>
+        <div className="d-flex justify-content-center mt-4 gap-3">
+          <motion.button
+            className="btn btn-outline-light btn-sm px-4"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleAnterior}
+            disabled={paginaActual === 1}
+          >
+            ◀ Anterior
+          </motion.button>
+          <motion.button
+            className="btn btn-outline-light btn-sm px-4"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleSiguiente}
+            disabled={paginaActual === Math.ceil(resultadosFiltrados.length / resultadosPorPagina)}
+          >
+            Siguiente ▶
+          </motion.button>
+        </div>
       </div>
     </motion.div>
   );
