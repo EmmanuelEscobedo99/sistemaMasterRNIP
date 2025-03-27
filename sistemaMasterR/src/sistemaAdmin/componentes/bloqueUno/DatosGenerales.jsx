@@ -8,14 +8,16 @@ import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
 import useStore from '../../zustand/useStore';
 import api from '../../../api/api';
 import { useSelector } from 'react-redux';
+import { motion } from 'framer-motion';
 
 const DatosGenerales = ({ onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
-
   const { datosGenerales, cargarDatosGenerales, cargarNombres, cargarDomicilio, cargarAlias, cargarSituacion, cargarJuridicos, cargarEjecucion, cargarODelito, cargarIngresos, cargarIngDelito } = useStore();
-
   const idAlterna = useSelector((state) => state.idAlterna.value);
+
+  // Estado de carga
+  const [loading, setLoading] = useState(true);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,6 +52,13 @@ const DatosGenerales = ({ onValidationStatus }) => {
   }, [errors]);
 
   const datosGeneralesObtenidos = datosGenerales?.[0] || {};
+
+  // Estado de carga: desaparece después de 2 segundos
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false); // Cambia el estado de carga después de 2 segundos
+    }, 2000);
+  }, []);
 
   const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
@@ -114,40 +123,65 @@ const DatosGenerales = ({ onValidationStatus }) => {
 
   return (
     <div className="row">
-      {Object.keys(fieldNames).map((fieldId, index) => (
-        <div key={fieldId} className="col-md-3 form-floating mt-3 d-flex align-items-center">
-          <OverlayTrigger
-            placement="right"
-            overlay={errors[fieldId] ? renderTooltip(errors[fieldId].message) : <></>}
-          >
-            <input
-              type="text"
-              className={`form-control ${errors[fieldId] ? 'is-invalid shake' : ''}`}
-              id={fieldId}
-              name={fieldNames[fieldId].field}
-              placeholder={errors[fieldId] ? errors[fieldId].message : fieldNames[fieldId].label}
-              {...register(fieldNames[fieldId].field, { onChange: handleChange })}
-              value={getFieldValue(fieldNames[fieldId].field)}
-              style={{ borderColor: errors[fieldId] ? 'red' : '' }}
-            />
-          </OverlayTrigger>
-          <label htmlFor={fieldId} style={{ marginLeft: '10px' }}>
-            {fieldNames[fieldId].label}
-          </label>
+      {/* Pantalla de carga */}
+      {loading ? (
+        <motion.div
+          className="d-flex justify-content-center align-items-center"
+          style={{
+            height: '50vh', // Ajusta la altura de la pantalla de carga
+            backgroundColor: 'transparent',
+            flexDirection: 'column',
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <img
+            src="../../../../public/ssp.jpeg" // Ruta de tu imagen de carga
+            alt="Cargando..."
+            width="200px"
+          />
+          <p style={{ color: 'black', marginTop: '20px', fontSize: '24px', fontWeight: 'bold' }}>
+            Cargando datos generales...
+          </p>
+        </motion.div>
+      ) : (
+        // Cuando los datos se han cargado, muestra los inputs y demás contenido
+        Object.keys(fieldNames).map((fieldId, index) => (
+          <div key={fieldId} className="col-md-3 form-floating mt-3 d-flex align-items-center">
+            <OverlayTrigger
+              placement="right"
+              overlay={errors[fieldId] ? renderTooltip(errors[fieldId].message) : <></>}
+            >
+              <input
+                type="text"
+                className={`form-control ${errors[fieldId] ? 'is-invalid shake' : ''}`}
+                id={fieldId}
+                name={fieldNames[fieldId].field}
+                placeholder={errors[fieldId] ? errors[fieldId].message : fieldNames[fieldId].label}
+                {...register(fieldNames[fieldId].field, { onChange: handleChange })}
+                value={getFieldValue(fieldNames[fieldId].field)}
+                style={{ borderColor: errors[fieldId] ? 'red' : '' }}
+              />
+            </OverlayTrigger>
+            <label htmlFor={fieldId} style={{ marginLeft: '10px' }}>
+              {fieldNames[fieldId].label}
+            </label>
 
-          {/* Checkbox para Selección */}
-          <div className="d-flex justify-content-center">
-            <input
-              type="checkbox"
-              name={`checkbox-${index}`}
-              value="Sí"
-              checked={radioSeleccionados.some(item => item.nombre === fieldNames[fieldId].label && item.valor === 'Sí')}
-              className="ms-2"
-              onChange={() => handleCheckboxChange(fieldNames[fieldId].label, 'Sí')}
-            />
+            {/* Checkbox para Selección */}
+            <div className="d-flex justify-content-center">
+              <input
+                type="checkbox"
+                name={`checkbox-${index}`}
+                value="Sí"
+                checked={radioSeleccionados.some(item => item.nombre === fieldNames[fieldId].label && item.valor === 'Sí')}
+                className="ms-2"
+                onChange={() => handleCheckboxChange(fieldNames[fieldId].label, 'Sí')}
+              />
+            </div>
           </div>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 };
