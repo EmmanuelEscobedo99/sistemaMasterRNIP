@@ -7,98 +7,108 @@ import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
 import useStore from '../../zustand/useStore';
 import { useSelector } from 'react-redux';
+import { motion } from 'framer-motion';
 
-const MostrarHuellas = ( { data, onFormChange, onValidationStatus } ) => {
+const MostrarHuellas = ({ data, onFormChange, onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
-
-  //const [idAlterna, setIdAlterna] = useState(1); // Simulación de ID alterna
-
-  const idAlternas = useSelector( ( state ) => state.idAlterna.value );
-  const idAlterna = isNaN( parseInt( idAlternas, 10 ) ) ? 0 : parseInt( idAlternas, 10 ) + 1;
-  console.log( idAlterna );
-
+  const idAlternas = useSelector((state) => state.idAlterna.value);
+  const idAlterna = isNaN(parseInt(idAlternas, 10)) ? 0 : parseInt(idAlternas, 10) + 1;
   const { imagenesPorLlave, cargarImagenesPorLlave } = useStore();
-  const LLAVE = useSelector( ( state ) => state.Llave.value );
+  const LLAVE = useSelector((state) => state.Llave.value);
 
-  // Manejo de selección/deselección de radio buttons
-  const handleCheckboxChange = ( grupo, valor ) => {
-    // Si el valor ya está seleccionado, desmarcarlo (eliminando de la lista)
-    if ( radioSeleccionados.some( item => item.nombre === grupo && item.valor === valor ) ) {
-      seleccionarRadio( grupo, null, 'Imagenes Principales' ); // Pasamos null para indicar que se deselecciona
-    } else {
-      // Si no está seleccionado, marcarlo
-      seleccionarRadio( grupo, valor, 'Imagenes Principales' );
+  // Estado de carga
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (LLAVE) {
+      cargarImagenesPorLlave(LLAVE);
+      // Pantalla de carga dura 2 segundos
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
     }
-  };
+  }, [LLAVE]);
 
-  useEffect( () => {
-    if ( LLAVE ) {
-      cargarImagenesPorLlave( LLAVE ); // ✅ mismo cambio
-    }
-  }, [ LLAVE ] );
-
-  const datosHuellas = imagenesPorLlave.filter( img =>
-    [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' ].includes( img.grupo )
+  const datosHuellas = imagenesPorLlave.filter(img =>
+    ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].includes(img.grupo)
   );
 
-  /*useEffect(() => {
-    console.log("Datos Huellas:", datosHuellas);
-  }, [datosHuellas]);*/
+  useEffect(() => {
+    onValidationStatus(errors);
+  }, [errors, onValidationStatus]);
 
-  useEffect( () => {
-    onValidationStatus( errors );
-  }, [ errors, onValidationStatus ] );
-
-  const handleRadioChange = ( nombre, valor ) => {
-    seleccionarRadio( nombre, valor, 'Huellas' );
+  const handleCheckboxChange = (grupo, valor) => {
+    if (radioSeleccionados.some(item => item.nombre === grupo && item.valor === valor)) {
+      seleccionarRadio(grupo, null, 'Imagenes Principales');
+    } else {
+      seleccionarRadio(grupo, valor, 'Imagenes Principales');
+    }
   };
 
   return (
     <form className="row">
-      <div className="col-12 d-flex justify-content-around mt-3">
-        { datosHuellas.length > 0 ? (
-          datosHuellas.map( ( img, index ) => (
-            <Card key={ index } style={ { width: '18rem' } }>
-              <Card.Img variant="top" src={ img.imagen } alt={ `Imagen ${ index }` } />
-              <Card.Body>
-                <Card.Title>Grupo { img.grupo }</Card.Title>
-                <div className="d-flex justify-content-center">
-                  {/* Usamos checkboxes en vez de radio buttons */ }
-                  <input
-                    type="checkbox"
-                    name={ `checkbox-${ index }` }
-                    value="Sí"
-                    checked={ radioSeleccionados.some( item => item.nombre === img.grupo && item.valor === 'Sí' ) }
-                    className="ms-2"
-                    onChange={ () => handleCheckboxChange( img.grupo, 'Sí' ) }
-                  />
-                  {/*<input
-                    type="checkbox"
-                    name={`checkbox-${index}`}
-                    value="No"
-                    checked={radioSeleccionados.some(item => item.nombre === img.grupo && item.valor === 'No')}
-                    className="ms-2"
-                    onChange={() => handleCheckboxChange(img.grupo, 'No')}
-                  />*/}
-                </div>
-              </Card.Body>
-            </Card>
-          ) )
-        ) : (
-          <p>No hay imágenes disponibles.</p>
-        ) }
-      </div>
+      {/* Pantalla de carga */}
+      {loading ? (
+        <motion.div
+          className="d-flex justify-content-center align-items-center"
+          style={{
+            height: '50vh', // Ajusta la altura de la pantalla de carga
+            backgroundColor: 'transparent',
+            flexDirection: 'column',
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <img
+            src="../../../../public/ssp.jpeg" // Ruta de tu imagen de carga
+            alt="Cargando..."
+            width="200px"
+          />
+          <p style={{ color: 'black', marginTop: '20px', fontSize: '24px', fontWeight: 'bold' }}>
+            Cargando huellas...
+          </p>
+        </motion.div>
+      ) : (
+        // Cuando los datos se han cargado, muestra las imágenes y demás contenido
+        <>
+          <div className="col-12 d-flex justify-content-around mt-3">
+            {datosHuellas.length > 0 ? (
+              datosHuellas.map((img, index) => (
+                <Card key={index} style={{ width: '18rem' }}>
+                  <Card.Img variant="top" src={img.imagen} alt={`Imagen ${index}`} />
+                  <Card.Body>
+                    <Card.Title>Grupo {img.grupo}</Card.Title>
+                    <div className="d-flex justify-content-center">
+                      <input
+                        type="checkbox"
+                        name={`checkbox-${index}`}
+                        value="Sí"
+                        checked={radioSeleccionados.some(item => item.nombre === img.grupo && item.valor === 'Sí')}
+                        className="ms-2"
+                        onChange={() => handleCheckboxChange(img.grupo, 'Sí')}
+                      />
+                    </div>
+                  </Card.Body>
+                </Card>
+              ))
+            ) : (
+              <p>No hay imágenes disponibles.</p>
+            )}
+          </div>
 
-      {/* Lista de radio seleccionados */ }
-      <div className="mt-4">
-        <h5 style={ { color: 'red' } }>Campos con errores:</h5>
-        <ul>
-          { radioSeleccionados.map( ( item, index ) => (
-            <li key={ index }>{ item.nombre }</li>
-          ) ) }
-        </ul>
-      </div>
+          {/* Lista de radio seleccionados */}
+          <div className="mt-4">
+            <h5 style={{ color: 'red' }}>Campos con errores:</h5>
+            <ul>
+              {radioSeleccionados.map((item, index) => (
+                <li key={index}>{item.nombre}</li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
     </form>
   );
 };
