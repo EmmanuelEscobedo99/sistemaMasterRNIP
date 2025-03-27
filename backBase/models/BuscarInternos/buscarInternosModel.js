@@ -125,63 +125,58 @@ const buscarInternosModel = {
     }
   },
     
-  // Nueva función para obtener los nombres con la ID_ALTERNA obtenida de una consulta especial
   async obtenerNombresPorBloques6() {
     try {
-      const [ resultados ] = await pool.query( `
-       SELECT DISTINCT n.*, m1.LLAVE
-       FROM nombres n
-       JOIN movimientos m1 ON n.ID_ALTERNA = m1.ID_ALTERNA
-       WHERE m1.ID_ALTERNA = (
-       SELECT m1.ID_ALTERNA
-       FROM movimientos m1
-       JOIN movimientos m2 
-       ON m1.LLAVE = m2.LLAVE
-       WHERE m1.ID_BLOQUE_FUNCIONAL IN (1, 2)   
-       AND m2.ID_BLOQUE_FUNCIONAL = 6          
-       AND m1.LLAVE = m2.LLAVE
-       AND m2.ID_ALTERNA != m1.ID_ALTERNA     
-       AND m1.procesado = 2                    
-       AND m2.procesado = 9                    
-       LIMIT 1
-       );
-
+      const [ resultados ] = await pool.query(`
+        SELECT DISTINCT n.*, m1.LLAVE
+        FROM nombres n
+        JOIN movimientos m1 ON n.ID_ALTERNA = m1.ID_ALTERNA
+        JOIN (
+          SELECT m1.ID_ALTERNA, m1.LLAVE
+          FROM movimientos m1
+          JOIN movimientos m2 ON m1.LLAVE = m2.LLAVE
+          WHERE m1.ID_BLOQUE_FUNCIONAL IN (1, 2)
+            AND m2.ID_BLOQUE_FUNCIONAL = 6
+            AND m1.LLAVE = m2.LLAVE
+            AND m2.ID_ALTERNA != m1.ID_ALTERNA
+            AND m1.procesado = 2
+            AND m2.procesado = 9
+          GROUP BY m1.LLAVE
+          LIMIT 5
+        ) AS sub ON m1.ID_ALTERNA = sub.ID_ALTERNA
       `);
-
       return resultados.length > 0 ? resultados : [];
-    } catch ( error ) {
-      console.error( "Error en obtenerNombresPorBloques:", error );
+    } catch (error) {
+      console.error("Error en obtenerNombresPorBloques6:", error);
       throw error;
     }
-  },
+  },  
   async obtenerNombresPorBloques6D() {
     try {
-      const [ resultados ] = await pool.query( `
-       SELECT DISTINCT n.*, m1.LLAVE
-       FROM nombres n
-       JOIN movimientos m1 ON n.ID_ALTERNA = m1.ID_ALTERNA
-       WHERE m1.ID_ALTERNA = (
-       SELECT m1.ID_ALTERNA
-       FROM movimientos m1
-       JOIN movimientos m2 
-       ON m1.LLAVE = m2.LLAVE
-       WHERE m1.ID_BLOQUE_FUNCIONAL IN (1, 2)   
-       AND m2.ID_BLOQUE_FUNCIONAL = 6          
-       AND m1.LLAVE = m2.LLAVE
-       AND m2.ID_ALTERNA != m1.ID_ALTERNA     
-       AND m1.procesado = 2                    
-       AND m2.procesado = 10                    
-       LIMIT 1
-       );
-
+      const [ resultados ] = await pool.query(`
+        SELECT DISTINCT n.*, m1.LLAVE
+        FROM nombres n
+        JOIN movimientos m1 ON n.ID_ALTERNA = m1.ID_ALTERNA
+        JOIN (
+          SELECT m1.ID_ALTERNA, m1.LLAVE
+          FROM movimientos m1
+          JOIN movimientos m2 ON m1.LLAVE = m2.LLAVE
+          WHERE m1.ID_BLOQUE_FUNCIONAL IN (1, 2)
+            AND m2.ID_BLOQUE_FUNCIONAL = 6
+            AND m1.LLAVE = m2.LLAVE
+            AND m2.ID_ALTERNA != m1.ID_ALTERNA
+            AND m1.procesado = 2
+            AND m2.procesado = 10
+          GROUP BY m1.LLAVE
+          LIMIT 5
+        ) AS sub ON m1.ID_ALTERNA = sub.ID_ALTERNA
       `);
-
       return resultados.length > 0 ? resultados : [];
-    } catch ( error ) {
-      console.error( "Error en obtenerNombresPorBloques:", error );
+    } catch (error) {
+      console.error("Error en obtenerNombresPorBloques6D:", error);
       throw error;
     }
-  },
+  },  
 };
 
 module.exports = buscarInternosModel;

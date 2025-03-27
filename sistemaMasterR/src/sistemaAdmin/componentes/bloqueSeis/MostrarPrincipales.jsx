@@ -7,35 +7,33 @@ import useStore from '../../zustand/useStore';
 import { useSelector } from 'react-redux';
 
 const MostrarPrincipales = ({ data, onValidationStatus }) => {
-  const { register, formState: { errors } } = useFormContext();
+  const { formState: { errors } } = useFormContext();
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
-  const { datosFormulario, cargarDatosFormulario } = useStore();
-  
-  const idAlternas = useSelector((state) => state.idAlterna.value);
-  const idAlterna = isNaN(parseInt(idAlternas, 10)) ? 0 : parseInt(idAlternas, 10) + 1;
+  const { imagenesPorLlave, cargarImagenesPorLlave } = useStore();
+
+  const LLAVE = useSelector((state) => state.Llave.value);
 
   useEffect(() => {
-    if (idAlterna) {
-      cargarDatosFormulario('principales', idAlterna);
+    if (LLAVE) {
+      cargarImagenesPorLlave(LLAVE);
     }
-  }, [idAlterna, cargarDatosFormulario]);
+  }, [LLAVE]);
 
-  const imagenesPrincipales = datosFormulario.imagenes || [];
+  const imagenesPrincipales = imagenesPorLlave.filter(img =>
+    ['A', 'B', 'C'].includes(img.grupo)
+  );
 
-  // Manejo de selección/deselección de radio buttons
   const handleCheckboxChange = (grupo, valor) => {
-    // Si el valor ya está seleccionado, desmarcarlo (eliminando de la lista)
     if (radioSeleccionados.some(item => item.nombre === grupo && item.valor === valor)) {
-      seleccionarRadio(grupo, null, 'Imagenes Principales'); // Pasamos null para indicar que se deselecciona
+      seleccionarRadio(grupo, null, 'Imagenes Principales');
     } else {
-      // Si no está seleccionado, marcarlo
       seleccionarRadio(grupo, valor, 'Imagenes Principales');
     }
   };
 
   return (
     <form className="row">
-      <div className="col-12 d-flex justify-content-around mt-3">
+      <div className="col-12 d-flex justify-content-around mt-3 flex-wrap gap-3">
         {imagenesPrincipales.length > 0 ? (
           imagenesPrincipales.map((img, index) => (
             <Card key={index} style={{ width: '18rem' }}>
@@ -43,7 +41,6 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
               <Card.Body>
                 <Card.Title>Grupo {img.grupo}</Card.Title>
                 <div className="d-flex justify-content-center">
-                  {/* Usamos checkboxes en vez de radio buttons */}
                   <input
                     type="checkbox"
                     name={`checkbox-${index}`}
@@ -52,14 +49,6 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
                     className="ms-2"
                     onChange={() => handleCheckboxChange(img.grupo, 'Sí')}
                   />
-                  {/*<input
-                    type="checkbox"
-                    name={`checkbox-${index}`}
-                    value="No"
-                    checked={radioSeleccionados.some(item => item.nombre === img.grupo && item.valor === 'No')}
-                    className="ms-2"
-                    onChange={() => handleCheckboxChange(img.grupo, 'No')}
-                  />*/}
                 </div>
               </Card.Body>
             </Card>
@@ -69,7 +58,6 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
         )}
       </div>
 
-      {/* Lista de radio seleccionados */}
       <div className="mt-4">
         <h5 style={{ color: 'red' }}>Campos con errores:</h5>
         <ul>
