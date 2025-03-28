@@ -77,7 +77,7 @@ const ConsultarErrores2 = () => {
             confirmButtonText: 'Aceptar'
           }).then(() => {
             console.log("first - before navigate");
-            navigate('/admin');
+            navigate('/admin2');
           }).catch((error) => {
             console.error("Error en Swal.fire:", error);
           });
@@ -136,7 +136,7 @@ const ConsultarErrores2 = () => {
             icon: 'success',
             confirmButtonText: 'Aceptar'
           } ).then( () => {
-            navigate( '/admin' );
+            navigate( '/admin2' );
           } );
 
         } catch ( error ) {

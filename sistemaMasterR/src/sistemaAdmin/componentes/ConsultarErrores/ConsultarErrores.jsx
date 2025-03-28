@@ -71,7 +71,7 @@ const ConsultarErrores = () => {
             icon: 'success',
             confirmButtonText: 'Aceptar'
           } ).then( () => {
-            navigate( '/admin2' );
+            navigate( '/admin' );
           } );
 
         } catch ( error ) {
@@ -125,7 +125,7 @@ const ConsultarErrores = () => {
             icon: 'success',
             confirmButtonText: 'Aceptar'
           } ).then( () => {
-            navigate( '/admin2' );
+            navigate( '/admin' );
           } );
 
         } catch ( error ) {

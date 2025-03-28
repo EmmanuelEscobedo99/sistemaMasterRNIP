@@ -17,6 +17,7 @@ import VistaIngresosP2 from '../componentes/vistas/bloqueDos/VistaIngresosP2';
 import VistaIngdelito from '../componentes/vistas/bloqueDos/VistaIngdelito';
 import VistaPrincipales from '../componentes/vistas/bloqueSeis/VistaPrincipales';
 import VistaHuella from '../componentes/vistas/bloqueDos/VistaHuella';
+import VistaConsultarErrores2 from '../componentes/vistas/ConsultarErrores/VistaConsultarErrores2';
 
 const Bloque2_2 = () => {
   const [ activeTab, setActiveTab ] = useState( "bformulariouno" );
@@ -215,7 +216,7 @@ const Bloque2_2 = () => {
               </>
             ) }
 
-            { activeTab === "terminar" && <div><VistaConsultarErrores data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
+            { activeTab === "terminar" && <div><VistaConsultarErrores2 data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
             {/*{ activeTab === "finalizar" && <div><h4>Finalizar</h4></div> }*/}
           </div>
         </div>
