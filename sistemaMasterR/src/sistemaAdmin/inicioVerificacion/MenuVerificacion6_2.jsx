@@ -74,7 +74,7 @@ const MenuVerificacion6_2 = () => {
               </>
             ) }
 
-            { activeTab === "terminar" && <div><VistaConsultarErrores2 data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
+            { activeTab === "terminar" && <div><VistaConsultarErrores data={ formData } onFormChange={ setBloqueUnoinicio } /></div> }
             {/*{ activeTab === "finalizar" && <div><h4>Finalizar</h4></div> }*/}
           </div>
         </div>

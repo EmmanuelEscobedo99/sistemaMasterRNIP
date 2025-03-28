@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import api from '../../../api/api';
 
 const ConsultarErrores2 = () => {
+  console.log("componente renderizado")
 
   const navigate = useNavigate();
 
@@ -68,14 +69,19 @@ const ConsultarErrores2 = () => {
           // Limpiar errores una vez que se complete el proceso
           limpiarErrores();
 
-          Swal.fire( {
+          console.log("Ejecutando Swal.fire()");
+          Swal.fire({
             title: 'Rechazado',
             text: 'Los registros han sido rechazados correctamente.',
             icon: 'success',
             confirmButtonText: 'Aceptar'
-          } ).then( () => {
-            navigate( '/admin2' );
-          } );
+          }).then(() => {
+            console.log("first - before navigate");
+            navigate('/admin');
+          }).catch((error) => {
+            console.error("Error en Swal.fire:", error);
+          });
+          
 
         } catch ( error ) {
           console.error( 'Error al enviar la petición:', error );
@@ -130,7 +136,7 @@ const ConsultarErrores2 = () => {
             icon: 'success',
             confirmButtonText: 'Aceptar'
           } ).then( () => {
-            navigate( '/admin2' );
+            navigate( '/admin' );
           } );
 
         } catch ( error ) {
