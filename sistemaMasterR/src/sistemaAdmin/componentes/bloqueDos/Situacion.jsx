@@ -124,7 +124,7 @@ const Domicilio = ({ data, onFormChange, onValidationStatus }) => {
   return (
     <div className="row">
       {fields.map((field, index) => (
-        <div key={field.id} className="col-md-3 form-floating mt-3 d-flex align-items-center">
+        <div key={field.id} className="col-md-4 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
             placement="right"
             overlay={errors[field.id] ? renderTooltip(errors[field.id].message) : <></>}

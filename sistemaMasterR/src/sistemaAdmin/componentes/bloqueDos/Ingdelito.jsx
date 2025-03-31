@@ -88,7 +88,7 @@ const Ingdelito = ({ data, onFormChange, onValidationStatus }) => {
     <div className="container-fluid">
       <div className="row d-flex flex-wrap gap-2">
         {ingdelito[0]?.map((delito, index) => (
-          <div key={index} className="col-md-4 mb-4 p-3 border rounded">
+          <div key={index} className="col-md-6 mb-4 p-3 border rounded">
             <h5>Delito #{index + 1}</h5>
             <div className="row">
               {fields.map((field) => (

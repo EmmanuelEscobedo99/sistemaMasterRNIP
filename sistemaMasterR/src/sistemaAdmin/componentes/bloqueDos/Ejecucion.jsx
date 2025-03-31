@@ -102,8 +102,8 @@ const Ejecucion = ({ data, onFormChange, onValidationStatus }) => {
   return (
     <div className="row">
       {[
-        { id: "FECHEJEC", label: "Fecha ejecución de la pena por el juez" },
-        { id: "FECHAPARTIR", label: "Fecha de compurgación de pena del individuo" },
+        { id: "FECHEJEC", label: "Fecha de ejecución de la pena por el juez" },
+        { id: "FECHAPARTIR", label: "Fecha de compurgación pena del individuo" },
         { id: "PENAANO", label: "Pena en años" },
         { id: "PENAMES", label: "Pena en meses" },
         { id: "PENADIA", label: "Pena en dias" },
@@ -119,7 +119,7 @@ const Ejecucion = ({ data, onFormChange, onValidationStatus }) => {
         { id: "OBSERVA", label: "Observaciones situacion penal actual" },
         { id: "FECHINGCENT", label: "Fecha de ingreso al centro" },
       ].map((field) => (
-        <div key={field.id} className="col-md-3 form-floating mt-3 d-flex align-items-center">
+        <div key={field.id} className="col-md-6 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
             placement="right"
             overlay={errors[field.id] ? renderTooltip(errors[field.id].message) : <></>}

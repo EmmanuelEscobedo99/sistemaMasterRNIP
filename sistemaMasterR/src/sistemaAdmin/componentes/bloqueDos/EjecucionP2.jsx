@@ -115,7 +115,7 @@ const EjecucionP2 = ({ data, onFormChange, onValidationStatus }) => {
         { id: "HORA_EXT_REIN", label: "Hora de externación del reingreso" },
         { id: "ID_ESTATUS_SITUACION", label: "Estatus de la situación penal actual" },
       ].map((field) => (
-        <div key={field.id} className="col-md-3 form-floating mt-3 d-flex align-items-center">
+        <div key={field.id} className="col-md-6 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
             placement="right"
             overlay={errors[field.id] ? renderTooltip(errors[field.id].message) : <></>}
