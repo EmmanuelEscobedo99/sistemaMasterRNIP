@@ -1,8 +1,6 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { FinalizarSesion } from "../../../accesoLogin/reducers/thunks/finalizarSesion/FinalizarSesion";
-import { useEffect } from "react";
-import useStore from "../../../sistemaAdmin/zustand/useStore";
 import { motion } from "framer-motion";
 import { FaSignOutAlt, FaLayerGroup, FaShieldAlt } from "react-icons/fa";
 import { MdAdminPanelSettings } from "react-icons/md";
@@ -10,18 +8,11 @@ import { MdAdminPanelSettings } from "react-icons/md";
 const Admin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { cargarInternos } = useStore();
-
-  useEffect(() => {
-    cargarInternos("obtenerInternos");
-  }, []);
 
   const handleLogout = () => {
     dispatch(FinalizarSesion())
       .unwrap()
-      .then(() => {
-        navigate("/");
-      })
+      .then(() => navigate("/"))
       .catch((error) => {
         console.error("Error al cerrar sesión:", error);
       });
@@ -29,21 +20,27 @@ const Admin = () => {
 
   return (
     <div className="d-flex flex-column min-vh-100">
+      {/* Fondo fijo aplicado directamente desde el principio */}
       <motion.nav
         className="navbar navbar-expand-lg"
-        style={{
-          background: "linear-gradient(to right, #0A0A0A, #111111)",
-          boxShadow: "0 4px 12px rgba(0, 255, 100, 0.25)",
-          paddingTop: "12px",
-          paddingBottom: "12px",
-        }}
-        initial={{ y: -50, opacity: 0 }}
+        initial={{ y: -60, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.6 }}
+        style={{
+          background: "linear-gradient(90deg, #0f0f0f, #1a1a1a)",
+          borderBottom: "1px solid #10B981",
+          boxShadow: "0 0 12px rgba(16, 185, 129, 0.4)",
+          zIndex: 1000,
+          position: "relative",
+        }}
       >
-        <div className="container-fluid px-5">
-          <NavLink to="/admin" className="navbar-brand d-flex align-items-center text-white fw-bold fs-5">
-            <MdAdminPanelSettings className="me-2 text-success" size={24} />
+        <div className="container-fluid px-4 py-2">
+          <NavLink
+            to="/admin"
+            className="navbar-brand d-flex align-items-center text-white fw-bold fs-4"
+            style={{ letterSpacing: "1px" }}
+          >
+            <MdAdminPanelSettings className="me-2 text-success" size={28} />
             ADMIN PANEL
           </NavLink>
 
@@ -60,35 +57,46 @@ const Admin = () => {
           </button>
 
           <div className="collapse navbar-collapse justify-content-end" id="navbarAdmin">
-            <ul className="navbar-nav align-items-center gap-4 pe-3">
+            <ul className="navbar-nav align-items-center gap-4 pe-2">
               <motion.li whileHover={{ scale: 1.1 }}>
                 <NavLink
                   to="/admin/bloque1y2"
-                  className="nav-link text-white d-flex align-items-center gap-2 fs-6"
+                  className={({ isActive }) =>
+                    `nav-link d-flex align-items-center gap-2 fs-6 ${
+                      isActive ? "text-success fw-semibold" : "text-white"
+                    }`
+                  }
                 >
-                  <FaLayerGroup className="text-success" /> BLOQUE 1 Y 2
+                  <FaLayerGroup size={18} /> BLOQUE 1 Y 2
                 </NavLink>
               </motion.li>
+
               <motion.li whileHover={{ scale: 1.1 }}>
                 <NavLink
                   to="/admin/bloque6"
-                  className="nav-link text-white d-flex align-items-center gap-2 fs-6"
+                  className={({ isActive }) =>
+                    `nav-link d-flex align-items-center gap-2 fs-6 ${
+                      isActive ? "text-success fw-semibold" : "text-white"
+                    }`
+                  }
                 >
-                  <FaShieldAlt className="text-success" /> BLOQUE 6
+                  <FaShieldAlt size={18} /> BLOQUE 6
                 </NavLink>
               </motion.li>
+
               <motion.li whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <button
                   onClick={handleLogout}
-                  className="btn btn-outline-success d-flex align-items-center gap-2 px-3 py-2"
+                  className="btn d-flex align-items-center gap-2 px-3 py-2"
                   style={{
                     color: "#ffffff",
                     border: "1px solid #10B981",
-                    backgroundColor: "transparent",
-                    marginLeft: "25px",
+                    background:
+                      "linear-gradient(135deg, transparent, rgba(16, 185, 129, 0.1))",
+                    transition: "all 0.3s ease",
                   }}
                 >
-                  <FaSignOutAlt /> Cerrar sesión
+                  <FaSignOutAlt className="text-success" /> Cerrar sesión
                 </button>
               </motion.li>
             </ul>
@@ -99,9 +107,10 @@ const Admin = () => {
       {/* Contenido principal */}
       <motion.div
         className="container-fluid p-4"
+        style={{ backgroundColor: "#121212", color: "#ffffff", flex: 1 }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.6 }}
       >
         <Outlet />
       </motion.div>
