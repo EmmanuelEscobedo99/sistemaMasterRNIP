@@ -12,9 +12,9 @@ const VistaConsultarErrores2 = ( { data, onFormChange } ) => {
   };
 
   return (
-    <div className="card-form" style={{ width:'140%' }}>
+    <div className="card-form" style={{ width:'150%' }}>
       <div className="">
-        <div className="col-md-12">
+        <div className="col-md-8">
           <div className="card shadow-lg p-4">
             <h6>Consultar Errores </h6>
             <FormProvider { ...methods }>
