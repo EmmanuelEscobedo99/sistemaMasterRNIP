@@ -4,8 +4,10 @@ import { FinalizarSesion } from "../../../accesoLogin/reducers/thunks/finalizarS
 import { motion } from "framer-motion";
 import { FaSignOutAlt, FaLayerGroup, FaShieldAlt } from "react-icons/fa";
 import { MdAdminPanelSettings } from "react-icons/md";
+import useDatosGeneralesStore from '../../../sistemaAdmin/zustand/useDatosGeneralesStore';
 
 const Admin = () => {
+  const { radioSeleccionados, limpiarErrores } = useDatosGeneralesStore();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -66,6 +68,7 @@ const Admin = () => {
                       isActive ? "text-success fw-semibold" : "text-white"
                     }`
                   }
+                  onClick={() => limpiarErrores()} // Llamamos a limpiarErrores aquí
                 >
                   <FaLayerGroup size={18} /> BLOQUE 1 Y 2
                 </NavLink>
@@ -79,6 +82,7 @@ const Admin = () => {
                       isActive ? "text-success fw-semibold" : "text-white"
                     }`
                   }
+                  onClick={() => limpiarErrores()} // Llamamos a limpiarErrores aquí
                 >
                   <FaShieldAlt size={18} /> BLOQUE 6
                 </NavLink>

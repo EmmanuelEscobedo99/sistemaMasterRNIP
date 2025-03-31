@@ -6,8 +6,10 @@ import useStore from "../../../sistemaAdmin/zustand/useStore";
 import { motion } from "framer-motion";
 import { FaSignOutAlt, FaShieldAlt, FaLayerGroup } from "react-icons/fa";
 import { MdSecurity } from "react-icons/md";
+import useDatosGeneralesStore from '../../../sistemaAdmin/zustand/useDatosGeneralesStore';
 
 const Admin2 = () => {
+  const { radioSeleccionados, limpiarErrores } = useDatosGeneralesStore();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { cargarInternos } = useStore();
@@ -63,15 +65,25 @@ const Admin2 = () => {
           <div className="collapse navbar-collapse justify-content-end" id="navbarAdmin2">
             <ul className="navbar-nav align-items-center gap-4 pe-3">
               <motion.li whileHover={{ scale: 1.1 }}>
-                <NavLink to="/admin2/bloque1y2_2" className="nav-link text-white d-flex align-items-center gap-2">
+                <NavLink
+                  to="/admin2/bloque1y2_2"
+                  className="nav-link text-white d-flex align-items-center gap-2"
+                  onClick={() => limpiarErrores()} // Llamamos a limpiarErrores aquí
+                >
                   <FaLayerGroup className="text-success" /> BLOQUE 1 Y 2
                 </NavLink>
               </motion.li>
+
               <motion.li whileHover={{ scale: 1.1 }}>
-                <NavLink to="/admin2/bloque6_2" className="nav-link text-white d-flex align-items-center gap-2">
+                <NavLink
+                  to="/admin2/bloque6_2"
+                  className="nav-link text-white d-flex align-items-center gap-2"
+                  onClick={() => limpiarErrores()} // Llamamos a limpiarErrores aquí
+                >
                   <FaShieldAlt className="text-success" /> BLOQUE 6
                 </NavLink>
               </motion.li>
+
               <motion.li whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <button
                   onClick={handleLogout}
