@@ -43,8 +43,7 @@ const ODelito = ({ data, onFormChange, onValidationStatus }) => {
     seleccionarRadio(nombreCompleto, valor, formulario);
   };
 
-  const capitalizeFirstLetter = (string) =>
-    string.charAt(0).toUpperCase() + string.slice(1);
+  const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
   const renderTooltip = (message) => <Tooltip>{message}</Tooltip>;
 
@@ -87,46 +86,10 @@ const ODelito = ({ data, onFormChange, onValidationStatus }) => {
                 <h5 className="card-title text-center">{`Delito #${index + 1}`}</h5>
                 <div className="row">
                   {fields.map((field) => (
-                    <div key={field.id} className="col-md-12 mt-3">
-                      <div className="d-flex justify-content-between align-items-start">
-                        <label
-                          htmlFor={`${field.id}_${index}`}
-                          style={{
-                            fontSize: '14px',
-                            fontWeight: '500',
-                            marginBottom: '5px',
-                            lineHeight: '1.2',
-                            maxWidth: '90%',
-                            whiteSpace: 'normal',
-                            wordWrap: 'break-word',
-                          }}
-                        >
-                          {field.label}
-                        </label>
-                        <input
-                          type="checkbox"
-                          name={`checkbox-${field.id}-${index}`}
-                          value="Sí"
-                          className="ms-2 mt-1"
-                          checked={radioSeleccionados.some(item => item.nombre === `${field.label} Delito ${index + 1}` && item.valor === 'Sí')}
-                          onChange={() => {
-                            const nombreCompleto = `${field.label} Delito ${index + 1}`;
-                            if (radioSeleccionados.some(item => item.nombre === nombreCompleto && item.valor === 'Sí')) {
-                              seleccionarRadio(nombreCompleto, null, 'ODelito');
-                            } else {
-                              seleccionarRadio(nombreCompleto, 'Sí', 'ODelito');
-                            }
-                          }}
-                        />
-                      </div>
-
+                    <div key={field.id} className="col-md-12 form-floating mt-3 d-flex align-items-center">
                       <OverlayTrigger
                         placement="right"
-                        overlay={
-                          errors[`${field.id}_${index}`]
-                            ? renderTooltip(errors[`${field.id}_${index}`]?.message)
-                            : <></>
-                        }
+                        overlay={errors[`${field.id}_${index}`] ? renderTooltip(errors[`${field.id}_${index}`]?.message) : <></>}
                       >
                         <input
                           type="text"
@@ -142,6 +105,24 @@ const ODelito = ({ data, onFormChange, onValidationStatus }) => {
                           readOnly
                         />
                       </OverlayTrigger>
+                      <label htmlFor={`${field.id}_${index}`} style={{ fontSize: '13px' }}>
+                        {field.label}
+                      </label>
+                      <input
+                        type="checkbox"
+                        name={`checkbox-${field.id}-${index}`}
+                        value="Sí"
+                        className="ms-2"
+                        checked={radioSeleccionados.some(item => item.nombre === `${field.label} Delito ${index + 1}` && item.valor === 'Sí')}
+                        onChange={() => {
+                          const nombreCompleto = `${field.label} Delito ${index + 1}`;
+                          if (radioSeleccionados.some(item => item.nombre === nombreCompleto && item.valor === 'Sí')) {
+                            seleccionarRadio(nombreCompleto, null, 'ODelito');
+                          } else {
+                            seleccionarRadio(nombreCompleto, 'Sí', 'ODelito');
+                          }
+                        }}
+                      />
                     </div>
                   ))}
                 </div>
