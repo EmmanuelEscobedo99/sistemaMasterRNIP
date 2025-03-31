@@ -65,14 +65,15 @@ const ConsultarErrores = () => {
           // Limpiar errores una vez que se complete el proceso
           limpiarErrores();
 
-          Swal.fire( {
+          Swal.fire({
             title: 'Rechazado',
             text: 'Los registros han sido rechazados correctamente.',
             icon: 'success',
             confirmButtonText: 'Aceptar'
-          } ).then( () => {
-            navigate( '/admin' );
-          } );
+          }).then(() => {
+            navigate(rolUsuario === "admin2" ? '/admin2' : '/admin'); // 👈 redirección dinámica
+          });
+
 
         } catch ( error ) {
           console.error( 'Error al enviar la petición:', error );
@@ -119,14 +120,15 @@ const ConsultarErrores = () => {
 
           limpiarErrores();
 
-          Swal.fire( {
+          Swal.fire({
             title: 'Aprobado',
             text: `El registro ha sido aprobado correctamente con procesado: ${ nuevoProcesado }.`,
             icon: 'success',
             confirmButtonText: 'Aceptar'
-          } ).then( () => {
-            navigate( '/admin' );
-          } );
+          }).then(() => {
+            navigate(rolUsuario === "admin2" ? '/admin2' : '/admin'); // 👈 redirección dinámica
+          });
+
 
         } catch ( error ) {
           console.error( "Error al aprobar el registro:", error );
