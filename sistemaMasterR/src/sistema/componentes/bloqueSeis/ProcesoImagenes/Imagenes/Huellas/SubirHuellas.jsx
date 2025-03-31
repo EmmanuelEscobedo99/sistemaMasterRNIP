@@ -67,9 +67,7 @@ export const SubirHuellas = ({
           </div>
 
           <div className="text-center mt-4">
-            <Button type="submit" className="btn btn-success px-4 py-2" style={{ fontSize: '1.2rem', fontWeight: 'bold', borderRadius: '30px' }}>
-              {modo === 'subir' ? 'Subir Imágenes' : 'Guardar Cambios'}
-            </Button>
+            
           </div>
         </form>
       ) : null}
