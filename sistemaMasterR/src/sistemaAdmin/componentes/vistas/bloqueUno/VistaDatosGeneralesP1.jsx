@@ -13,7 +13,7 @@ const VistaDatosGeneralesP1 = ({ data, onFormChange }) => {
 
   return (
     <div className="container mt-4">
-      <div className="shadow-lg p-4 bg-white rounded">
+      <div className="shadow-lg p-5 bg-white rounded" >
         <h6 className="fw-bold mb-3">Incorporación de Datos generales</h6>
         <FormProvider {...methods}>
           <form>

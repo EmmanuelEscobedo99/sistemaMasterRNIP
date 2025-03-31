@@ -98,7 +98,7 @@ const Domicilio = ({ data, onFormChange, onValidationStatus }) => {
         { id: "DCALLE", label: "Calle del individuo" },
         { id: "DCP", label: "Código postal" },
       ].map((field) => (
-        <div key={field.id} className="col-md-3 form-floating mt-3 d-flex align-items-center">
+        <div key={field.id} className="col-md-4 form-floating mt-3 d-flex align-items-center">
           <OverlayTrigger
             placement="right"
             overlay={errors[field.id] ? renderTooltip(errors[field.id].message) : <></>}

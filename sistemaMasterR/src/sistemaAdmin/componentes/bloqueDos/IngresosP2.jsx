@@ -109,7 +109,7 @@ const IngresosP2 = ({ data, onFormChange, onValidationStatus }) => {
           <h5>{`Ingreso #${index + 1}`}</h5>
           <div className="row">
             {fields.map((field) => (
-              <div key={field.id} className="col-md-3 form-floating mt-3 d-flex align-items-center">
+              <div key={field.id} className="col-md-6 form-floating mt-2 d-flex align-items-center">
                 <OverlayTrigger
                   placement="right"
                   overlay={errors[`${field.id}_${index}`] ? renderTooltip(errors[`${field.id}_${index}`]?.message) : <></>}

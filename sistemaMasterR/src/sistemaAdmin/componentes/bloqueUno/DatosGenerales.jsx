@@ -99,7 +99,7 @@ const DatosGenerales = ({ onValidationStatus }) => {
     "EDAD": { label: "Edad del individuo", field: "EDAD" },
     "ESTATURA": { label: "Estatura del individuo", field: "ESTATURA" },
     "PESO": { label: "Peso del individuo", field: "PESO" },
-    "EST_CIV": { label: "Estado civil del individuo", field: "EST_CIV" },
+    "EST_CIV": { label: "Estado civil", field: "EST_CIV" },
     "FEC_NAC": { label: "Fecha de nacimiento", field: "FEC_NAC" },
     "NENTID": { label: "Entidad de nacimiento", field: "NENTID" },
     "NMUNIC": { label: "Municipio de nacimiento", field: "NMUNIC" },
@@ -148,7 +148,7 @@ const DatosGenerales = ({ onValidationStatus }) => {
       ) : (
         // Cuando los datos se han cargado, muestra los inputs y demás contenido
         Object.keys(fieldNames).map((fieldId, index) => (
-          <div key={fieldId} className="col-md-3 form-floating mt-3 d-flex align-items-center">
+          <div key={fieldId} className="col-md-4 form-floating mt-4 d-flex align-items-center">
             <OverlayTrigger
               placement="right"
               overlay={errors[fieldId] ? renderTooltip(errors[fieldId].message) : <></>}
