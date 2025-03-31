@@ -13,13 +13,11 @@ const Ingresos = ({ data, onFormChange, onValidationStatus }) => {
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { ingresos } = useStore();
 
-  // Estado de carga
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulamos la carga de datos
     setTimeout(() => {
-      setLoading(false); // Cambiar el estado de carga después de 2 segundos
+      setLoading(false);
     }, 2000);
   }, []);
 
@@ -45,21 +43,17 @@ const Ingresos = ({ data, onFormChange, onValidationStatus }) => {
     seleccionarRadio(nombreCompleto, valor, formulario);
   };
 
-  const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
+  const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
   const formatFecha = (fecha) => {
     if (!fecha) return '';
     if (fecha.includes('T')) {
-      return fecha.split('T')[0];  // Formato: YYYY-MM-DD
+      return fecha.split('T')[0];
     }
-    return fecha;  // Si ya viene bien formateada
+    return fecha;
   };
 
-  const renderTooltip = (message) => (
-    <Tooltip>{message}</Tooltip>
-  );
+  const renderTooltip = (message) => <Tooltip>{message}</Tooltip>;
 
   const fields = [
     { id: "DAUTORI", label: "Autoridad que consigna" },
@@ -80,7 +74,6 @@ const Ingresos = ({ data, onFormChange, onValidationStatus }) => {
     { id: "PENAANO", label: "Pena en años" },
   ];
 
-  // Si el estado de carga es verdadero, mostramos la pantalla de carga
   if (loading) {
     return (
       <motion.div
@@ -94,11 +87,7 @@ const Ingresos = ({ data, onFormChange, onValidationStatus }) => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <img
-          src="../../../../public/ssp.jpeg" // Ruta de tu imagen de carga
-          alt="Cargando..."
-          width="200px"
-        />
+        <img src="../../../../public/ssp.jpeg" alt="Cargando..." width="200px" />
         <p style={{ color: 'black', marginTop: '20px', fontSize: '24px', fontWeight: 'bold' }}>
           Cargando Ingresos...
         </p>
@@ -113,7 +102,7 @@ const Ingresos = ({ data, onFormChange, onValidationStatus }) => {
           <h5>{`Ingreso #${index + 1}`}</h5>
           <div className="row">
             {fields.map((field) => (
-              <div key={field.id} className="col-md-3 form-floating mt-3 d-flex align-items-center">
+              <div key={field.id} className="col-md-4 form-floating mt-3 d-flex align-items-center">
                 <OverlayTrigger
                   placement="right"
                   overlay={errors[`${field.id}_${index}`] ? renderTooltip(errors[`${field.id}_${index}`]?.message) : <></>}
@@ -130,8 +119,21 @@ const Ingresos = ({ data, onFormChange, onValidationStatus }) => {
                     readOnly
                   />
                 </OverlayTrigger>
-                <label htmlFor={`${field.id}_${index}`} style={{ marginLeft: '10px' }}>{field.label}</label>
-                {/* Checkbox toggleable */}
+                <label
+                  htmlFor={`${field.id}_${index}`}
+                  style={{
+                    marginLeft: '10px',
+                    fontSize: '13px',
+                    whiteSpace: 'normal',
+                    wordWrap: 'break-word',
+                    maxWidth: '100%',
+                    lineHeight: '1.1',
+                    fontWeight: '500',
+                    textAlign: 'left'
+                  }}
+                >
+                  {field.label}
+                </label>
                 <input
                   type="checkbox"
                   name={`checkbox-${field.id}-${index}`}
@@ -152,20 +154,6 @@ const Ingresos = ({ data, onFormChange, onValidationStatus }) => {
           </div>
         </div>
       ))}
-
-      {/* Lista de radio seleccionados mostrando Ingreso # */}
-      {/*<div className="mt-4">
-        <h5 style={{ color: 'red' }}>Campos con errores:</h5>
-        {radioSeleccionados.length > 0 ? (
-          <ul>
-            {radioSeleccionados.map((item, index) => (
-              <li key={index}>{item.nombre}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>Sin campos marcados por el momento.</p>
-        )}
-      </div>*/}
     </div>
   );
 };

@@ -13,16 +13,17 @@ const Ingdelito = ({ data, onFormChange, onValidationStatus }) => {
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { ingdelito } = useStore();
 
-  // Estado de carga
   const [loading, setLoading] = useState(true);
 
-  // Simulación de carga de datos
   useEffect(() => {
-    // Simulamos la carga de datos
     setTimeout(() => {
-      setLoading(false); // Cambiar el estado de carga después de 2 segundos
+      setLoading(false);
     }, 2000);
   }, []);
+
+  useEffect(() => {
+    onValidationStatus(errors);
+  }, [errors, onValidationStatus]);
 
   const handleChange = (index, e) => {
     const { name, value } = e.target;
@@ -44,10 +45,6 @@ const Ingdelito = ({ data, onFormChange, onValidationStatus }) => {
 
   const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
-  useEffect(() => {
-    onValidationStatus(errors);
-  }, [errors, onValidationStatus]);
-
   const renderTooltip = (message) => <Tooltip>{message}</Tooltip>;
 
   const fields = [
@@ -58,7 +55,6 @@ const Ingdelito = ({ data, onFormChange, onValidationStatus }) => {
     { id: "DELITO_SENTENCIA", label: "Descripción del delito acorde a la sentencia" },
   ];
 
-  // Si el estado de carga es verdadero, mostramos la pantalla de carga
   if (loading) {
     return (
       <motion.div
@@ -72,11 +68,7 @@ const Ingdelito = ({ data, onFormChange, onValidationStatus }) => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <img
-          src="../../../../public/ssp.jpeg" // Ruta de tu imagen de carga
-          alt="Cargando..."
-          width="200px"
-        />
+        <img src="../../../../public/ssp.jpeg" alt="Cargando..." width="200px" />
         <p style={{ color: 'black', marginTop: '20px', fontSize: '24px', fontWeight: 'bold' }}>
           Cargando Ingdelito...
         </p>
@@ -111,13 +103,14 @@ const Ingdelito = ({ data, onFormChange, onValidationStatus }) => {
                   </OverlayTrigger>
                   <label
                     htmlFor={`${field.id}_${index}`}
-                    title={field.label}
                     style={{
                       marginLeft: '10px',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
+                      fontSize: '13px',
+                      whiteSpace: 'normal',
+                      wordWrap: 'break-word',
                       maxWidth: '100%',
+                      lineHeight: '1.1',
+                      fontWeight: '500',
                     }}
                   >
                     {field.label}

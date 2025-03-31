@@ -13,13 +13,11 @@ const IngresosP2 = ({ data, onFormChange, onValidationStatus }) => {
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { ingresos } = useStore();
 
-  // Estado de carga
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulamos la carga de datos
     setTimeout(() => {
-      setLoading(false); // Cambiar el estado de carga después de 2 segundos
+      setLoading(false);
     }, 2000);
   }, []);
 
@@ -51,7 +49,7 @@ const IngresosP2 = ({ data, onFormChange, onValidationStatus }) => {
   const formatFecha = (fecha) => {
     if (!fecha) return '';
     if (fecha.includes('T')) {
-      return fecha.split('T')[0]; // YYYY-MM-DD
+      return fecha.split('T')[0];
     }
     return fecha;
   };
@@ -79,14 +77,6 @@ const IngresosP2 = ({ data, onFormChange, onValidationStatus }) => {
     { id: "FECHA_INGRESO", label: "Fecha de ingreso del interno", isDate: true },
   ];
 
-  const fieldLabels = fields.reduce((acc, field) => {
-    acc[field.id] = field.label;
-    return acc;
-  }, {});
-
-  const getFieldLabel = (fieldId) => fieldLabels[fieldId] || fieldId;
-
-  // Si el estado de carga es verdadero, mostramos la pantalla de carga
   if (loading) {
     return (
       <motion.div
@@ -101,7 +91,7 @@ const IngresosP2 = ({ data, onFormChange, onValidationStatus }) => {
         transition={{ duration: 0.5 }}
       >
         <img
-          src="../../../../public/ssp.jpeg" // Ruta de tu imagen de carga
+          src="../../../../public/ssp.jpeg"
           alt="Cargando..."
           width="200px"
         />
@@ -122,11 +112,7 @@ const IngresosP2 = ({ data, onFormChange, onValidationStatus }) => {
               <div key={field.id} className="col-md-3 form-floating mt-3 d-flex align-items-center">
                 <OverlayTrigger
                   placement="right"
-                  overlay={
-                    errors[`${field.id}_${index}`]
-                      ? renderTooltip(errors[`${field.id}_${index}`]?.message)
-                      : <></>
-                  }
+                  overlay={errors[`${field.id}_${index}`] ? renderTooltip(errors[`${field.id}_${index}`]?.message) : <></>}
                 >
                   <input
                     type="text"
@@ -140,9 +126,21 @@ const IngresosP2 = ({ data, onFormChange, onValidationStatus }) => {
                     readOnly
                   />
                 </OverlayTrigger>
-                <label htmlFor={`${field.id}_${index}`} style={{ marginLeft: '10px' }}>{field.label}</label>
-
-                {/* Checkbox toggleable */}
+                <label
+                  htmlFor={`${field.id}_${index}`}
+                  style={{
+                    marginLeft: '10px',
+                    fontSize: '13px',
+                    whiteSpace: 'normal',
+                    wordWrap: 'break-word',
+                    maxWidth: '100%',
+                    lineHeight: '1.1',
+                    fontWeight: '500',
+                    textAlign: 'left'
+                  }}
+                >
+                  {field.label}
+                </label>
                 <input
                   type="checkbox"
                   name={`checkbox-${field.id}-${index}`}
