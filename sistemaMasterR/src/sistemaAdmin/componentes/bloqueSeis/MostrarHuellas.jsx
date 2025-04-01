@@ -1,30 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Card } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
-import useStore from '../../zustand/useStore';
 import { useSelector } from 'react-redux';
 
 const MostrarHuellas = () => {
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
-  const { imagenesPorLlave, cargarImagenesPorLlave } = useStore();
-  const LLAVE = useSelector((state) => state.Llave.value);
+  const imagenes = useSelector((state) => state.imagenes.imagenes); // ✅ Usamos Redux
+  const loading = useSelector((state) => state.imagenes.loading?.includes(true)); // Puedes ajustar si manejas esto diferente
 
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const cargar = async () => {
-      if (LLAVE) {
-        await cargarImagenesPorLlave(LLAVE);
-        setTimeout(() => setLoading(false), 2000); // Simula pantalla de carga
-      }
-    };
-    cargar();
-  }, [LLAVE]);
-
-  const datosHuellas = imagenesPorLlave.filter(img =>
-    ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].includes(img.grupo)
-  );
+  const datosHuellas = imagenes?.filter(img =>
+    ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].includes(img?.grupo)
+  ) || [];
 
   const handleCheckboxChange = (grupo, valor) => {
     if (radioSeleccionados.some(item => item.nombre === grupo && item.valor === valor)) {

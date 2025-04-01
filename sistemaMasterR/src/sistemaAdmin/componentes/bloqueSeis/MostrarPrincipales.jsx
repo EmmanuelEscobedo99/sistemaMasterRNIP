@@ -1,30 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Card } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
-import useStore from '../../zustand/useStore';
+import { useSelector } from 'react-redux';
 
 const MostrarPrincipales = () => {
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
-  const { imagenesPorLlave, cargarImagenesPorLlave } = useStore();
-  const [loading, setLoading] = useState(true);
-  const { LLAVE } = useParams();
 
-  useEffect(() => {
-    const fetchImagenes = async () => {
-      if (LLAVE) {
-        await cargarImagenesPorLlave(LLAVE); // ✅ Asegura que se esperan los datos
-        setLoading(false);
-      }
-    };
+  const imagenes = useSelector((state) => state.imagenes.imagenes);
+  const loading = useSelector((state) => state.imagenes.loading?.includes(true));
 
-    fetchImagenes();
-  }, [LLAVE]);
-
-  const imagenesPrincipales = imagenesPorLlave.filter(img =>
-    ['A', 'B', 'C'].includes(img.grupo)
-  );
+  const imagenesPrincipales = imagenes?.filter(img =>
+    ['A', 'B', 'C'].includes(img?.grupo)
+  ) || [];
 
   const handleCheckboxChange = (grupo, valor) => {
     if (radioSeleccionados.some(item => item.nombre === grupo && item.valor === valor)) {
