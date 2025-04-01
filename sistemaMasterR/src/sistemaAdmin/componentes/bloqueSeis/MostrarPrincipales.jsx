@@ -13,6 +13,7 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
   const [loading, setLoading] = useState(true);
   const LLAVE = useSelector((state) => state.Llave.value);
 
+
   useEffect(() => {
     if (LLAVE) {
       cargarImagenesPorLlave(LLAVE);

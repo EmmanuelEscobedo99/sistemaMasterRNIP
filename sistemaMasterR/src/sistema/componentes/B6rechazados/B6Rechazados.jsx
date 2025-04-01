@@ -59,7 +59,7 @@ const B6Rechazados = () => {
 
   const handleSeleccionar = (LLAVE) => {
     setLlave(LLAVE);
-    navigate("/capturista/formPaginas");
+    navigate("/capturista/mostrarimagenes");
   };
 
   const indiceFinal = paginaActual * resultadosPorPagina;

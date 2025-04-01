@@ -17,6 +17,8 @@ import Bloque1y2_2 from '../layOut/paginas/admin2/Bloque1y2_2';
 import Bloque6_2 from '../layOut/paginas/admin2/Bloque6_2';
 import MenuVerificacion6_2 from '../sistemaAdmin/inicioVerificacion/MenuVerificacion6_2';
 import B6Rechazados from '../sistema/componentes/B6rechazados/B6Rechazados';
+import MostrarPrincipales from '../sistemaAdmin/componentes/bloqueSeis/MostrarPrincipales';
+import SeleccionarFormMostrar from '../sistema/pages/ProcesoImagenes/UrlFormPages/SeleccionarFormMostrar';
 
 export const router = createBrowserRouter([
   {
@@ -62,6 +64,10 @@ export const router = createBrowserRouter([
           {
             path: "formpaginas",  // ✅ Ruta para el formulario de imágenes
             element: <SeleccionarForm />,  // ✅ Renderiza `SeleccionarForm.jsx`
+          },
+          {
+            path: "mostrarimagenes",  // ✅ Ruta para el formulario de imágenes
+            element: <SeleccionarFormMostrar />,  // ✅ Renderiza `SeleccionarForm.jsx`
           },
         ],
       },
