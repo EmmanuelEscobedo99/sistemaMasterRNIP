@@ -29,7 +29,7 @@ export const EditarPrincipales = ({
       {imagenesObtenidas.length > 0 && (
         <form onSubmit={onSubmit}>
           <div className="row justify-content-center">
-            {[1, 2, 3].map((index) => (
+            {[0, 1, 2].map((index) => (
               <div className="col-md-4 mb-4" key={index}>
                 <Card className="shadow rounded-lg border-0">
                   <CardBody className="text-center p-4">
