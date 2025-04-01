@@ -1,95 +1,96 @@
-import React, { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
-import { Card, CardBody, CardTitle, Button, Spinner } from 'react-bootstrap';
-import { VistaEditarHuellas } from '../../../../pages/ProcesoImagenes/VistasFormulario/VistaEditarHuellas';
+import React from 'react';
+import { Card, CardBody, CardTitle, Button } from 'react-bootstrap';
 
-export const EditarHuellas = () => {
-  const navigate = useNavigate();
-  const LLAVE = useParams().LLAVE;
-  const {
-    register,
-    handleSubmit,
-    handleImageChange,
-    onSubmit,
-    isSubmitting,
-    isImagesFetched,
-    fetchedImages,
-    imagenes,
-    loading,
-    dedoDerecho,
-    dedoIzquierdo
-  } = VistaEditarHuellas( LLAVE );
-
-  const regresar = () => {
-    navigate( `/vistaHuella/${ LLAVE }` );
-  };
+export const EditarHuellas = ({
+  LLAVE,
+  isImagesFetched,
+  fetchedImages,
+  imagenes,
+  handleImageChange,
+  handleSubmit,
+  setModo,
+  errores2,
+  modo
+}) => {
+  const dedoDerecho = ['Pulgar', 'Índice', 'Medio', 'Anular', 'Meñique'];
+  const dedoIzquierdo = ['Pulgar', 'Índice', 'Medio', 'Anular', 'Meñique'];
 
   return (
-    <div className="container">
-      <h1 className="text-center my-4">Editar Fotos de Huellas</h1>
-      <Button className="btn btn-secondary m-3" onClick={ () => regresar( LLAVE ) }>
-        Regresar
-      </Button>
-      <form onSubmit={ handleSubmit( onSubmit ) }>
-        <div className="row">
-          { Array.from( { length: 10 }, ( _, index ) => (
-            <div className="col-md-4 mb-4" key={ index }>
-              <Card className="shadow">
-                <CardBody>
-                  <CardTitle className="text-center">
-                    { index < 5 ? `Dedo ${ dedoDerecho[ index ] } (Derecha)` : `Dedo ${ dedoIzquierdo[ index - 5 ] } (Izquierda)` }
-                  </CardTitle>
-                  <input
-                    type="file"
-                    className="form-control mb-3"
-                    { ...register( `imagen${ index + 1 }` ) }
-                    onChange={ ( e ) => handleImageChange( e, index ) }
-                  />
-                  { loading[ index ] ? (
-                    <div className="text-center">
-                      <Spinner animation="border" variant="primary" />
-                    </div>
-                  ) : (
-                    imagenes[ index ] && (
-                      <img
-                        src={ imagenes[ index ].url }
-                        alt={ `Imagen ${ index + 1 }` }
-                        className="img-fluid"
-                        style={ { width: '100%', height: '200px', objectFit: 'cover' } }
-                      />
-                    )
-                  ) }
+    <div className="container py-4">
+      <h1 className="text-center my-4" style={{ fontSize: '2.5rem', fontWeight: '700', color: '#004085' }}>
+        Editar Fotos de Huellas
+      </h1>
+
+      {/* Solo mostramos el formulario si estamos en modo "editar" */}
+      {modo === 'editar' && (
+        <form onSubmit={handleSubmit}>
+          <div className="row justify-content-center">
+            {Array.from({ length: 10 }, (_, index) => (
+              <div className="col-md-6 col-lg-4 mb-4" key={index}>
+                <Card className="shadow-sm rounded-lg border-0">
+                  <CardBody className="text-center p-4">
+                    <CardTitle className="mb-3" style={{ fontSize: '1.2rem', fontWeight: '600', color: '#333' }}>
+                      {index < 5 ? `Dedo ${dedoDerecho[index]} (Derecha)` : `Dedo ${dedoIzquierdo[index - 5]} (Izquierda)`}
+                    </CardTitle>
+                    <input
+                      type="file"
+                      className="form-control mb-3"
+                      onChange={(e) => handleImageChange(e, index)}
+                      style={{ borderRadius: '10px' }}
+                    />
+                    {errores2[index] && <p className="text-danger mt-2">{errores2[index]}</p>}
+                    {imagenes[index] && (
+                      <div className="text-center mt-3">
+                        <img
+                          src={imagenes[index].url}
+                          alt={`Imagen Huella ${index + 1}`}
+                          className="img-fluid rounded border shadow-sm"
+                          style={{ maxHeight: '220px', objectFit: 'cover', borderRadius: '10px' }}
+                        />
+                      </div>
+                    )}
+                  </CardBody>
+                </Card>
+              </div>
+            ))}
+          </div>
+
+          {/* Botón de Guardar cambios */}
+          <div className="text-center mt-4">
+            <Button variant="success" type="submit" style={{ padding: '10px 20px' }}>
+              Guardar cambios
+            </Button>
+          </div>
+        </form>
+      )}
+
+      {/* Mostrar imágenes obtenidas si existen */}
+      <div className="row mt-5 justify-content-center">
+        {fetchedImages && fetchedImages.length > 0 ? (
+          fetchedImages.map((image, index) => (
+            <div className="col-md-4 col-lg-3 d-flex justify-content-center" key={index}>
+              <Card className="shadow-sm border-0" style={{ width: '15rem', borderRadius: '15px' }}>
+                <CardBody className="p-3">
+                  <h5 className="text-center mb-3" style={{ fontWeight: '600', fontSize: '1.2rem', color: '#333' }}>
+                    {image.grupo}
+                  </h5>
+                  <div className="text-center">
+                    <img
+                      src={image.imagen}
+                      alt={`Imagen ${index + 1}`}
+                      className="img-fluid rounded border shadow-sm"
+                      style={{ maxHeight: '220px', objectFit: 'cover', borderRadius: '10px' }}
+                    />
+                  </div>
                 </CardBody>
               </Card>
             </div>
-          ) ) }
-        </div>
-        <div className="text-center">
-          <Button variant="success" className="mt-3" type="submit" disabled={ isSubmitting }>
-            { isSubmitting ? 'Enviando...' : 'Enviar' }
-          </Button>
-        </div>
-      </form>
-
-      <div className="row mt-4">
-        { fetchedImages.length > 0 ? fetchedImages.map( ( image, index ) => (
-          <div className="col-md-4" key={ index }>
-            <Card className="shadow mb-2">
-              <CardBody>
-                <h5 className="text-center">{ image.grupo }</h5>
-                <img
-                  src={ image.imagen }
-                  alt={ `Imagen ${ index + 1 }` }
-                  className="img-fluid"
-                  style={ { width: '100%', height: '200px', objectFit: 'cover' } }
-                />
-              </CardBody>
-            </Card>
+          ))
+        ) : (
+          <div className="col-12 text-center">
+            <h5 className="text-muted">No hay imágenes disponibles aún.</h5>
           </div>
-        ) ) : (
-          <p className="text-center">No hay imágenes disponibles.</p>
-        ) }
+        )}
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ import useStore from "../../../../app/useStore";
 import MostrarPrincipales from '../../../../sistemaAdmin/componentes/bloqueSeis/MostrarPrincipales';
 import MostrarHuellas from '../../../../sistemaAdmin/componentes/bloqueSeis/MostrarHuellas';
 import { VistaEditar } from '../VistasFormulario/VistaEditar';
+import { VistaEditarHuellas } from '../VistasFormulario/VistaEditarHuellas';
 
 const SeleccionarFormMostrar = () => {
   const navigate = useNavigate();
@@ -195,7 +196,7 @@ const SeleccionarFormMostrar = () => {
       <Card className="mt-3">
         <CardBody>
           {activeKey === '2' && <VistaEditar />}
-          {activeKey === '3' && <MostrarHuellas />}
+          {activeKey === '3' && <VistaEditarHuellas />}
           {activeKey === '4' && (
             <>
               <Button
