@@ -26,18 +26,6 @@ export const EditarPrincipales = ({
         Editar Fotos Principales
       </h1>
 
-      <div className="d-flex justify-content-center mb-4">
-        {imagenesObtenidas && Array.isArray(imagenesObtenidas) && imagenesObtenidas.length > 0 && (
-          <Button
-            className="btn btn-secondary px-4 py-2"
-            onClick={regresarFormulariosForm}
-            style={{ fontSize: '1.1rem', fontWeight: 'bold', borderRadius: '30px' }}
-          >
-            Regresar a Modo Subir
-          </Button>
-        )}
-      </div>
-
       {imagenesObtenidas.length > 0 && (
         <form onSubmit={onSubmit}>
           <div className="row justify-content-center">

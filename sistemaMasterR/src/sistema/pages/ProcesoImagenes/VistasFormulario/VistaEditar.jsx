@@ -27,11 +27,13 @@ export const VistaEditar = () => {
   const TAMANO_MAXIMO = TAMANO_MAXIMO_MB * 1024 * 1024;
 
   const obtenerIdAlterna = async (LLAVE) => {
+    console.log("LLAVEFSSDFSDFSDFSDFSDFDFGDFGDFGDFGDFG", LLAVE)
     try {
       const response = await axios.post('http://localhost:3000/api/bloque1/idAlterna', { LLAVE });
       if (response && response.data.status !== 404) {
         dispatch(setIdAlterna(response.data[0].ID_ALTERNA));
         dispatch(setEnviando(false));
+        console.log("sdsdfsdfsdfsdfsdf", idAlterna)
       } else {
         dispatch(setEnviando(true));
         dispatch(agregarError2('Error al obtener el ID alterna.'));
