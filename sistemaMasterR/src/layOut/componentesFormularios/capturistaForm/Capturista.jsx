@@ -66,6 +66,11 @@ const Capturista = () => {
                   <FaDatabase className="text-success" /> Incorporar Bloque 6
                 </NavLink>
               </motion.li>
+              <motion.li whileHover={{ scale: 1.1 }}>
+                <NavLink to="/capturista/b6rechazados" className="nav-link text-white d-flex align-items-center gap-2">
+                  <FaDatabase className="text-success" /> Bloque 6 Rechazados
+                </NavLink>
+              </motion.li>
               <motion.li whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <button
                   onClick={handleLogout}
