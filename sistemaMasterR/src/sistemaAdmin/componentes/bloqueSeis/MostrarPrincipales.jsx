@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
 import { Card } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
 import useStore from '../../zustand/useStore';
 
-const MostrarPrincipales = ({ data, onValidationStatus }) => {
-  const { formState: { errors } } = useFormContext();
+const MostrarPrincipales = () => {
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { imagenesPorLlave, cargarImagenesPorLlave } = useStore();
   const [loading, setLoading] = useState(true);
-  const LLAVE = useSelector((state) => state.Llave.value);
-
+  const { LLAVE } = useParams();
 
   useEffect(() => {
-    if (LLAVE) {
-      cargarImagenesPorLlave(LLAVE);
-      setTimeout(() => setLoading(false), 2000);
-    }
+    const fetchImagenes = async () => {
+      if (LLAVE) {
+        await cargarImagenesPorLlave(LLAVE); // ✅ Asegura que se esperan los datos
+        setLoading(false);
+      }
+    };
+
+    fetchImagenes();
   }, [LLAVE]);
 
   const imagenesPrincipales = imagenesPorLlave.filter(img =>
@@ -34,7 +35,7 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
   };
 
   return (
-    <form>
+    <div>
       {loading ? (
         <motion.div
           className="d-flex justify-content-center align-items-center"
@@ -75,7 +76,7 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
                       alt={`Grupo ${img.grupo}`}
                       style={{
                         height: '210px',
-                        objectFit: 'contain', // 🔽 que se vea completa
+                        objectFit: 'contain',
                         objectPosition: 'center',
                         backgroundColor: '#0F172A',
                       }}
@@ -128,7 +129,7 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
           )}
         </>
       )}
-    </form>
+    </div>
   );
 };
 

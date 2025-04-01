@@ -61,27 +61,29 @@ const SeleccionarFormMostrar = () => {
 
 
   useEffect(() => {
-    const obtenerImagenes = async () => {
-      if (idAlterna) {
-        try {
-          const response = await axios.get(`http://localhost:3000/api/mostrarPrincipales/principales/${idAlterna}`);
-          if (response.data && response.data.imagenes) {
-            dispatch(setImagenes(response.data.imagenes));
-            dispatch(setObtuveImagenes(imagenesFiltradas.length > 0));
-            console.log("entre bien")
-          }
-        } catch (error) {
-          dispatch(setObtuveImagenes([]));
+    const obtenerImagenesPorLlave = async () => {
+      if (!LLAVE) return;
+      try {
+        const response = await axios.get(`http://localhost:3000/api/imagenesPorLlave/${LLAVE}`);
+        if (Array.isArray(response.data)) {
+          dispatch(setImagenes(response.data));
+          dispatch(setObtuveImagenes(response.data.length > 0));
+          console.log("✅ Imágenes obtenidas por LLAVE:", response.data);
+        } else {
+          dispatch(setImagenes([]));
           dispatch(setObtuveImagenes(false));
-          console.log("ebtre errrir")
+          console.log("⚠️ No se obtuvieron imágenes por LLAVE");
         }
+      } catch (error) {
+        dispatch(setImagenes([]));
+        dispatch(setObtuveImagenes(false));
+        console.error("❌ Error al obtener imágenes por LLAVE:", error);
       }
     };
-
-    if (idAlterna) {
-      obtenerImagenes();
-    }
-  }, [idAlterna]);
+  
+    obtenerImagenesPorLlave();
+  }, [LLAVE]);
+  
 
   const handleRegresar = () => {
     dispatch(setImagenes([])); // 🔥 Limpiar imágenes principales
