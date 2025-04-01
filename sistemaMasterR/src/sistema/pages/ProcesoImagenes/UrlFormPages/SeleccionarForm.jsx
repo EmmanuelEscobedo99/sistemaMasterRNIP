@@ -146,7 +146,7 @@ const SeleccionarForm = () => {
   
       if (responseImagenes.status === 200) {
         Swal.fire("¡Éxito!", "Las imágenes se enviaron correctamente.", "success").then(() => {
-          navigate('/');
+          navigate('/capturista');
           setTimeout(() => {
             window.location.reload();
           }, 100);
