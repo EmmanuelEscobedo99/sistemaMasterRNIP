@@ -3,14 +3,15 @@ import React, { useState, useEffect } from 'react';
 import { Nav, NavItem, NavLink, Button, Card, CardBody, CardTitle } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { setImagenes, setObtuveImagenes } from '../../../redux/imagenesSlice'; // Importamos la acción
-import { VistaPrincipales } from '../VistasFormulario/VistaPrincipales';
-import { VistaHuella } from '../VistasFormulario/VistaHuella';
+//import { VistaPrincipales } from '../../../../sistemaAdmin/componentes/vistas/bloqueSeis/VistaPrincipales';
+//import { VistaHuella } from '../VistasFormulario/VistaHuella';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { limpiarHuellas } from '../../../redux/huellasSlice'; // 🔥 Agregar esto
 import useStore from "../../../../app/useStore";
 import MostrarPrincipales from '../../../../sistemaAdmin/componentes/bloqueSeis/MostrarPrincipales';
 import MostrarHuellas from '../../../../sistemaAdmin/componentes/bloqueSeis/MostrarHuellas';
+import { VistaEditar } from '../VistasFormulario/VistaEditar';
 
 const SeleccionarFormMostrar = () => {
   const navigate = useNavigate();
@@ -193,7 +194,7 @@ const SeleccionarFormMostrar = () => {
 
       <Card className="mt-3">
         <CardBody>
-          {activeKey === '2' && <MostrarPrincipales />}
+          {activeKey === '2' && <VistaEditar />}
           {activeKey === '3' && <MostrarHuellas />}
           {activeKey === '4' && (
             <>
