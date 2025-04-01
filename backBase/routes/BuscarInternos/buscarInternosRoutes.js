@@ -10,5 +10,7 @@ router.get('/procesado10', buscarInternosController.obtenerInternosProcesado10);
 router.get('/procesado2', buscarInternosController.obtenerInternosProcesado2);
 router.get('/nombresBloque6', buscarInternosController.obtenerNombresPorBloques6);
 router.get('/nombresBloque6D', buscarInternosController.obtenerNombresPorBloques6D);
+router.get('/nombresBloque11', buscarInternosController.obtenerNombresPorBloques11);
+
 
 module.exports = router;

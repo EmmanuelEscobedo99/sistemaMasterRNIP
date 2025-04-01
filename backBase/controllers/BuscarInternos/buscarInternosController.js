@@ -73,7 +73,16 @@ const buscarInternosController = {
       console.error(error);
       res.status(500).json({ error: error.message });
     }
-  }
+  },
+  async obtenerNombresPorBloques11(req, res) {
+    try {
+      const result = await buscarInternosService.obtenerNombresPorBloques11();
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: error.message });
+    }
+  }     
 };
 
 module.exports = buscarInternosController;

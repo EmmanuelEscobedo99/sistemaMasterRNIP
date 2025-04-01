@@ -210,7 +210,16 @@ const useStore = create((set) => ({
       } catch (error) {
         console.error('Error al cargar imágenes por llave:', error);
       }
-    },       
+    },
+        // 🔹 Cargar internos del Bloque 6D con procesado 11
+    cargarInternosBloque11: async () => {
+      try {
+        const response = await api.get('/buscarInternos/nombresBloque11');
+        set({ internosBloque11: response.data });
+      } catch (error) {
+        console.error('Error al cargar los datos del Bloque 11:', error);
+      }
+    },    
 }));
 
 export default useStore;

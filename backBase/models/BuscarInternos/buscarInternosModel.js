@@ -177,6 +177,32 @@ const buscarInternosModel = {
       throw error;
     }
   },  
+  // 🔹 NUEVO: Obtener nombres por bloques funcionales para procesado = 11
+  async obtenerNombresPorBloques11() {
+    try {
+      const [ resultados ] = await pool.query(`
+        SELECT DISTINCT n.*, m1.LLAVE
+        FROM nombres n
+        JOIN movimientos m1 ON n.ID_ALTERNA = m1.ID_ALTERNA
+        JOIN (
+          SELECT m1.ID_ALTERNA, m1.LLAVE
+          FROM movimientos m1
+          JOIN movimientos m2 ON m1.LLAVE = m2.LLAVE
+          WHERE m1.ID_BLOQUE_FUNCIONAL IN (1, 2)
+            AND m2.ID_BLOQUE_FUNCIONAL = 6
+            AND m1.LLAVE = m2.LLAVE
+            AND m2.ID_ALTERNA != m1.ID_ALTERNA
+            AND m1.procesado = 2
+            AND m2.procesado = 11
+          GROUP BY m1.LLAVE
+        ) AS sub ON m1.ID_ALTERNA = sub.ID_ALTERNA
+      `);
+      return resultados.length > 0 ? resultados : [];
+    } catch (error) {
+      console.error("Error en obtenerNombresPorBloques11:", error);
+      throw error;
+    }
+  },   
 };
 
 module.exports = buscarInternosModel;

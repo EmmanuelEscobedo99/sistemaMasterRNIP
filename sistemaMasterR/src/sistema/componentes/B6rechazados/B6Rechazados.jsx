@@ -1,53 +1,79 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import useStore from "../../../app/useStore";
-import api from "../../../api/api";
-import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { FaUpload } from "react-icons/fa";
+import api from "../../../api/api"; // o ajusta la ruta según dónde esté tu archivo api.js
 
 const B6Rechazados = () => {
   const navigate = useNavigate();
   const setLlave = useStore((state) => state.setLlave);
   const [personas, setPersonas] = useState([]);
+  const [resultados, setResultados] = useState([]);
+  const [resultadosFiltrados, setResultadosFiltrados] = useState([]);
   const [busqueda, setBusqueda] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-
+  const [paginaActual, setPaginaActual] = useState(1);
   const [loading, setLoading] = useState(true);
+  const resultadosPorPagina = 10;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get("/buscarInternos/procesado2");
-        setPersonas(response.data || []);
+        const response = await useStore.getState().cargarInternosBloque11();
+        const data = useStore.getState().internosBloque11;
+
+        const agrupados = data.reduce((acc, { DNOMBRE, DPATERNO, DMATERNO, LLAVE, ID_ALTERNA }) => {
+          if (!acc[LLAVE]) {
+            acc[LLAVE] = { nombres: [], LLAVE, ID_ALTERNA };
+          }
+          acc[LLAVE].nombres.push({ DNOMBRE, DPATERNO, DMATERNO });
+          return acc;
+        }, {});
+
+        const resultadosAgrupados = Object.values(agrupados);
+        setResultados(resultadosAgrupados);
+        setResultadosFiltrados(resultadosAgrupados);
       } catch (error) {
         console.error("Error al obtener datos de internos:", error);
       } finally {
         setTimeout(() => setLoading(false), 1500);
       }
     };
+
     fetchData();
   }, []);
 
   const handleBuscar = (e) => {
-    setBusqueda(e.target.value.toLowerCase());
-    setCurrentPage(1);
+    const valor = e.target.value.toLowerCase();
+    setBusqueda(valor);
+
+    const filtrados = resultados.filter((registro) =>
+      registro.nombres
+        .map((n) => `${n.DNOMBRE} ${n.DPATERNO} ${n.DMATERNO}`.toLowerCase())
+        .some((nombre) => nombre.includes(valor))
+    );
+
+    setResultadosFiltrados(filtrados);
+    setPaginaActual(1);
   };
 
-  const personasFiltradas = personas.filter((persona) =>
-    persona.nombres
-      .map((n) => `${n.DNOMBRE} ${n.DPATERNO} ${n.DMATERNO}`.toLowerCase())
-      .join(" ")
-      .includes(busqueda)
-  );
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = personasFiltradas.slice(indexOfFirstItem, indexOfLastItem);
-
-  const seleccionarPersona = (LLAVE) => {
+  const handleSeleccionar = (LLAVE) => {
     setLlave(LLAVE);
-    navigate(`/capturista/formPaginas`);
+    navigate("/capturista/formPaginas");
+  };
+
+  const indiceFinal = paginaActual * resultadosPorPagina;
+  const indiceInicial = indiceFinal - resultadosPorPagina;
+  const resultadosPaginados = resultadosFiltrados.slice(indiceInicial, indiceFinal);
+
+  const handleAnterior = () => {
+    if (paginaActual > 1) setPaginaActual(paginaActual - 1);
+  };
+
+  const handleSiguiente = () => {
+    if (paginaActual < Math.ceil(resultadosFiltrados.length / resultadosPorPagina)) {
+      setPaginaActual(paginaActual + 1);
+    }
   };
 
   return (
@@ -65,8 +91,9 @@ const B6Rechazados = () => {
       ) : (
         <motion.div
           className="container-fluid mt-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
           style={{
             color: "#E5E7EB",
             backgroundColor: "#0A0A0A",
@@ -96,33 +123,25 @@ const B6Rechazados = () => {
               className="table table-dark table-hover align-middle w-100"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              
+              transition={{ duration: 0.5 }}
             >
               <thead className="bg-dark text-uppercase">
                 <tr>
                   <th className="px-3">Nombre(s)</th>
-                  <th className="px-3">Apellidos</th>
                   <th className="text-center px-3">Acción</th>
                 </tr>
               </thead>
               <tbody>
-                {currentItems.length > 0 ? (
-                  currentItems.map((persona) => (
+                {resultadosPaginados.length > 0 ? (
+                  resultadosPaginados.map(({ nombres, LLAVE }, idx) => (
                     <motion.tr
-                      key={persona.LLAVE}
+                      key={idx}
                       whileHover={{ scale: 1.01 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
                       <td className="px-3">
-                        {persona.nombres.map((n, i) => (
-                          <div key={i}>{n.DNOMBRE}</div>
-                        ))}
-                      </td>
-                      <td className="px-3">
-                        {persona.nombres.map((n, i) => (
-                          <div key={i}>
-                            {n.DPATERNO} {n.DMATERNO}
-                          </div>
+                        {nombres.map((n, i) => (
+                          <div key={i}>{`${n.DNOMBRE} ${n.DPATERNO} ${n.DMATERNO}`}</div>
                         ))}
                       </td>
                       <td className="text-center px-3">
@@ -131,7 +150,7 @@ const B6Rechazados = () => {
                           style={{ minWidth: "150px" }}
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.95 }}
-                          onClick={() => seleccionarPersona(persona.LLAVE)}
+                          onClick={() => handleSeleccionar(LLAVE)}
                         >
                           <FaUpload /> Subir Imágenes
                         </motion.button>
@@ -140,7 +159,7 @@ const B6Rechazados = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="3" className="text-center text-danger py-3">
+                    <td colSpan="2" className="text-center text-danger py-3">
                       No se encontraron registros
                     </td>
                   </tr>
@@ -149,14 +168,13 @@ const B6Rechazados = () => {
             </motion.table>
           </div>
 
-          {/* Paginación */}
           <div className="d-flex justify-content-center mt-4 gap-3">
             <motion.button
               className="btn btn-outline-light btn-sm px-4"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setCurrentPage(currentPage - 1)}
-              disabled={currentPage === 1}
+              onClick={handleAnterior}
+              disabled={paginaActual === 1}
             >
               ◀ Anterior
             </motion.button>
@@ -164,8 +182,8 @@ const B6Rechazados = () => {
               className="btn btn-outline-light btn-sm px-4"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setCurrentPage(currentPage + 1)}
-              disabled={indexOfLastItem >= personasFiltradas.length}
+              onClick={handleSiguiente}
+              disabled={paginaActual === Math.ceil(resultadosFiltrados.length / resultadosPorPagina)}
             >
               Siguiente ▶
             </motion.button>
