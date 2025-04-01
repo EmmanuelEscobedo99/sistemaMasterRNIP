@@ -199,6 +199,7 @@ const useStore = create((set) => ({
     cargarImagenesPorLlave: async (llave) => {
       try {
         const response = await api.get(`/imagenesPorLlave/${llave}`);
+        console.log("📦 Respuesta imágenes:", response.data); // 👈 Asegúrate que sea array de objetos válidos
         set({ imagenesPorLlave: response.data });
       } catch (error) {
         console.error('Error al cargar imágenes por llave:', error);
