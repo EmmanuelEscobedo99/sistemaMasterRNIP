@@ -1,12 +1,13 @@
 import React from 'react';
 import { Card, CardBody, CardTitle, Button, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { FaUpload, FaImage } from 'react-icons/fa';
 
 export const EditarPrincipales = ({
-  imagenes,
+  imagenes, // nuevas seleccionadas
   loading,
   enviando,
-  imagenesObtenidas,
+  imagenesObtenidas, // originales del backend
   obtuveImagenes,
   handleCambioImagen,
   onSubmit,
@@ -20,61 +21,86 @@ export const EditarPrincipales = ({
 }) => {
   const navigate = useNavigate();
 
+  const obtenerGrupo = (index) => {
+    return index === 0 ? 'A' : index === 1 ? 'B' : 'C';
+  };
+
   return (
-    <div className="container py-4">
-      <h1 className="text-center my-4" style={{ fontSize: '2.5rem', fontWeight: '700', color: '#004085' }}>
-        Editar Fotos Principales
+    <div className="container py-5">
+      <h1 className="text-center mb-5" style={{ fontSize: '2.8rem', fontWeight: '700', color: '#003366' }}>
+        ✨ Editar Fotos Principales
       </h1>
 
       {imagenesObtenidas.length > 0 && (
         <form onSubmit={onSubmit}>
           <div className="row justify-content-center">
-            {[0, 1, 2].map((index) => (
-              <div className="col-md-4 mb-4" key={index}>
-                <Card className="shadow rounded-lg border-0">
-                  <CardBody className="text-center p-4">
-                    <CardTitle className="mb-3" style={{ fontSize: '1.3rem', fontWeight: '600', color: '#333' }}>
-                      {index === 1 ? 'Frente' : index === 2 ? 'Derecho' : 'Izquierdo'}
-                    </CardTitle>
+            {[0, 1, 2].map((index) => {
+              const grupo = obtenerGrupo(index);
+              const imagenNueva = imagenes[index];
 
-                    <div className="position-relative">
-                      <input
-                        type="file"
-                        className="form-control mb-3 mx-auto"
-                        onChange={(e) => handleCambioImagen(e, index)}
-                        style={{ borderRadius: '10px' }}
-                      />
+              return (
+                <div className="col-md-4 mb-4" key={index}>
+                  <Card className="border-0 shadow-lg rounded-4 p-3 bg-light">
+                    <CardBody>
+                      <CardTitle className="text-center mb-3" style={{ fontSize: '1.4rem', fontWeight: '600', color: '#0d3b66' }}>
+                        {grupo === 'A' ? '📸 Frente' : grupo === 'B' ? '📸 Derecho' : '📸 Izquierdo'}
+                      </CardTitle>
+
+                      <div className="input-group mb-3">
+                        <span className="input-group-text bg-primary text-white">
+                          <FaUpload />
+                        </span>
+                        <input
+                          type="file"
+                          className="form-control"
+                          onChange={(e) => handleCambioImagen(e, index)}
+                          style={{ borderRadius: '0 10px 10px 0' }}
+                        />
+                      </div>
+
                       {loading[index] && (
-                        <div className="position-absolute top-50 start-50 translate-middle">
+                        <div className="text-center mb-2">
                           <Spinner animation="border" variant="primary" />
                         </div>
                       )}
-                      {errores2[index] && <p className="text-danger mt-2">{errores2[index]}</p>}
-                    </div>
 
-                    {imagenes[index] && (
-                      <div className="text-center mt-3">
-                        <img
-                          src={imagenes[index].url}
-                          alt={`Imagen ${index + 1}`}
-                          className="img-fluid rounded border shadow-sm"
-                          style={{ maxHeight: '220px', objectFit: 'cover', borderRadius: '10px' }}
-                        />
-                      </div>
-                    )}
-                  </CardBody>
-                </Card>
-              </div>
-            ))}
+                      {errores2[index] && (
+                        <p className="text-danger text-center">{errores2[index]}</p>
+                      )}
+
+                      {imagenNueva?.url && (
+                        <div className="text-center mt-3">
+                          <p className="text-muted mb-1" style={{ fontSize: '0.9rem' }}>🆕 Nueva imagen seleccionada</p>
+                          <img
+                            src={imagenNueva.url}
+                            alt={`Nueva Imagen ${index}`}
+                            className="img-fluid rounded border shadow-sm"
+                            style={{ maxHeight: '180px', objectFit: 'cover', borderRadius: '15px' }}
+                          />
+                        </div>
+                      )}
+                    </CardBody>
+                  </Card>
+                </div>
+              );
+            })}
           </div>
 
           {modo === 'editar' && (
             <div className="text-center mt-4">
               <Button
                 type="submit"
-                className="btn btn-warning px-4 py-2"
+                className="px-5 py-2"
+                style={{
+                  fontSize: '1.2rem',
+                  fontWeight: 'bold',
+                  borderRadius: '30px',
+                  background: 'linear-gradient(90deg, #fca311, #ffba08)',
+                  color: '#fff',
+                  border: 'none',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                }}
                 disabled={enviando}
-                style={{ fontSize: '1.2rem', fontWeight: 'bold', borderRadius: '30px' }}
               >
                 {enviando ? 'Guardando...' : 'Guardar Cambios'}
               </Button>
@@ -83,23 +109,29 @@ export const EditarPrincipales = ({
         </form>
       )}
 
-      <div className="row mt-5 justify-content-center">
-        {imagenesObtenidas && imagenesObtenidas.length > 0 ? (
+      <hr className="my-5" />
+
+      <h3 className="text-center mb-4" style={{ color: '#003366', fontWeight: '600' }}>🗂 Imágenes actuales</h3>
+
+      <div className="row justify-content-center">
+        {imagenesObtenidas.length > 0 ? (
           imagenesObtenidas.map((image, index) => (
-            <div className="col-md-4 col-lg-3 d-flex justify-content-center" key={index}>
-              <Card className="shadow-sm border-0" style={{ width: '18rem', borderRadius: '15px' }}>
+            <div className="col-md-4 col-lg-3 d-flex justify-content-center mb-4" key={index}>
+              <Card
+                className="shadow-sm border-0 bg-white rounded-4 text-center"
+                style={{ width: '18rem', transition: 'all 0.3s ease-in-out' }}
+              >
                 <CardBody className="p-3">
-                  <h5 className="text-center mb-3" style={{ fontWeight: '600', fontSize: '1.2rem', color: '#333' }}>
+                  <h5 className="mb-3" style={{ fontWeight: '600', fontSize: '1.1rem', color: '#0d3b66' }}>
+                    <FaImage className="me-2" />
                     {image.grupo}
                   </h5>
-                  <div className="text-center">
-                    <img
-                      src={image.imagen}
-                      alt={`Imagen ${index + 1}`}
-                      className="img-fluid rounded border shadow-sm"
-                      style={{ maxHeight: '220px', objectFit: 'cover', borderRadius: '10px' }}
-                    />
-                  </div>
+                  <img
+                    src={image.imagen}
+                    alt={`Imagen ${index + 1}`}
+                    className="img-fluid rounded border shadow-sm"
+                    style={{ maxHeight: '220px', objectFit: 'cover', borderRadius: '12px' }}
+                  />
                 </CardBody>
               </Card>
             </div>
