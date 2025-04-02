@@ -161,24 +161,25 @@ export const EditarHuellas = ({
               </Row>
 
               {/* Botón de Guardar Cambios */}
-              <div className="text-center mt-3">
-                <Button
-                  variant="warning"
-                  type="submit"
-                  style={{
-                    padding: '8px 18px',
-                    fontSize: '1rem',
-                    fontWeight: '600',
-                    borderRadius: '30px',
-                    backgroundColor: '#F59E0B',
-                    borderColor: '#F59E0B',
-                    boxShadow: '0 4px 8px rgba(255, 159, 11, 0.1)',
-                    transition: 'all 0.3s ease',
-                  }}
-                >
-                  Guardar cambios
-                </Button>
-              </div>
+              <div className="mt-3" style={{ textAlign: 'left' }}>
+  <Button
+    variant="warning"
+    type="submit"
+    style={{
+      padding: '8px 18px',
+      fontSize: '1rem',
+      fontWeight: '600',
+      borderRadius: '30px',
+      backgroundColor: '#F59E0B',
+      borderColor: '#F59E0B',
+      boxShadow: '0 4px 8px rgba(255, 159, 11, 0.1)',
+      transition: 'all 0.3s ease',
+    }}
+  >
+    Guardar cambios
+  </Button>
+</div>
+
             </form>
           )}
         </Col>
