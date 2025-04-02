@@ -27,7 +27,6 @@ router.put('/editar/:idAlterna', upload.array('nuevaImagen', 3), async (req, res
 
     req.files.forEach((imagen, index) => {
       const grupo = grupos[index];
-      
       if (!grupo) return;
 
       pool.query(query, [imagen.buffer, idAlterna, grupo], (err, result) => {
@@ -39,7 +38,16 @@ router.put('/editar/:idAlterna', upload.array('nuevaImagen', 3), async (req, res
       });
     });
 
-    res.status(200).json({ message: 'Imágenes actualizadas correctamente.' });
+    const actualizarProcesadoQuery = 'UPDATE movimientos SET PROCESADO = 9 WHERE ID_ALTERNA = ?';
+    pool.query(actualizarProcesadoQuery, [idAlterna], (err, result) => {
+      if (err) {
+        console.error('❌ Error al actualizar el campo PROCESADO:', err);
+      } else {
+        console.log(`🔁 Campo PROCESADO actualizado a 9 para ID_ALTERNA ${idAlterna}`);
+      }
+    });
+
+    res.status(200).json({ message: 'Imágenes actualizadas correctamente y PROCESADO cambiado a 9.' });
   } catch (error) {
     console.error('Error al actualizar las imágenes:', error);
     res.status(500).json({ message: 'Error al actualizar las imágenes en la base de datos', error });
