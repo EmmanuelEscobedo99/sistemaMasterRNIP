@@ -19,6 +19,7 @@ import MenuVerificacion6_2 from '../sistemaAdmin/inicioVerificacion/MenuVerifica
 import B6Rechazados from '../sistema/componentes/B6rechazados/B6Rechazados';
 import MostrarPrincipales from '../sistemaAdmin/componentes/bloqueSeis/MostrarPrincipales';
 import SeleccionarFormMostrar from '../sistema/pages/ProcesoImagenes/UrlFormPages/SeleccionarFormMostrar';
+import B12Rechazados from '../sistema/componentes/B12rechazados/B12Rechazados';
 
 export const router = createBrowserRouter([
   {
@@ -26,53 +27,41 @@ export const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/capturista",
-    element: <ProtectedRoute allowedRoles={["capturista"]} />,
-    children: [
-      {
-        path: "",
-        element: <OpenCapturista />,
-        children: [
-          {
-            path: "MModificacion",
-            // element: <MenuModificacion />, // Inicio de modificación
-          },
-          {
-            path: "paginas",
-            // element: <BloqueUno />, // Proceso de modificación de cada bloque
-          },
-          {
-            path: "calar",
-            // element: <Calar />, // Registro de bloques 1 y 2
-          },
-          {
-            path: "registro",
-            element: <MenuRegistro />, // Registro de bloques 1 y 2
-          },
-          {
-            path: "incorporar-bloque-6",
-            element: <Navigate to="/capturista/tabladatos" replace />, // 🔹 Redirige correctamente a `tabladatos`
-          },
-          {
-            path: "tabladatos",
-            element: <TablaDatos />, // ✅ Renderiza `TablaDatos.jsx`
-          },
-          {
-            path: "b6rechazados",
-            element: <B6Rechazados />, // ✅ Renderiza `TablaDatos.jsx`
-          },
-          {
-            path: "formpaginas",  // ✅ Ruta para el formulario de imágenes
-            element: <SeleccionarForm />,  // ✅ Renderiza `SeleccionarForm.jsx`
-          },
-          {
-            path: "mostrarimagenes",  // ✅ Ruta para el formulario de imágenes
-            element: <SeleccionarFormMostrar />,  // ✅ Renderiza `SeleccionarForm.jsx`
-          },
-        ],
-      },
-    ],
-  },
+      path: "/capturista",
+      element: <ProtectedRoute allowedRoles={["capturista"]} />,
+      children: [
+        {
+          path: "",
+          element: <OpenCapturista />,
+          children: [
+            {
+              path: "registro",
+              element: <MenuRegistro />,
+            },
+            {
+              path: "tabladatos",
+              element: <TablaDatos />,
+            },
+            {
+              path: "b6rechazados",
+              element: <B6Rechazados />,
+            },
+            {
+              path: "b12rechazados", // ✅ NUEVA RUTA
+              element: <B12Rechazados />,
+            },
+            {
+              path: "formpaginas",
+              element: <SeleccionarForm />,
+            },
+            {
+              path: "mostrarimagenes",
+              element: <SeleccionarFormMostrar />,
+            },
+          ],
+        },
+      ],
+    },    
   {
     path: "/admin",
     element: <ProtectedRoute allowedRoles={["admin"]} />,

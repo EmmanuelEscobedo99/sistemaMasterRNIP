@@ -214,6 +214,14 @@ const useStore = create((set) => ({
         console.error('Error al cargar los datos del Bloque 11:', error);
       }
     },
+    cargarInternosBloque12Rechazados: async () => {
+      try {
+        const response = await api.get('/b12rechazados/nombresBloque12');
+        set({ internosBloque12: response.data });
+      } catch (error) {
+        console.error('Error al cargar los datos del Bloque 1 y 2 (rechazados - procesado 8):', error);
+      }
+    },    
 }));
 
 export default useStore;
