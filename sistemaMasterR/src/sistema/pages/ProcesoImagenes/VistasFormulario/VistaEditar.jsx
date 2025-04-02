@@ -21,25 +21,29 @@ export const VistaEditar = () => {
   const [modo] = useState('editar');
 
   const dispatch = useDispatch();
-  const { imagenes, loading, idAlterna, enviando, errores2 } = useSelector((state) => state.imagenes);
+  const { imagenes: imagenesNuevas, loading, idAlterna, enviando, errores2 } = useSelector((state) => state.imagenes);
+
+  const [imagenesOriginales, setImagenesOriginales] = useState([]); // ← Array para las originales
 
   const TAMANO_MAXIMO_MB = 0.12;
   const TAMANO_MAXIMO = TAMANO_MAXIMO_MB * 1024 * 1024;
 
   const obtenerIdAlterna = async (LLAVE) => {
-    console.log("LLAVEFSSDFSDFSDFSDFSDFDFGDFGDFGDFGDFG", LLAVE)
     try {
       const response = await axios.post('http://localhost:3000/api/bloque1/idAlterna', { LLAVE });
       if (response && response.data.status !== 404) {
-        dispatch(setIdAlterna(response.data[0].ID_ALTERNA));
+        const idAlt = response.data[0].ID_ALTERNA;
+        dispatch(setIdAlterna(idAlt));
         dispatch(setEnviando(false));
-        console.log("sdsdfsdfsdfsdfsdf", idAlterna)
+
+        const respImgs = await axios.get(`http://localhost:3000/api/imagenesPorIdAlterna/${idAlt}`);
+        setImagenesOriginales(respImgs.data || []);
       } else {
         dispatch(setEnviando(true));
         dispatch(agregarError2('Error al obtener el ID alterna.'));
       }
     } catch (error) {
-      console.error('Error al obtener el ID alterna:', error);
+      console.error('Error al obtener el ID alterna o imágenes:', error);
     }
   };
 
@@ -59,7 +63,7 @@ export const VistaEditar = () => {
       dispatch(limpiarError2(index));
       const reader = new FileReader();
       reader.onloadend = () => {
-        const nuevasImagenes = [...imagenes];
+        const nuevasImagenes = [...imagenesNuevas];
         nuevasImagenes[index] = { url: reader.result, file, name: file.name };
         dispatch(setImagenes(nuevasImagenes));
       };
@@ -71,24 +75,23 @@ export const VistaEditar = () => {
     e.preventDefault();
 
     Swal.fire({
-      title: '¿Estás seguro?',
+      title: '¿Estás segura?',
       text: '¿Deseas actualizar las imágenes seleccionadas?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, continuar',
-      cancelButtonText: 'No, cancelar',
+      confirmButtonText: 'Sí, actualizar',
+      cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           dispatch(setEnviando(true));
           const formData = new FormData();
-          const gruposAsignados = ['A', 'B', 'C'];
+          const grupos = ['A', 'B', 'C'];
 
-          imagenes.forEach((img, index) => {
+          imagenesNuevas.forEach((img, index) => {
             if (img?.file) {
-              const grupo = gruposAsignados[index] || 'A';
-              formData.append(`nuevaImagen`, img.file);
-              formData.append(`grupo`, grupo);
+              formData.append('nuevaImagen', img.file);
+              formData.append('grupo', grupos[index]);
             }
           });
 
@@ -104,11 +107,11 @@ export const VistaEditar = () => {
           );
 
           if (response.status === 200) {
-            Swal.fire("¡Éxito!", 'Las imágenes se han actualizado correctamente.', "success")
-              .then(() => {
-                dispatch(setImagenes([null, null, null]));
-                document.querySelectorAll('input[type="file"]').forEach(input => input.value = "");
-              });
+            Swal.fire("¡Éxito!", 'Las imágenes se han actualizado correctamente.', "success").then(() => {
+              dispatch(setImagenes([null, null, null]));
+              document.querySelectorAll('input[type="file"]').forEach(input => input.value = "");
+              obtenerIdAlterna(LLAVE); // recargar las imágenes originales
+            });
           } else {
             Swal.fire({ icon: 'error', title: 'Error', text: 'Hubo un error en la operación.' });
           }
@@ -128,21 +131,13 @@ export const VistaEditar = () => {
     }
   }, [LLAVE]);
 
-  // 👇 Extrae directamente las imágenes A, B y C desde "imagenes"
-  const imagenesPrincipales = imagenes
-    ?.filter((img) => img !== null && ['A', 'B', 'C'].includes(img.grupo))
-    .map((img) => ({
-      grupo: img.grupo,
-      imagen: img.imagen || img.url, // soporte para base64 o FileReader
-    })) || [];
-
   return (
     <EditarPrincipales
-      imagenes={imagenes}
+      imagenes={imagenesNuevas}
       loading={loading}
       enviando={enviando}
-      imagenesObtenidas={imagenesPrincipales}
-      obtuveImagenes={imagenesPrincipales.length > 0}
+      imagenesObtenidas={imagenesOriginales}
+      obtuveImagenes={imagenesOriginales.length > 0}
       handleCambioImagen={handleCambioImagen}
       onSubmit={onSubmit}
       errores2={errores2}
