@@ -1,17 +1,42 @@
-import React from 'react';
-import { Card } from 'react-bootstrap';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Tooltip, Card } from 'react-bootstrap';
+import '../../../sistema/css/estilo.css';
+import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1/ValidacionBloqueUno';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
+import useStore from '../../zustand/useStore';
 import { useSelector } from 'react-redux';
+import { motion } from 'framer-motion';
 
-const MostrarHuellas = () => {
+const MostrarHuellas = ({ data, onFormChange, onValidationStatus }) => {
+  const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
-  const imagenes = useSelector((state) => state.imagenes.imagenes); // ✅ Usamos Redux
-  const loading = useSelector((state) => state.imagenes.loading?.includes(true)); // Puedes ajustar si manejas esto diferente
+  const idAlternas = useSelector((state) => state.idAlterna.value);
+  const idAlterna = isNaN(parseInt(idAlternas, 10)) ? 0 : parseInt(idAlternas, 10) + 1;
+  const { imagenesPorLlave, cargarImagenesPorLlave } = useStore();
+  const LLAVE = useSelector((state) => state.Llave.value);
 
-  const datosHuellas = imagenes?.filter(img =>
-    ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].includes(img?.grupo)
-  ) || [];
+  // Estado de carga
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (LLAVE) {
+      cargarImagenesPorLlave(LLAVE);
+      // Pantalla de carga dura 2 segundos
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    }
+  }, [LLAVE]);
+
+  const datosHuellas = imagenesPorLlave.filter(img =>
+    ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].includes(img.grupo)
+  );
+
+  useEffect(() => {
+    onValidationStatus(errors);
+  }, [errors, onValidationStatus]);
 
   const handleCheckboxChange = (grupo, valor) => {
     if (radioSeleccionados.some(item => item.nombre === grupo && item.valor === valor)) {
@@ -22,12 +47,13 @@ const MostrarHuellas = () => {
   };
 
   return (
-    <div className="row">
+    <form className="row">
+      {/* Pantalla de carga */}
       {loading ? (
         <motion.div
           className="d-flex justify-content-center align-items-center"
           style={{
-            height: '50vh',
+            height: '50vh', // Ajusta la altura de la pantalla de carga
             backgroundColor: 'transparent',
             flexDirection: 'column',
           }}
@@ -36,7 +62,7 @@ const MostrarHuellas = () => {
           transition={{ duration: 0.5 }}
         >
           <img
-            src="../../../../public/ssp.jpeg"
+            src="../../../../public/ssp.jpeg" // Ruta de tu imagen de carga
             alt="Cargando..."
             width="200px"
           />
@@ -45,11 +71,12 @@ const MostrarHuellas = () => {
           </p>
         </motion.div>
       ) : (
+        // Cuando los datos se han cargado, muestra las imágenes y demás contenido
         <>
-          <div className="col-12 d-flex justify-content-around flex-wrap mt-3">
+          <div className="col-12 d-flex justify-content-around mt-3">
             {datosHuellas.length > 0 ? (
               datosHuellas.map((img, index) => (
-                <Card key={index} style={{ width: '18rem', marginBottom: '20px' }}>
+                <Card key={index} style={{ width: '18rem' }}>
                   <Card.Img variant="top" src={img.imagen} alt={`Imagen ${index}`} />
                   <Card.Body>
                     <Card.Title>Grupo {img.grupo}</Card.Title>
@@ -67,23 +94,22 @@ const MostrarHuellas = () => {
                 </Card>
               ))
             ) : (
-              <p className="text-center">No hay imágenes disponibles.</p>
+              <p>No hay imágenes disponibles.</p>
             )}
           </div>
 
-          {radioSeleccionados.length > 0 && (
-            <div className="mt-4">
-              <h5 style={{ color: 'red' }}>Campos con errores:</h5>
-              <ul>
-                {radioSeleccionados.map((item, index) => (
-                  <li key={index}>{item.nombre}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+          {/* Lista de radio seleccionados */}
+          <div className="mt-4">
+            <h5 style={{ color: 'red' }}>Campos con errores:</h5>
+            <ul>
+              {radioSeleccionados.map((item, index) => (
+                <li key={index}>{item.nombre}</li>
+              ))}
+            </ul>
+          </div>
         </>
       )}
-    </div>
+    </form>
   );
 };
 
