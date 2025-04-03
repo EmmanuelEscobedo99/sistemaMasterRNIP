@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 
 const Domicilio = ({ data, onFormChange, onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
-  const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
+  const { seleccionarRadio, radioSeleccionados,  establecerIdBloqueFuncional } = useDatosGeneralesStore();
   const { situacion } = useStore();
 
   // Estado de carga
@@ -42,6 +42,7 @@ const Domicilio = ({ data, onFormChange, onValidationStatus }) => {
       seleccionarRadio(label, null, 'Situación');
     } else {
       seleccionarRadio(label, valor, 'Situación');
+      establecerIdBloqueFuncional(2); 
     }
   };
 

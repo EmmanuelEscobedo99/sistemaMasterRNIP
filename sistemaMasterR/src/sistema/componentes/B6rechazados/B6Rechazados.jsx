@@ -174,7 +174,7 @@ const B6Rechazados = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="2" className="text-center text-danger py-3">
+                    <td colSpan="3" className="text-center text-danger py-3">
                       No se encontraron registros
                     </td>
                   </tr>

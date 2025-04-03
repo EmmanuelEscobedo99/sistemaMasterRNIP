@@ -12,7 +12,7 @@ import { motion } from 'framer-motion';
 
 const DatosGenerales = ({ onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
-  const { actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
+  const { actualizarDato, seleccionarRadio, radioSeleccionados, establecerIdBloqueFuncional } = useDatosGeneralesStore(); // Asegúrate de tener la función establecerIdBloqueFuncional en tu store
   const { datosGenerales, cargarDatosGenerales, cargarNombres, cargarDomicilio, cargarAlias, cargarSituacion, cargarJuridicos, cargarEjecucion, cargarODelito, cargarIngresos, cargarIngDelito } = useStore();
   const idAlterna = useSelector((state) => state.idAlterna.value);
 
@@ -118,6 +118,9 @@ const DatosGenerales = ({ onValidationStatus }) => {
       seleccionarRadio(label, null, 'Datos Generales P1');
     } else {
       seleccionarRadio(label, valor, 'Datos Generales P1');
+      
+      // Aquí actualizamos ID_BLOQUE_FUNCIONAL al seleccionar el checkbox
+      establecerIdBloqueFuncional(1);  // Establecemos ID_BLOQUE_FUNCIONAL = 1
     }
   };
 

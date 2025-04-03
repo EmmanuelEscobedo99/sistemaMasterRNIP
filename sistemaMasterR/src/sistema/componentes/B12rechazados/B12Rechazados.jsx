@@ -108,6 +108,7 @@ const B12Rechazados = () => {
               <thead className="bg-dark text-uppercase">
                 <tr>
                   <th className="px-3">Nombre(s)</th>
+                  <th className="text-center px-3">Motivo de rechazo</th>
                   <th className="px-3">LLAVE</th>
                 </tr>
               </thead>
@@ -124,6 +125,7 @@ const B12Rechazados = () => {
                           <div key={i}>{`${n.DNOMBRE} ${n.DPATERNO} ${n.DMATERNO}`}</div>
                         ))}
                       </td>
+                      <td style={{ color: 'red' }}></td>
                       <td className="px-3">{LLAVE}</td>
                     </motion.tr>
                   ))

@@ -9,11 +9,9 @@ import api from '../../../api/api';
 const ConsultarErrores = () => {
 
   const navigate = useNavigate();
-
-  const { radioSeleccionados, limpiarErrores } = useDatosGeneralesStore();
+  const { radioSeleccionados, limpiarErrores, idBloqueFuncional } = useDatosGeneralesStore(); // Obtener idBloqueFuncional
   const [ mensaje, setMensaje ] = useState( '' ); // State to store the feedback message
 
-  //const [idAlterna, setIdAlterna] = useState(1);
   const idAlterna = useSelector( ( state ) => state.idAlterna.value );
   const LLAVE = useSelector( ( state ) => state.Llave.value );
 
@@ -58,22 +56,21 @@ const ConsultarErrores = () => {
           // Iterar sobre cada formulario y rechazar los registros
           for ( const [ formName, items ] of Object.entries( erroresAgrupados ) ) {
             for ( const item of items ) {
-              await rechazarRegistro(idAlterna, LLAVE, formName, item.nombre, mensaje );
+              await rechazarRegistro( idAlterna, LLAVE, formName, item.nombre, mensaje );
             }
           }
 
           // Limpiar errores una vez que se complete el proceso
           limpiarErrores();
 
-          Swal.fire({
+          Swal.fire( {
             title: 'Rechazado',
             text: 'Los registros han sido rechazados correctamente.',
             icon: 'success',
             confirmButtonText: 'Aceptar'
-          }).then(() => {
-            navigate(rolUsuario === "admin2" ? '/admin2' : '/admin'); // 👈 redirección dinámica
-          });
-
+          } ).then( () => {
+            navigate( rolUsuario === "admin2" ? '/admin2' : '/admin' ); // 👈 redirección dinámica
+          } );
 
         } catch ( error ) {
           console.error( 'Error al enviar la petición:', error );
@@ -89,7 +86,7 @@ const ConsultarErrores = () => {
   };
 
   // Función para rechazar el registro y enviar los datos al backend
-  const rechazarRegistro = async (ID_ALTERNA, LLAVE, FORMULARIO, CAMPO, DESCRIPCION ) => {
+  const rechazarRegistro = async ( ID_ALTERNA, LLAVE, FORMULARIO, CAMPO, DESCRIPCION ) => {
     try {
       // Realizas la solicitud PUT aquí, pasando los datos necesarios
       await api.put( `rechazar/rechazarRegistro/${ ID_ALTERNA }/${ LLAVE }/${ FORMULARIO }/${ CAMPO }/${ DESCRIPCION }` );
@@ -97,7 +94,6 @@ const ConsultarErrores = () => {
       throw new Error( 'Error al rechazar el registro' );
     }
   };
-
 
   const rolUsuario = useSelector( ( state ) => state.auth.rol ); // ✅ Obtiene el rol de Redux
 
@@ -120,15 +116,14 @@ const ConsultarErrores = () => {
 
           limpiarErrores();
 
-          Swal.fire({
+          Swal.fire( {
             title: 'Aprobado',
             text: `El registro ha sido aprobado correctamente con procesado: ${ nuevoProcesado }.`,
             icon: 'success',
             confirmButtonText: 'Aceptar'
-          }).then(() => {
-            navigate(rolUsuario === "admin2" ? '/admin2' : '/admin'); // 👈 redirección dinámica
-          });
-
+          } ).then( () => {
+            navigate( rolUsuario === "admin2" ? '/admin2' : '/admin' ); // 👈 redirección dinámica
+          } );
 
         } catch ( error ) {
           console.error( "Error al aprobar el registro:", error );
@@ -163,8 +158,13 @@ const ConsultarErrores = () => {
           <div key={ index } className="mb-4">
             <h6>Formulario: { formName }</h6>
             <ul>
-              { groupedErrors[ formName ].map( ( item, index ) => (
-                <li key={ index }>{ item.nombre }</li>
+              { groupedErrors[ formName ].map( ( item, itemIndex ) => (
+                <li key={ itemIndex }>
+                  { item.nombre } {/* Muestra el nombre del item */ }
+                  <br />
+                  {/* Aquí estamos mostrando todos los idBloqueFuncional correspondientes */ }
+                  <h6>ID_BLOQUE_FUNCIONAL: { item.idBloqueFuncional }</h6>
+                </li>
               ) ) }
             </ul>
           </div>
@@ -173,15 +173,8 @@ const ConsultarErrores = () => {
         <p>No hay errores seleccionados.</p>
       ) }
 
-      {/* Button to clear the selected errors */ }
-      {/*<button 
-        className="btn btn-danger mt-3"
-        onClick={handleLimpiarErrors}
-      >
-        Limpiar Errores 
-      </button>*/}
 
-      {/* Textarea for sending feedback .*/ }
+      {/* Textarea for sending feedback */ }
       <div className="mt-4">
         <h6>Envíales un mensaje sobre los errores:</h6>
         <textarea
