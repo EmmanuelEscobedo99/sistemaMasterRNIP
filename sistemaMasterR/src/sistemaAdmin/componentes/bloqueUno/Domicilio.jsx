@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 
 const Domicilio = ({ data, onFormChange, onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
-  const { datos, actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
+  const { datos, actualizarDato, seleccionarRadio, radioSeleccionados, establecerIdBloqueFuncional } = useDatosGeneralesStore();
   const { domicilio, cargarDomicilio } = useStore();
 
   // Estado de carga
@@ -60,6 +60,7 @@ const Domicilio = ({ data, onFormChange, onValidationStatus }) => {
       seleccionarRadio(label, null, 'Domicilio');
     } else {
       seleccionarRadio(label, valor, 'Domicilio');
+      establecerIdBloqueFuncional(1); // 🟢 ID_BLOQUE_FUNCIONAL = 1 para DOMICILIO
     }
   };
 
@@ -78,7 +79,7 @@ const Domicilio = ({ data, onFormChange, onValidationStatus }) => {
         transition={{ duration: 0.5 }}
       >
         <img
-          src="../../../../public/ssp.jpeg" // Ruta de tu imagen de carga
+          src="../../../../public/ssp.jpeg"
           alt="Cargando..."
           width="200px"
         />
@@ -110,8 +111,6 @@ const Domicilio = ({ data, onFormChange, onValidationStatus }) => {
               name={field.id}
               placeholder={errors[field.id] ? errors[field.id].message : field.label}
               value={
-                // Si tiene `sourceKey` (como en DMUNIC y DENTID), toma el valor de ahí
-                // Si no, usa el valor directo del campo
                 field.sourceKey ? (domicilioObtenidos[field.sourceKey] || '') : (domicilioObtenidos[field.id] || '')
               }
               {...register(field.id, { onChange: handleChange })}

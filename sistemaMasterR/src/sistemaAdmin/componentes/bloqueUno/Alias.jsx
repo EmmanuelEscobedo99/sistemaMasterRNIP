@@ -13,13 +13,11 @@ const Alias = ({ data, onFormChange, onValidationStatus }) => {
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { alias } = useStore();
 
-  // Estado de carga
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulamos una carga de datos
     setTimeout(() => {
-      setLoading(false); // Cambiar el estado de carga después de 2 segundos
+      setLoading(false);
     }, 2000);
   }, []);
 
@@ -37,26 +35,18 @@ const Alias = ({ data, onFormChange, onValidationStatus }) => {
     } else {
       clearErrors(name);
     }
+
     onFormChange(name, value);
   };
 
-  const handleRadioChange = (nombre, valor, formulario) => {
-    seleccionarRadio(nombre, valor, formulario);
-  };
-
-  const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
+  const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
   const renderTooltip = (message) => (
     <Tooltip>{message}</Tooltip>
   );
 
-  const aliasObtenidos = alias?.[0] || [];  // Aquí nos aseguramos de que sea un array de alias
+  const aliasObtenidos = alias?.[0] || [];
 
-  console.log('Alias obtenidos:', aliasObtenidos);
-
-  // Si el estado de carga es verdadero, mostramos la pantalla de carga
   if (loading) {
     return (
       <motion.div
@@ -71,7 +61,7 @@ const Alias = ({ data, onFormChange, onValidationStatus }) => {
         transition={{ duration: 0.5 }}
       >
         <img
-          src="../../../../public/ssp.jpeg" // Ruta de tu imagen de carga
+          src="../../../../public/ssp.jpeg"
           alt="Cargando..."
           width="200px"
         />
@@ -84,43 +74,47 @@ const Alias = ({ data, onFormChange, onValidationStatus }) => {
 
   return (
     <div className="row">
-      {aliasObtenidos.map((item, index) => (
-        <div key={index} className="col-md-3 form-floating mt-3 d-flex align-items-center">
-          <OverlayTrigger
-            placement="right"
-            overlay={errors[`ALIAS_${index}`] ? renderTooltip(errors[`ALIAS_${index}`].message) : <></>}
-          >
-            <input
-              type="text"
-              className={`form-control ${errors[`ALIAS_${index}`] ? 'is-invalid shake' : ''}`}
-              id={`ALIAS_${index}`}
-              name={`ALIAS_${index}`}
-              placeholder={`Alias ${index + 1}`}
-              value={item.ALIAS || ''}
-              {...register(`ALIAS_${index}`, { onChange: handleChange })}
-              style={{ borderColor: errors[`ALIAS_${index}`] ? 'red' : '' }}
-            />
-          </OverlayTrigger>
-          <label htmlFor={`ALIAS_${index}`} style={{ marginLeft: '10px' }}>{`Alias ${index + 1}`}</label>
+      {aliasObtenidos.map((item, index) => {
+        const nombreCampo = `Alias ${index + 1}`;
+        return (
+          <div key={index} className="col-md-3 form-floating mt-3 d-flex align-items-center">
+            <OverlayTrigger
+              placement="right"
+              overlay={errors[`ALIAS_${index}`] ? renderTooltip(errors[`ALIAS_${index}`].message) : <></>}
+            >
+              <input
+                type="text"
+                className={`form-control ${errors[`ALIAS_${index}`] ? 'is-invalid shake' : ''}`}
+                id={`ALIAS_${index}`}
+                name={`ALIAS_${index}`}
+                placeholder={`Alias ${index + 1}`}
+                value={item.ALIAS || ''}
+                {...register(`ALIAS_${index}`, { onChange: handleChange })}
+                style={{ borderColor: errors[`ALIAS_${index}`] ? 'red' : '' }}
+              />
+            </OverlayTrigger>
+            <label htmlFor={`ALIAS_${index}`} style={{ marginLeft: '10px' }}>
+              {`Alias ${index + 1}`}
+            </label>
 
-          {/* Checkbox toggleable */}
-          <input
-            type="checkbox"
-            name={`checkbox-ALIAS_${index}`}
-            value="Sí"
-            className="ms-2"
-            checked={radioSeleccionados.some(item => item.nombre === `Alias ${index + 1}` && item.valor === 'Sí')}
-            onChange={() => {
-              const nombreCompleto = `Alias ${index + 1}`;
-              if (radioSeleccionados.some(item => item.nombre === nombreCompleto && item.valor === 'Sí')) {
-                seleccionarRadio(nombreCompleto, null, 'Alias');
-              } else {
-                seleccionarRadio(nombreCompleto, 'Sí', 'Alias');
-              }
-            }}
-          />
-        </div>
-      ))}
+            {/* Checkbox toggleable */}
+            <input
+              type="checkbox"
+              name={`checkbox-ALIAS_${index}`}
+              value="Sí"
+              className="ms-2"
+              checked={radioSeleccionados.some(item => item.nombre === nombreCampo && item.valor === 'Sí')}
+              onChange={() => {
+                if (radioSeleccionados.some(item => item.nombre === nombreCampo && item.valor === 'Sí')) {
+                  seleccionarRadio(nombreCampo, null, 'Alias');
+                } else {
+                  seleccionarRadio(nombreCampo, 'Sí', 'Alias');
+                }
+              }}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 };

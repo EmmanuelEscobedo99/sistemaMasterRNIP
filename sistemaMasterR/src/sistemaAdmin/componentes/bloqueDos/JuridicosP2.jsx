@@ -13,13 +13,11 @@ const JuridicosP2 = ({ data, onFormChange, onValidationStatus }) => {
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { juridicos } = useStore();
 
-  // Estado de carga
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulamos la carga de datos
     setTimeout(() => {
-      setLoading(false); // Cambiar el estado de carga después de 2 segundos
+      setLoading(false);
     }, 2000);
   }, []);
 
@@ -36,23 +34,16 @@ const JuridicosP2 = ({ data, onFormChange, onValidationStatus }) => {
     onFormChange(name, value);
   };
 
-  const handleRadioChange = (nombre, valor, formulario) => {
-    seleccionarRadio(nombre, valor, formulario);
-  };
-
   const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
   useEffect(() => {
     onValidationStatus(errors);
   }, [errors, onValidationStatus]);
 
-  const renderTooltip = (message) => (
-    <Tooltip>{message}</Tooltip>
-  );
+  const renderTooltip = (message) => <Tooltip>{message}</Tooltip>;
 
   const juridicosObtenidos = juridicos?.[0] || {};
 
-  // Función para mapear valores especiales (con descripción de catálogo)
   const getFieldValue = (fieldId) => {
     switch (fieldId) {
       case "CALIDAD":
@@ -68,7 +59,7 @@ const JuridicosP2 = ({ data, onFormChange, onValidationStatus }) => {
       case "FECHAAMPARO":
       case "FECHAAMPARO2":
       case "FCUMPLIMIENTOS":
-        return formatFecha(juridicosObtenidos[fieldId]);  // Formato de fecha
+        return formatFecha(juridicosObtenidos[fieldId]);
       default:
         return juridicosObtenidos[fieldId] || '';
     }
@@ -76,7 +67,7 @@ const JuridicosP2 = ({ data, onFormChange, onValidationStatus }) => {
 
   const formatFecha = (fechaISO) => {
     if (!fechaISO) return '';
-    return fechaISO.split('T')[0];  // Convierte '2025-03-02T06:00:00.000Z' a '2025-03-02'
+    return fechaISO.split('T')[0];
   };
 
   const fields = [
@@ -97,7 +88,6 @@ const JuridicosP2 = ({ data, onFormChange, onValidationStatus }) => {
     { id: "FCUMPLIMIENTOS", label: "Fecha cumplimiento de sentencia" },
   ];
 
-  // Si el estado de carga es verdadero, mostramos la pantalla de carga
   if (loading) {
     return (
       <motion.div
@@ -112,7 +102,7 @@ const JuridicosP2 = ({ data, onFormChange, onValidationStatus }) => {
         transition={{ duration: 0.5 }}
       >
         <img
-          src="../../../../public/ssp.jpeg" // Ruta de tu imagen de carga
+          src="../../../../public/ssp.jpeg"
           alt="Cargando..."
           width="200px"
         />
@@ -153,9 +143,9 @@ const JuridicosP2 = ({ data, onFormChange, onValidationStatus }) => {
             className="ms-2"
             onChange={() => {
               if (radioSeleccionados.some(item => item.nombre === field.label && item.valor === 'Sí')) {
-                seleccionarRadio(field.label, null, 'Juridicos PT2');
+                seleccionarRadio(field.label, null, 'JuridicosP2'); // ✅ nombre exacto en bloque2Forms
               } else {
-                seleccionarRadio(field.label, 'Sí', 'Juridicos PT2');
+                seleccionarRadio(field.label, 'Sí', 'JuridicosP2');
               }
             }}
           />

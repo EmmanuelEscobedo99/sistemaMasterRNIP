@@ -13,13 +13,11 @@ const Ingresos = ({ data, onFormChange, onValidationStatus }) => {
   const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { ingresos } = useStore();
 
-  // Estado de carga
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulamos la carga de datos
     setTimeout(() => {
-      setLoading(false); // Cambiar el estado de carga después de 2 segundos
+      setLoading(false);
     }, 2000);
   }, []);
 
@@ -80,7 +78,6 @@ const Ingresos = ({ data, onFormChange, onValidationStatus }) => {
     { id: "PENAANO", label: "Pena en años" },
   ];
 
-  // Si el estado de carga es verdadero, mostramos la pantalla de carga
   if (loading) {
     return (
       <motion.div
@@ -95,7 +92,7 @@ const Ingresos = ({ data, onFormChange, onValidationStatus }) => {
         transition={{ duration: 0.5 }}
       >
         <img
-          src="../../../../public/ssp.jpeg" // Ruta de tu imagen de carga
+          src="../../../../public/ssp.jpeg"
           alt="Cargando..."
           width="200px"
         />
@@ -131,6 +128,7 @@ const Ingresos = ({ data, onFormChange, onValidationStatus }) => {
                   />
                 </OverlayTrigger>
                 <label htmlFor={`${field.id}_${index}`} style={{ marginLeft: '10px' }}>{field.label}</label>
+
                 {/* Checkbox toggleable */}
                 <input
                   type="checkbox"
@@ -152,20 +150,6 @@ const Ingresos = ({ data, onFormChange, onValidationStatus }) => {
           </div>
         </div>
       ))}
-
-      {/* Lista de radio seleccionados mostrando Ingreso # */}
-      {/*<div className="mt-4">
-        <h5 style={{ color: 'red' }}>Campos con errores:</h5>
-        {radioSeleccionados.length > 0 ? (
-          <ul>
-            {radioSeleccionados.map((item, index) => (
-              <li key={index}>{item.nombre}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>Sin campos marcados por el momento.</p>
-        )}
-      </div>*/}
     </div>
   );
 };

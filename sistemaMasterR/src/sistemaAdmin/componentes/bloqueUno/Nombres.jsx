@@ -10,16 +10,14 @@ import { motion } from 'framer-motion';
 
 const DatosGeneralesP2 = ({ data, onFormChange, onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
-  const { seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
+  const { seleccionarRadio, radioSeleccionados, establecerIdBloqueFuncional } = useDatosGeneralesStore();
   const { nombres } = useStore();
 
-  // Estado de carga
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulamos una carga de datos
     setTimeout(() => {
-      setLoading(false); // Cambiar el estado de carga después de 2 segundos
+      setLoading(false);
     }, 2000);
   }, []);
 
@@ -57,11 +55,10 @@ const DatosGeneralesP2 = ({ data, onFormChange, onValidationStatus }) => {
     <Tooltip>{message}</Tooltip>
   );
 
-  const nombresObtenidos = nombres?.[0] || [];  // Nos aseguramos de que sea un array de nombres
+  const nombresObtenidos = nombres?.[0] || [];
 
   console.log('Nombres obtenidos:', nombresObtenidos);
 
-  // Si el estado de carga es verdadero, mostramos la pantalla de carga
   if (loading) {
     return (
       <motion.div
@@ -76,7 +73,7 @@ const DatosGeneralesP2 = ({ data, onFormChange, onValidationStatus }) => {
         transition={{ duration: 0.5 }}
       >
         <img
-          src="../../../../public/ssp.jpeg" // Ruta de tu imagen de carga
+          src="../../../../public/ssp.jpeg"
           alt="Cargando..."
           width="200px"
         />
@@ -115,7 +112,6 @@ const DatosGeneralesP2 = ({ data, onFormChange, onValidationStatus }) => {
                   />
                 </OverlayTrigger>
                 <label htmlFor={`${field.id}_${index}`} className="ms-1">{field.label}</label>
-                {/* Checkbox toggleable */}
                 <div className="mt-2">
                   <input
                     type="checkbox"
@@ -129,6 +125,7 @@ const DatosGeneralesP2 = ({ data, onFormChange, onValidationStatus }) => {
                         seleccionarRadio(nombreCompleto, null, 'Nombres');
                       } else {
                         seleccionarRadio(nombreCompleto, 'Sí', 'Nombres');
+                        establecerIdBloqueFuncional(1); // ✅ Agregado para asignar ID_BLOQUE_FUNCIONAL = 1
                       }
                     }}
                   />

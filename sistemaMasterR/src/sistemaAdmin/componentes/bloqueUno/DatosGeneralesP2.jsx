@@ -6,20 +6,18 @@ import '../../../sistema/css/estilo.css';
 import ValidacionBloqueUno from '../../../sistema/validaciones/validacionBloque1/ValidacionBloqueUno';
 import useDatosGeneralesStore from '../../zustand/useDatosGeneralesStore';
 import useStore from '../../zustand/useStore';
-import { motion } from 'framer-motion'; // Para la animación de carga
+import { motion } from 'framer-motion';
 
 const DatosGeneralesP2 = ({ data, onFormChange, onValidationStatus }) => {
   const { register, formState: { errors }, setError, clearErrors } = useFormContext();
   const { datos, actualizarDato, seleccionarRadio, radioSeleccionados } = useDatosGeneralesStore();
   const { datosGenerales } = useStore();
 
-  // Estado de carga
   const [loading, setLoading] = useState(true);
 
-  // Simulamos la carga de los datos (por ejemplo, después de 2 segundos desaparece la pantalla de carga)
   useEffect(() => {
     setTimeout(() => {
-      setLoading(false); // Cambia el estado de carga después de 2 segundos
+      setLoading(false);
     }, 2000);
   }, []);
 
@@ -36,19 +34,13 @@ const DatosGeneralesP2 = ({ data, onFormChange, onValidationStatus }) => {
     onFormChange(name, value);
   };
 
-  const handleRadioChange = (nombre, valor, formulario) => {
-    seleccionarRadio(nombre, valor, formulario);
-  };
-
-  const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
-
   useEffect(() => {
     onValidationStatus(errors);
   }, [errors, onValidationStatus]);
 
-  const renderTooltip = (message) => (
-    <Tooltip>{message}</Tooltip>
-  );
+  const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+
+  const renderTooltip = (message) => <Tooltip>{message}</Tooltip>;
 
   const datosGeneralesObtenidos = datosGenerales?.[0] || {};
 
@@ -77,7 +69,6 @@ const DatosGeneralesP2 = ({ data, onFormChange, onValidationStatus }) => {
     }
   };
 
-  // Mapeo de campos con sus nombres descriptivos y etiquetas
   const fields = [
     { id: "TELEFONO", label: "Teléfono del individuo" },
     { id: "FORMULA", label: "Fórmula" },
@@ -97,7 +88,6 @@ const DatosGeneralesP2 = ({ data, onFormChange, onValidationStatus }) => {
     { id: "ID_ANALFABETA", label: "Es analfabeta el individuo" },
   ];
 
-  // Manejo de selección/deselección de checkboxes
   const handleCheckboxChange = (label, valor) => {
     if (radioSeleccionados.some(item => item.nombre === label && item.valor === valor)) {
       seleccionarRadio(label, null, 'Datos Generales P2');
@@ -108,12 +98,11 @@ const DatosGeneralesP2 = ({ data, onFormChange, onValidationStatus }) => {
 
   return (
     <div className="row">
-      {/* Pantalla de carga */}
       {loading ? (
         <motion.div
           className="d-flex justify-content-center align-items-center"
           style={{
-            height: '50vh', // Ajusta la altura de la pantalla de carga
+            height: '50vh',
             backgroundColor: 'transparent',
             flexDirection: 'column',
           }}
@@ -122,7 +111,7 @@ const DatosGeneralesP2 = ({ data, onFormChange, onValidationStatus }) => {
           transition={{ duration: 0.5 }}
         >
           <img
-            src="../../../../public/ssp.jpeg" // Ruta de tu imagen de carga
+            src="../../../../public/ssp.jpeg"
             alt="Cargando..."
             width="200px"
           />
@@ -131,7 +120,6 @@ const DatosGeneralesP2 = ({ data, onFormChange, onValidationStatus }) => {
           </p>
         </motion.div>
       ) : (
-        // Cuando los datos se han cargado, muestra los inputs y demás contenido
         fields.map((field) => (
           <div key={field.id} className="col-md-4 form-floating mt-3 d-flex align-items-center">
             <OverlayTrigger
@@ -150,8 +138,7 @@ const DatosGeneralesP2 = ({ data, onFormChange, onValidationStatus }) => {
               />
             </OverlayTrigger>
             <label htmlFor={field.id} style={{ marginLeft: '10px' }}>{field.label}</label>
-            
-            {/* Checkbox para Selección */}
+
             <div className="d-flex justify-content-center">
               <input
                 type="checkbox"

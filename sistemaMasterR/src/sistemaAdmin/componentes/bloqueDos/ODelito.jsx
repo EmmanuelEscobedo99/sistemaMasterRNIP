@@ -38,11 +38,6 @@ const ODelito = ({ data, onFormChange, onValidationStatus }) => {
     onFormChange(`${name}_${index}`, value);
   };
 
-  const handleRadioChange = (nombre, valor, formulario, index) => {
-    const nombreCompleto = `${nombre} Delito ${index + 1}`;
-    seleccionarRadio(nombreCompleto, valor, formulario);
-  };
-
   const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
   const renderTooltip = (message) => <Tooltip>{message}</Tooltip>;
@@ -119,7 +114,7 @@ const ODelito = ({ data, onFormChange, onValidationStatus }) => {
                           if (radioSeleccionados.some(item => item.nombre === nombreCompleto && item.valor === 'Sí')) {
                             seleccionarRadio(nombreCompleto, null, 'ODelito');
                           } else {
-                            seleccionarRadio(nombreCompleto, 'Sí', 'ODelito');
+                            seleccionarRadio(nombreCompleto, 'Sí', 'ODelito'); // Asignará ID_BLOQUE_FUNCIONAL = 2 desde el store
                           }
                         }}
                       />

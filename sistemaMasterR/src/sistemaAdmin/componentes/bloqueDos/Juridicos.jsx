@@ -154,9 +154,9 @@ const Domicilio = ({ data, onFormChange, onValidationStatus }) => {
             className="ms-2"
             onChange={() => {
               if (radioSeleccionados.some(item => item.nombre === field.label && item.valor === 'Sí')) {
-                seleccionarRadio(field.label, null, 'Juridicos PT1');
+                seleccionarRadio(field.label, null, 'Juridicos');
               } else {
-                seleccionarRadio(field.label, 'Sí', 'Juridicos PT1');
+                seleccionarRadio(field.label, 'Sí', 'Juridicos');
               }
             }}
           />

@@ -150,9 +150,9 @@ const IngresosP2 = ({ data, onFormChange, onValidationStatus }) => {
                   onChange={() => {
                     const nombreCompleto = `${field.label} Ingreso ${index + 1}`;
                     if (radioSeleccionados.some(item => item.nombre === nombreCompleto && item.valor === 'Sí')) {
-                      seleccionarRadio(nombreCompleto, null, 'Ingresos PT2');
+                      seleccionarRadio(nombreCompleto, null, 'IngresosP2'); // <- corregido aquí
                     } else {
-                      seleccionarRadio(nombreCompleto, 'Sí', 'Ingresos PT2');
+                      seleccionarRadio(nombreCompleto, 'Sí', 'IngresosP2'); // <- corregido aquí
                     }
                   }}
                 />
