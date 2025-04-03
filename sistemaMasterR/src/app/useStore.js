@@ -35,6 +35,7 @@ const useStore = create((set) => ({
   llaveSeleccionada: "", // 🔥 Agregar estado de la llave seleccionada
   imagenesPorLlave: [],
   internosBloque11: [],
+  erroresB6: [],
 
   cargarDatosFormulario: async (tabla, idAlterna) => {
     try {
@@ -222,6 +223,14 @@ const useStore = create((set) => ({
         console.error('Error al cargar los datos del Bloque 1 y 2 (rechazados - procesado 8):', error);
       }
     },    
+    cargarErroresB6: async () => {
+      try {
+        const response = await api.get('/buscarInternos/erroresb6');
+        set({ erroresB6: response.data });
+      } catch (error) {
+        console.error('Error al cargar los datos del Bloque 1 y 2 (rechazados - procesado 8):', error);
+      }
+    },
 }));
 
 export default useStore;

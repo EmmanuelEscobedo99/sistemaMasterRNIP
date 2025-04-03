@@ -49,6 +49,15 @@ const buscarInternosService = {
       throw error;
     }
   },   
+  async obtenerDescripcionErrorB6() {
+    try {
+      const result = await buscarInternosModel.obtenerDescripcionErrorB6();
+      return result;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 };
 
 module.exports = buscarInternosService;

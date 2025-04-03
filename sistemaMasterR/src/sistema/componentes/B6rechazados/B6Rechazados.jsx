@@ -19,17 +19,28 @@ const B6Rechazados = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Cargar los datos de internos y errores
         const response = await useStore.getState().cargarInternosBloque11();
         const data = useStore.getState().internosBloque11;
-
+  
+        const responseDesc = await useStore.getState().cargarErroresB6();
+        const descripcion = useStore.getState().erroresB6;
+  
+        // Agrupar los registros
         const agrupados = data.reduce((acc, { DNOMBRE, DPATERNO, DMATERNO, LLAVE, ID_ALTERNA }) => {
           if (!acc[LLAVE]) {
-            acc[LLAVE] = { nombres: [], LLAVE, ID_ALTERNA };
+            acc[LLAVE] = { nombres: [], LLAVE, ID_ALTERNA, descripcion: "" };
           }
           acc[LLAVE].nombres.push({ DNOMBRE, DPATERNO, DMATERNO });
+  
+          // Buscar la descripcion correspondiente al LLAVE en el array `descripcion`
+          const descObject = descripcion.find(d => d.LLAVE === LLAVE);
+          const descripcionLLAVE = descObject ? descObject.descripcion : "Descripción no disponible";
+          acc[LLAVE].descripcion = descripcionLLAVE;
+          
           return acc;
         }, {});
-
+  
         const resultadosAgrupados = Object.values(agrupados);
         setResultados(resultadosAgrupados);
         setResultadosFiltrados(resultadosAgrupados);
@@ -39,9 +50,11 @@ const B6Rechazados = () => {
         setTimeout(() => setLoading(false), 1500);
       }
     };
-
+  
     fetchData();
   }, []);
+  
+  
 
   const handleBuscar = (e) => {
     const valor = e.target.value.toLowerCase();
@@ -128,12 +141,13 @@ const B6Rechazados = () => {
               <thead className="bg-dark text-uppercase">
                 <tr>
                   <th className="px-3">Nombre(s)</th>
+                  <th className="text-center px-3">Motivo de rechazo</th>
                   <th className="text-center px-3">Acción</th>
                 </tr>
               </thead>
               <tbody>
                 {resultadosPaginados.length > 0 ? (
-                  resultadosPaginados.map(({ nombres, LLAVE }, idx) => (
+                  resultadosPaginados.map(({ nombres, LLAVE, descripcion }, idx) => (
                     <motion.tr
                       key={idx}
                       whileHover={{ scale: 1.01 }}
@@ -144,6 +158,7 @@ const B6Rechazados = () => {
                           <div key={i}>{`${n.DNOMBRE} ${n.DPATERNO} ${n.DMATERNO}`}</div>
                         ))}
                       </td>
+                      <td style={{ color: 'red' }}>{descripcion}</td>
                       <td className="text-center px-3">
                         <motion.button
                           className="btn btn-outline-info btn-sm d-flex align-items-center justify-content-center gap-2"
