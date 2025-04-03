@@ -111,6 +111,7 @@ export const VistaEditar = () => {
               dispatch(setImagenes([null, null, null]));
               document.querySelectorAll('input[type="file"]').forEach(input => input.value = "");
               obtenerIdAlterna(LLAVE); // recargar las imágenes originales
+              navigate('/capturista/b6rechazados')
             });
           } else {
             Swal.fire({ icon: 'error', title: 'Error', text: 'Hubo un error en la operación.' });

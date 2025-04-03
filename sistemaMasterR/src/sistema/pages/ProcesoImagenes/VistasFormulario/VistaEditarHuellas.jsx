@@ -139,6 +139,7 @@ export const VistaEditarHuellas = () => {
                 document.querySelectorAll('input[type="file"]').forEach(input => {
                   input.value = '';
                 });
+                navigate('/capturista/b6rechazados');
               });
           } else {
             Swal.fire({
