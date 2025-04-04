@@ -20,6 +20,8 @@ import B6Rechazados from '../sistema/componentes/B6rechazados/B6Rechazados';
 import MostrarPrincipales from '../sistemaAdmin/componentes/bloqueSeis/MostrarPrincipales';
 import SeleccionarFormMostrar from '../sistema/pages/ProcesoImagenes/UrlFormPages/SeleccionarFormMostrar';
 import B12Rechazados from '../sistema/componentes/B12rechazados/B12Rechazados';
+import Rechazadosmexico from '../sistema/componentes/Rechazadosmexico/Rechazadosmexico'; // ✅ Nueva importación
+import Errorestecnicos from '../sistema/componentes/Errorestecnicos/Errorestecnicos'; // ✅ Nueva importación
 
 export const router = createBrowserRouter([
   {
@@ -27,41 +29,49 @@ export const router = createBrowserRouter([
     element: <Login />,
   },
   {
-      path: "/capturista",
-      element: <ProtectedRoute allowedRoles={["capturista"]} />,
-      children: [
-        {
-          path: "",
-          element: <OpenCapturista />,
-          children: [
-            {
-              path: "registro",
-              element: <MenuRegistro />,
-            },
-            {
-              path: "tabladatos",
-              element: <TablaDatos />,
-            },
-            {
-              path: "b6rechazados",
-              element: <B6Rechazados />,
-            },
-            {
-              path: "b12rechazados", // ✅ NUEVA RUTA
-              element: <B12Rechazados />,
-            },
-            {
-              path: "formpaginas",
-              element: <SeleccionarForm />,
-            },
-            {
-              path: "mostrarimagenes",
-              element: <SeleccionarFormMostrar />,
-            },
-          ],
-        },
-      ],
-    },    
+    path: "/capturista",
+    element: <ProtectedRoute allowedRoles={["capturista"]} />,
+    children: [
+      {
+        path: "",
+        element: <OpenCapturista />,
+        children: [
+          {
+            path: "registro",
+            element: <MenuRegistro />,
+          },
+          {
+            path: "tabladatos",
+            element: <TablaDatos />,
+          },
+          {
+            path: "b6rechazados",
+            element: <B6Rechazados />,
+          },
+          {
+            path: "b12rechazados",
+            element: <B12Rechazados />,
+          },
+          {
+            path: "rechazadosmexico", // ✅ Nueva ruta
+            element: <Rechazadosmexico />,
+          },
+          {
+            path: "errorestecnicos", // ✅ Nueva ruta
+            element: <Errorestecnicos />,
+          },
+          {
+            path: "formpaginas",
+            element: <SeleccionarForm />,
+          },
+          {
+            path: "mostrarimagenes",
+            element: <SeleccionarFormMostrar />,
+          },
+        ],
+      },
+    ],
+  },
   {
     path: "/admin",
     element: <ProtectedRoute allowedRoles={["admin"]} />,
