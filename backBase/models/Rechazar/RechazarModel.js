@@ -53,8 +53,8 @@ const RechazarModel = {
 
       // Insertar en la tabla errores_formulario
       const resultInsert = await connection.query(
-        "INSERT INTO errores_formulario (LLAVE, FORMULARIO, CAMPO, DESCRIPCION) VALUES (?, ?, ?, ?)",
-        [ LLAVE, FORMULARIO, CAMPO, DESCRIPCION ]
+        "INSERT INTO errores_formulario (LLAVE, FORMULARIO, CAMPO, DESCRIPCION, ID_BLOQUE_FUNCIONAL) VALUES (?, ?, ?, ?, ?)",
+        [ LLAVE, FORMULARIO, CAMPO, DESCRIPCION, 6 ]
       );
 
       // Confirmar la transacción
