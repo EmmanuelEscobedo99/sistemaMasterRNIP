@@ -91,6 +91,15 @@ const buscarInternosController = {
       console.error(error);
       res.status(500).json({ error: error.message });
     }
+  },
+  async obtenerDescripcionErrorB12(req, res) {
+    try {
+      const result = await buscarInternosService.obtenerDescripcionErrorB12();
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: error.message });
+    }
   }
      
 };

@@ -12,6 +12,7 @@ router.get('/nombresBloque6', buscarInternosController.obtenerNombresPorBloques6
 router.get('/nombresBloque6D', buscarInternosController.obtenerNombresPorBloques6D);
 router.get('/nombresBloque11', buscarInternosController.obtenerNombresPorBloques11);
 router.get('/erroresb6', buscarInternosController.obtenerDescripcionErrorB6);
+router.get('/erroresB12', buscarInternosController.obtenerDescripcionErrorB12);
 
 
 module.exports = router;

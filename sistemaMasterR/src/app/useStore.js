@@ -36,6 +36,7 @@ const useStore = create((set) => ({
   imagenesPorLlave: [],
   internosBloque11: [],
   erroresB6: [],
+  erroresB12: [],
 
   cargarDatosFormulario: async (tabla, idAlterna) => {
     try {
@@ -227,6 +228,14 @@ const useStore = create((set) => ({
       try {
         const response = await api.get('/buscarInternos/erroresb6');
         set({ erroresB6: response.data });
+      } catch (error) {
+        console.error('Error al cargar los datos del Bloque 1 y 2 (rechazados - procesado 8):', error);
+      }
+    },
+    cargarErroresB12: async () => {
+      try {
+        const response = await api.get('/buscarInternos/erroresB12');
+        set({ erroresB12: response.data });
       } catch (error) {
         console.error('Error al cargar los datos del Bloque 1 y 2 (rechazados - procesado 8):', error);
       }

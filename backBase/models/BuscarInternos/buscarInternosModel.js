@@ -230,6 +230,32 @@ LIMIT 1;
       console.error( "Error en obtenerDescripcionErrorB6" );
       throw error;
     }
+  },
+  async obtenerDescripcionErrorB12() {
+    try {
+      const [ resultados ] = await pool.query( `
+    SELECT DISTINCT
+    m.ID_ALTERNA, 
+    m.LLAVE,
+    n.DNOMBRE, 
+    n.DPATERNO, 
+    n.DMATERNO,
+    e.DESCRIPCION,
+    e.FORMULARIO,
+    e.CAMPO,
+    e.ID_BLOQUE_FUNCIONAL
+FROM movimientos m
+INNER JOIN nombres n ON m.ID_ALTERNA = n.ID_ALTERNA
+LEFT JOIN errores_formulario e ON m.LLAVE = e.LLAVE
+WHERE m.PROCESADO = 8 
+AND m.ID_BLOQUE_FUNCIONAL IN (1, 2)
+ORDER BY m.LLAVE, e.ID_BLOQUE_FUNCIONAL;
+      `);
+      return resultados.length > 0 ? resultados : [];
+    } catch ( error ) {
+      console.error( "Error en obtenerDescripcionErrorB6" );
+      throw error;
+    }
   }
 };
 

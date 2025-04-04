@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useStore from "../../../app/useStore";
 import { motion } from "framer-motion";
+import { FaUpload } from 'react-icons/fa';
 
 const B12Rechazados = () => {
   const [resultados, setResultados] = useState([]);
@@ -13,15 +14,35 @@ const B12Rechazados = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log("Iniciando carga de datos...");
+
+        // Llamamos a cargarInternosBloque12Rechazados
         await useStore.getState().cargarInternosBloque12Rechazados();
         const data = useStore.getState().internosBloque12;
 
-        setResultados(data);
-        setResultadosFiltrados(data);
+        console.log("Datos de internosBloque12 cargados:", data);
+
+        // Llamamos a cargarErroresB12
+        await useStore.getState().cargarErroresB12();
+        const erroresB12 = useStore.getState().erroresB12;
+
+        console.log("Errores B12 cargados:", erroresB12);
+
+        // Unir datos de errores con datos de nombres usando la llave
+        const resultadosConErrores = data.map((registro) => {
+          // Filtra los errores que corresponden a la LLAVE de cada registro
+          const erroresParaLLAVE = erroresB12.filter((error) => error.LLAVE === registro.LLAVE);
+          return { ...registro, errores: erroresParaLLAVE };
+        });
+
+        // Guardamos los resultados completos
+        setResultados(resultadosConErrores);
+        setResultadosFiltrados(resultadosConErrores);
       } catch (error) {
         console.error("Error al obtener datos del Bloque 12 rechazados:", error);
       } finally {
-        setTimeout(() => setLoading(false), 1000);
+        console.log("Datos cargados, ocultando pantalla de carga...");
+        setLoading(false); // Esto debería ocultar la pantalla de carga
       }
     };
 
@@ -108,26 +129,46 @@ const B12Rechazados = () => {
               <thead className="bg-dark text-uppercase">
                 <tr>
                   <th className="px-3">Nombre(s)</th>
-                  <th className="text-center px-3">Motivo de rechazo</th>
-                  <th className="px-3">LLAVE</th>
+                  <th className="px-3">Bloque Funcional</th>
+                  <th className="px-3">Formulario</th>
+                  <th className="px-3">Campo</th>
+                  <th className="text-center px-3">Motivo De Rechazo</th>
+                  
+                  <th className="px-3">Acción</th>
                 </tr>
               </thead>
               <tbody>
                 {resultadosPaginados.length > 0 ? (
-                  resultadosPaginados.map(({ nombres, LLAVE }, idx) => (
-                    <motion.tr
-                      key={idx}
-                      whileHover={{ scale: 1.01 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
-                      <td className="px-3">
-                        {nombres.map((n, i) => (
-                          <div key={i}>{`${n.DNOMBRE} ${n.DPATERNO} ${n.DMATERNO}`}</div>
-                        ))}
-                      </td>
-                      <td style={{ color: 'red' }}></td>
-                      <td className="px-3">{LLAVE}</td>
-                    </motion.tr>
+                  resultadosPaginados.map(({ nombres, LLAVE, errores }, idx) => (
+                    errores.map((error, errorIdx) => (
+                      <motion.tr
+                        key={`${idx}-${errorIdx}`}
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <td className="px-3">
+                          {nombres.map((n, i) => (
+                            <div key={i}>{`${n.DNOMBRE} ${n.DPATERNO} ${n.DMATERNO}`}</div>
+                          ))}
+                        </td>
+                        <td>{error.ID_BLOQUE_FUNCIONAL}</td>
+                        <td>{error.FORMULARIO}</td>
+                        <td>{error.CAMPO}</td>
+                        <td style={{ color: 'red' }}>{error.DESCRIPCION}</td>
+                        
+                        <td className="text-center px-3">
+                          <motion.button
+                            className="btn btn-outline-info btn-sm d-flex align-items-center justify-content-center gap-2"
+                            style={{ minWidth: "150px" }}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleSeleccionar(LLAVE)}
+                          >
+                            <FaUpload /> Modificar
+                          </motion.button>
+                        </td>
+                      </motion.tr>
+                    ))
                   ))
                 ) : (
                   <tr>

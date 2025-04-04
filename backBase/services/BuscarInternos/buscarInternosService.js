@@ -57,6 +57,15 @@ const buscarInternosService = {
       console.error(error);
       throw error;
     }
+  },
+  async obtenerDescripcionErrorB12() {
+    try {
+      const result = await buscarInternosModel.obtenerDescripcionErrorB12();
+      return result;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 };
 
