@@ -28,12 +28,20 @@ const B12Rechazados = () => {
 
         console.log("Errores B12 cargados:", erroresB12);
 
-        // Unir datos de errores con datos de nombres usando la llave
-        const resultadosConErrores = data.map((registro) => {
-          // Filtra los errores que corresponden a la LLAVE de cada registro
+        // Agrupar los datos por la LLAVE
+        const agrupadosPorLlave = data.reduce((acc, registro) => {
+          // Si no existe un registro para esa LLAVE, lo inicializamos
+          if (!acc[registro.LLAVE]) {
+            acc[registro.LLAVE] = { ...registro, errores: [] };
+          }
+          // Agregar los errores correspondientes a la LLAVE
           const erroresParaLLAVE = erroresB12.filter((error) => error.LLAVE === registro.LLAVE);
-          return { ...registro, errores: erroresParaLLAVE };
-        });
+          acc[registro.LLAVE].errores.push(...erroresParaLLAVE);
+          return acc;
+        }, {});
+
+        // Convertimos el objeto de agrupación en un array
+        const resultadosConErrores = Object.values(agrupadosPorLlave);
 
         // Guardamos los resultados completos
         setResultados(resultadosConErrores);
@@ -133,43 +141,69 @@ const B12Rechazados = () => {
                   <th className="px-3">Formulario</th>
                   <th className="px-3">Campo</th>
                   <th className="text-center px-3">Motivo De Rechazo</th>
-                  
                   <th className="px-3">Acción</th>
                 </tr>
               </thead>
               <tbody>
                 {resultadosPaginados.length > 0 ? (
-                  resultadosPaginados.map(({ nombres, LLAVE, errores }, idx) => (
-                    errores.map((error, errorIdx) => (
+                  resultadosPaginados.map((registro, idx) => {
+                    // Agrupar todos los errores de la misma LLAVE
+                    const erroresAgrupados = registro.errores.reduce((acc, error) => {
+                      // Si ya existe un bloque funcional con el mismo ID, lo actualizamos
+                      const encontrado = acc.find((e) => e.ID_BLOQUE_FUNCIONAL === error.ID_BLOQUE_FUNCIONAL);
+                      if (encontrado) {
+                        encontrado.DESCRIPCION = `${encontrado.DESCRIPCION}, ${error.DESCRIPCION}`;
+                      } else {
+                        acc.push(error);
+                      }
+                      return acc;
+                    }, []);
+
+                    return (
                       <motion.tr
-                        key={`${idx}-${errorIdx}`}
+                        key={registro.LLAVE}
                         whileHover={{ scale: 1.01 }}
                         transition={{ type: "spring", stiffness: 300 }}
                       >
                         <td className="px-3">
-                          {nombres.map((n, i) => (
+                          {registro.nombres.map((n, i) => (
                             <div key={i}>{`${n.DNOMBRE} ${n.DPATERNO} ${n.DMATERNO}`}</div>
                           ))}
                         </td>
-                        <td>{error.ID_BLOQUE_FUNCIONAL}</td>
-                        <td>{error.FORMULARIO}</td>
-                        <td>{error.CAMPO}</td>
-                        <td style={{ color: 'red' }}>{error.DESCRIPCION}</td>
-                        
+                        <td>
+                          {erroresAgrupados.map((error, errorIdx) => (
+                            <div key={errorIdx}>{error.ID_BLOQUE_FUNCIONAL}</div>
+                          ))}
+                        </td>
+                        <td>
+                          {erroresAgrupados.map((error, errorIdx) => (
+                            <div key={errorIdx}>{error.FORMULARIO}</div>
+                          ))}
+                        </td>
+                        <td>
+                          {erroresAgrupados.map((error, errorIdx) => (
+                            <div key={errorIdx}>{error.CAMPO}</div>
+                          ))}
+                        </td>
+                        <td style={{ color: 'red' }}>
+                          {erroresAgrupados.map((error, errorIdx) => (
+                            <div key={errorIdx}>{error.DESCRIPCION}</div>
+                          ))}
+                        </td>
                         <td className="text-center px-3">
                           <motion.button
                             className="btn btn-outline-info btn-sm d-flex align-items-center justify-content-center gap-2"
                             style={{ minWidth: "150px" }}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
-                            onClick={() => handleSeleccionar(LLAVE)}
+                            onClick={''}
                           >
                             <FaUpload /> Modificar
                           </motion.button>
                         </td>
                       </motion.tr>
-                    ))
-                  ))
+                    );
+                  })
                 ) : (
                   <tr>
                     <td colSpan="2" className="text-center text-danger py-3">
