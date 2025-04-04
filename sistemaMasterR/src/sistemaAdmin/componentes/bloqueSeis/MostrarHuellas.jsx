@@ -17,13 +17,11 @@ const MostrarHuellas = ({ data, onFormChange, onValidationStatus }) => {
   const { imagenesPorLlave, cargarImagenesPorLlave } = useStore();
   const LLAVE = useSelector((state) => state.Llave.value);
 
-  // Estado de carga
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (LLAVE) {
       cargarImagenesPorLlave(LLAVE);
-      // Pantalla de carga dura 2 segundos
       setTimeout(() => {
         setLoading(false);
       }, 2000);
@@ -40,20 +38,19 @@ const MostrarHuellas = ({ data, onFormChange, onValidationStatus }) => {
 
   const handleCheckboxChange = (grupo, valor) => {
     if (radioSeleccionados.some(item => item.nombre === grupo && item.valor === valor)) {
-      seleccionarRadio(grupo, null, 'Imagenes Principales');
+      seleccionarRadio(grupo, null, 'Huellas'); // ✅ Se corrige aquí
     } else {
-      seleccionarRadio(grupo, valor, 'Imagenes Principales');
+      seleccionarRadio(grupo, valor, 'Huellas'); // ✅ Se corrige aquí
     }
   };
 
   return (
     <form className="row">
-      {/* Pantalla de carga */}
       {loading ? (
         <motion.div
           className="d-flex justify-content-center align-items-center"
           style={{
-            height: '50vh', // Ajusta la altura de la pantalla de carga
+            height: '50vh',
             backgroundColor: 'transparent',
             flexDirection: 'column',
           }}
@@ -62,7 +59,7 @@ const MostrarHuellas = ({ data, onFormChange, onValidationStatus }) => {
           transition={{ duration: 0.5 }}
         >
           <img
-            src="../../../../public/ssp.jpeg" // Ruta de tu imagen de carga
+            src="../../../../public/ssp.jpeg"
             alt="Cargando..."
             width="200px"
           />
@@ -71,25 +68,21 @@ const MostrarHuellas = ({ data, onFormChange, onValidationStatus }) => {
           </p>
         </motion.div>
       ) : (
-        // Cuando los datos se han cargado, muestra las imágenes y demás contenido
         <>
-          <div className="col-12 d-flex justify-content-around mt-3">
+          <div className="col-12 d-flex justify-content-around flex-wrap gap-3 mt-3">
             {datosHuellas.length > 0 ? (
               datosHuellas.map((img, index) => (
-                <Card key={index} style={{ width: '18rem' }}>
+                <Card key={index} style={{ width: '140px' }}>
                   <Card.Img variant="top" src={img.imagen} alt={`Imagen ${index}`} />
-                  <Card.Body>
-                    <Card.Title>Grupo {img.grupo}</Card.Title>
-                    <div className="d-flex justify-content-center">
-                      <input
-                        type="checkbox"
-                        name={`checkbox-${index}`}
-                        value="Sí"
-                        checked={radioSeleccionados.some(item => item.nombre === img.grupo && item.valor === 'Sí')}
-                        className="ms-2"
-                        onChange={() => handleCheckboxChange(img.grupo, 'Sí')}
-                      />
-                    </div>
+                  <Card.Body className="text-center">
+                    <Card.Title style={{ fontSize: '14px' }}>Grupo {img.grupo}</Card.Title>
+                    <input
+                      type="checkbox"
+                      name={`checkbox-${index}`}
+                      value="Sí"
+                      checked={radioSeleccionados.some(item => item.nombre === img.grupo && item.valor === 'Sí')}
+                      onChange={() => handleCheckboxChange(img.grupo, 'Sí')}
+                    />
                   </Card.Body>
                 </Card>
               ))
@@ -98,7 +91,6 @@ const MostrarHuellas = ({ data, onFormChange, onValidationStatus }) => {
             )}
           </div>
 
-          {/* Lista de radio seleccionados */}
           <div className="mt-4">
             <h5 style={{ color: 'red' }}>Campos con errores:</h5>
             <ul>

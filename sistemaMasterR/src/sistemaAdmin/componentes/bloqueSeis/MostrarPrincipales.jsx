@@ -26,7 +26,7 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
 
   const handleCheckboxChange = (grupo, valor) => {
     if (radioSeleccionados.some(item => item.nombre === grupo && item.valor === valor)) {
-      seleccionarRadio(grupo, null, 'Imagenes Principales');
+      seleccionarRadio(grupo, null, 'Imagenes Principales'); // ✅ formulario = "Imagenes Principales"
     } else {
       seleccionarRadio(grupo, valor, 'Imagenes Principales');
     }
@@ -74,7 +74,7 @@ const MostrarPrincipales = ({ data, onValidationStatus }) => {
                       alt={`Grupo ${img.grupo}`}
                       style={{
                         height: '210px',
-                        objectFit: 'contain', // 🔽 que se vea completa
+                        objectFit: 'contain',
                         objectPosition: 'center',
                         backgroundColor: '#0F172A',
                       }}
