@@ -3,12 +3,10 @@ import useStore from "../../../app/useStore";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaUpload } from "react-icons/fa";
-import api from "../../../api/api"; // o ajusta la ruta según dónde esté tu archivo api.js
 
 const B6Rechazados = () => {
   const navigate = useNavigate();
   const setLlave = useStore((state) => state.setLlave);
-  const [personas, setPersonas] = useState([]);
   const [resultados, setResultados] = useState([]);
   const [resultadosFiltrados, setResultadosFiltrados] = useState([]);
   const [busqueda, setBusqueda] = useState("");
@@ -19,28 +17,43 @@ const B6Rechazados = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Cargar los datos de internos y errores
-        const response = await useStore.getState().cargarInternosBloque11();
-        const data = useStore.getState().internosBloque11;
-  
-        const responseDesc = await useStore.getState().cargarErroresB6();
-        const descripcion = useStore.getState().erroresB6;
-  
-        // Agrupar los registros
-        const agrupados = data.reduce((acc, { DNOMBRE, DPATERNO, DMATERNO, LLAVE, ID_ALTERNA }) => {
+        // Obtener los datos de los internos y errores
+        const internosResponse = await useStore.getState().cargarInternosBloque11();
+        const internos = useStore.getState().internosBloque11;
+
+        const erroresResponse = await useStore.getState().cargarErroresB6();
+        const errores = useStore.getState().erroresB6;
+
+        // Agrupar los registros por LLAVE
+        const agrupados = internos.reduce((acc, { DNOMBRE, DPATERNO, DMATERNO, LLAVE, ID_ALTERNA }) => {
           if (!acc[LLAVE]) {
-            acc[LLAVE] = { nombres: [], LLAVE, ID_ALTERNA, descripcion: "" };
+            acc[LLAVE] = {
+              nombres: [],
+              LLAVE,
+              ID_ALTERNA,
+              descripcion: new Set(), // Usamos un Set para evitar duplicados
+              formulario: [],
+              campo: [],
+              idBloqueFuncional: "",
+            };
           }
           acc[LLAVE].nombres.push({ DNOMBRE, DPATERNO, DMATERNO });
-  
-          // Buscar la descripcion correspondiente al LLAVE en el array `descripcion`
-          const descObject = descripcion.find(d => d.LLAVE === LLAVE);
-          const descripcionLLAVE = descObject ? descObject.descripcion : "Descripción no disponible";
-          acc[LLAVE].descripcion = descripcionLLAVE;
-          
+
+          // Buscar las descripciones relacionadas con esta LLAVE
+          const erroresDeLLAVE = errores.filter(d => d.LLAVE === LLAVE);
+          if (erroresDeLLAVE.length > 0) {
+            erroresDeLLAVE.forEach((error) => {
+              acc[LLAVE].descripcion.add(error.descripcion);  // Usamos Set para evitar duplicados
+              acc[LLAVE].formulario.push(error.FORMULARIO);  // Guardamos todos los formularios
+              acc[LLAVE].campo.push(error.CAMPO);  // Guardamos todos los campos
+              acc[LLAVE].idBloqueFuncional = error.ID_BLOQUE_FUNCIONAL;  // Asegúrate de que cada error tiene el mismo ID de bloque funcional.
+            });
+          }
+
           return acc;
         }, {});
-  
+
+        // Convertimos el objeto de agrupación en un array
         const resultadosAgrupados = Object.values(agrupados);
         setResultados(resultadosAgrupados);
         setResultadosFiltrados(resultadosAgrupados);
@@ -50,11 +63,9 @@ const B6Rechazados = () => {
         setTimeout(() => setLoading(false), 1500);
       }
     };
-  
+
     fetchData();
   }, []);
-  
-  
 
   const handleBuscar = (e) => {
     const valor = e.target.value.toLowerCase();
@@ -87,6 +98,11 @@ const B6Rechazados = () => {
     if (paginaActual < Math.ceil(resultadosFiltrados.length / resultadosPorPagina)) {
       setPaginaActual(paginaActual + 1);
     }
+  };
+
+  // Función para garantizar que siempre estamos trabajando con arrays
+  const ensureArray = (value) => {
+    return Array.isArray(value) ? value : [value];
   };
 
   return (
@@ -141,13 +157,15 @@ const B6Rechazados = () => {
               <thead className="bg-dark text-uppercase">
                 <tr>
                   <th className="px-3">Nombre(s)</th>
-                  <th className="text-center px-3">Motivo de rechazo</th>
-                  <th className="text-center px-3">Acción</th>
+                  <th className="px-3">Formulario</th>
+                  <th className="px-3">Campo</th>
+                  <th className="text-center px-3">Motivo De Rechazo</th>
+                  <th className="px-3">Acción</th>
                 </tr>
               </thead>
               <tbody>
                 {resultadosPaginados.length > 0 ? (
-                  resultadosPaginados.map(({ nombres, LLAVE, descripcion }, idx) => (
+                  resultadosPaginados.map(({ nombres, LLAVE, descripcion, formulario, campo, idBloqueFuncional }, idx) => (
                     <motion.tr
                       key={idx}
                       whileHover={{ scale: 1.01 }}
@@ -158,7 +176,11 @@ const B6Rechazados = () => {
                           <div key={i}>{`${n.DNOMBRE} ${n.DPATERNO} ${n.DMATERNO}`}</div>
                         ))}
                       </td>
-                      <td style={{ color: 'red' }}>{descripcion}</td>
+                      <td>{ensureArray(formulario).join(", ")}</td> {/* Usamos la función para asegurarnos de que formulario es un array */}
+                      <td>{ensureArray(campo).join(", ")}</td> {/* Usamos la función para asegurarnos de que campo es un array */}
+                      <td style={{ color: 'red' }}>
+                        {Array.from(descripcion).join(", ")}  {/* Convertimos el Set a un Array y lo concatenamos */}
+                      </td>
                       <td className="text-center px-3">
                         <motion.button
                           className="btn btn-outline-info btn-sm d-flex align-items-center justify-content-center gap-2"
