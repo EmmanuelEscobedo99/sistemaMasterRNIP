@@ -1,14 +1,14 @@
+// src/sistema/componentes/Errorestecnicos/Errorestecnicos.jsx
+
 import React, { useEffect, useState } from "react";
 import useStore from "../../../app/useStore";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaUpload } from "react-icons/fa";
-import api from "../../../api/api"; // o ajusta la ruta según dónde esté tu archivo api.js
 
-const B6Rechazados = () => {
+const Errorestecnicos = () => {
   const navigate = useNavigate();
   const setLlave = useStore((state) => state.setLlave);
-  const [personas, setPersonas] = useState([]);
   const [resultados, setResultados] = useState([]);
   const [resultadosFiltrados, setResultadosFiltrados] = useState([]);
   const [busqueda, setBusqueda] = useState("");
@@ -19,28 +19,25 @@ const B6Rechazados = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Cargar los datos de internos y errores
-        const response = await useStore.getState().cargarInternosBloque11();
-        const data = useStore.getState().internosBloque11;
-  
-        const responseDesc = await useStore.getState().cargarErroresB6();
+        await useStore.getState().cargarInternosErroresTecnicos();
+        const data = useStore.getState().internosErroresTecnicos;
+
+        await useStore.getState().cargarErroresB6();
         const descripcion = useStore.getState().erroresB6;
-  
-        // Agrupar los registros
+
         const agrupados = data.reduce((acc, { DNOMBRE, DPATERNO, DMATERNO, LLAVE, ID_ALTERNA }) => {
           if (!acc[LLAVE]) {
             acc[LLAVE] = { nombres: [], LLAVE, ID_ALTERNA, descripcion: "" };
           }
           acc[LLAVE].nombres.push({ DNOMBRE, DPATERNO, DMATERNO });
-  
-          // Buscar la descripcion correspondiente al LLAVE en el array `descripcion`
+
           const descObject = descripcion.find(d => d.LLAVE === LLAVE);
           const descripcionLLAVE = descObject ? descObject.descripcion : "Descripción no disponible";
           acc[LLAVE].descripcion = descripcionLLAVE;
-          
+
           return acc;
         }, {});
-  
+
         const resultadosAgrupados = Object.values(agrupados);
         setResultados(resultadosAgrupados);
         setResultadosFiltrados(resultadosAgrupados);
@@ -50,11 +47,9 @@ const B6Rechazados = () => {
         setTimeout(() => setLoading(false), 1500);
       }
     };
-  
+
     fetchData();
   }, []);
-  
-  
 
   const handleBuscar = (e) => {
     const valor = e.target.value.toLowerCase();
@@ -114,7 +109,7 @@ const B6Rechazados = () => {
             borderRadius: "10px",
           }}
         >
-          <h2 className="fw-bold mb-1">Registros del bloque 6 rechazados</h2>
+          <h2 className="fw-bold mb-1">Errores técnicos</h2>
           <p className="text-secondary mb-4">Selecciona un interno para editar imágenes.</p>
 
           <input
@@ -209,4 +204,4 @@ const B6Rechazados = () => {
   );
 };
 
-export default B6Rechazados;
+export default Errorestecnicos;

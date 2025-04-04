@@ -37,7 +37,9 @@ const useStore = create((set) => ({
   internosBloque11: [],
   erroresB6: [],
   erroresB12: [],
-
+  internosErroresTecnicos: [],
+  internosRechazadosMexico: [],
+  
   cargarDatosFormulario: async (tabla, idAlterna) => {
     try {
       const response = await api.get(`/mostrarPrincipales/${tabla}/${idAlterna}`);
@@ -238,6 +240,22 @@ const useStore = create((set) => ({
         set({ erroresB12: response.data });
       } catch (error) {
         console.error('Error al cargar los datos del Bloque 1 y 2 (rechazados - procesado 8):', error);
+      }
+    },
+    cargarInternosErroresTecnicos: async () => {
+      try {
+        const response = await api.get('/errorestecnicos/nombresErroresTecnicos');
+        set({ internosErroresTecnicos: response.data });
+      } catch (error) {
+        console.error('Error al cargar los datos de errores técnicos (procesado 4):', error);
+      }
+    },
+    cargarInternosRechazadosMexico: async () => {
+      try {
+        const response = await api.get('/rechazadosmexico/nombresRechazadosMexico');
+        set({ internosRechazadosMexico: response.data });
+      } catch (error) {
+        console.error('Error al cargar los datos de rechazados por México (procesado 3):', error);
       }
     },
 }));

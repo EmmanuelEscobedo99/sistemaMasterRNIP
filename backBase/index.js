@@ -1,7 +1,9 @@
 const express = require('express');
 const cors = require('cors');
-const cookieParser = require('cookie-parser'); // Importar cookie-parser //a
+const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
+
+// Rutas principales
 const ipRouter = require('./routes/ip/ipRouter');
 const loginRouter = require('./routes/auth/authRoutes');
 const registroRoutes = require('./routes/registroUsuarios/registroUsuarios');
@@ -20,19 +22,28 @@ const mostrarODelitos = require('./routes/Bloque2/ODelito/ODelitoRoutes');
 const mostrarIngresos = require('./routes/Bloque2/Ingresos/IngresosRoutes');
 const mostrarIngdelito = require('./routes/Bloque2/Ingdelito/IngdelitoRoutes');
 const mostrarInternos = require('./routes/BuscarInternos/buscarInternosRoutes');
+
 const rechazarRoutes = require('./routes/Rechazar/RechazarRoutes');
 const AprovarRoutes = require('./routes/Aprovar/AprovarRoutes');
+
 const editarHuellasRoutes = require('./routes/Bloque6/editarHuellasRoutes');
 const editarPrincipalesRoutes = require('./routes/Bloque6/editarPrincipalesRoutes');
+const editarImagenesRoutes = require('./routes/Bloque6/editarImagenes');
+
 const huellasRoutes = require('./routes/Bloque6/huellasRoutes');
 const imagenesRoutes = require('./routes/Bloque6/imagenesRoutes');
 const principalesRoutes = require('./routes/Bloque6/principalesRoutes');
-const obtenerIdAlterna  = require('./routes/Bloque1/obtenerIdAlterna/obtenerIdAlternaRoutes')
-const movimientosRoutes = require('./routes/Bloque6/movimientosRoutes'); // ✅ Corregido
+
+const obtenerIdAlterna = require('./routes/Bloque1/obtenerIdAlterna/obtenerIdAlternaRoutes');
+const movimientosRoutes = require('./routes/Bloque6/movimientosRoutes');
+
 const traerImagenesRoutes = require('./routes/TraerImagenes/TraerImagenesRoutes');
 const imagenesPorIdAlternaRoutes = require('./routes/ImagenesPorIdAlterna/imagenesPorIdAlternaRoutes');
 const b12RechazadosRoutes = require('./routes/b12rechazados/b12RechazadosRoutes');
-const editarImagenesRoutes = require('./routes/Bloque6/editarImagenes'); // <- NUEVA
+
+// 🆕 NUEVAS RUTAS AGREGADAS
+const erroresTecnicosRoutes = require('./routes/Errorestecnicos/ErrorestecnicosRoutes');
+const rechazadosMexicoRoutes = require('./routes/Rechazadosmexico/RechazadosmexicoRoutes');
 
 const app = express();
 const PORT = 3000;
@@ -41,14 +52,15 @@ dotenv.config();
 
 // Configuración de CORS
 const corsOptions = {
-  origin: 'http://localhost:5173', // Origen permitido
-  credentials: true, // Permitir el uso de credenciales
+  origin: 'http://localhost:5173',
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(cookieParser()); // Usar cookie-parser para parsear las cookies
+app.use(cookieParser());
 
+// Middleware de rutas
 app.use('/api/ip', ipRouter);
 app.use('/api/auth', loginRouter);
 
@@ -56,7 +68,6 @@ app.use('/api/registrarUsuarios', registroRoutes);
 app.use('/api/datos', datosRoutes);
 
 app.use('/api/idAlterna', idAlternaRoutes);
-
 app.use('/api/mostrarPrincipales', mostrarPrincipalesRoutes);
 app.use('/api/mostrarHuellas', mostrarHuellasRoutes);
 app.use('/api/bloque1', mostrarDatosGenerales);
@@ -72,17 +83,21 @@ app.use('/api/ingdelito', mostrarIngdelito);
 app.use('/api/buscarInternos', mostrarInternos);
 app.use('/api/rechazar', rechazarRoutes);
 app.use('/api/aprovar', AprovarRoutes);
+
 app.use('/api/principales', principalesRoutes);
 app.use('/api/editarPrincipales', editarPrincipalesRoutes);
-app.use('/api/huellas', huellasRoutes);
 app.use('/api/editarHuellas', editarHuellasRoutes);
 app.use('/api/imagenes', imagenesRoutes);
+app.use('/api/editarImagenes', editarImagenesRoutes);
+
 app.use('/api/bloque1', obtenerIdAlterna);
 app.use('/api/movimientos', movimientosRoutes);
 app.use('/api/imagenesPorLlave', traerImagenesRoutes);
 app.use('/api/imagenesPorIdAlterna', imagenesPorIdAlternaRoutes);
 app.use('/api/b12rechazados', b12RechazadosRoutes);
-app.use('/api/imagenes', editarImagenesRoutes); // <- AÑADE ESTA LÍNEA
+
+app.use('/api/errorestecnicos', erroresTecnicosRoutes);
+app.use('/api/rechazadosmexico', rechazadosMexicoRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);

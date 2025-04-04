@@ -24,6 +24,8 @@ const useStore = create((set) => ({
   internosBloque6D: [],
   llaveSeleccionada: "", // 🔥 Agregar estado de la llave seleccionada
   imagenesPorLlave: [],
+  internosErroresTecnicos: [],
+  internosRechazadosMexico: [],
    
   cargarDatosFormulario: async (tabla, idAlterna) => {
     try {
@@ -227,7 +229,23 @@ const useStore = create((set) => ({
       } catch (error) {
         console.error('Error al cargar los datos del Bloque 1 y 2 (rechazados - procesado 8):', error);
       }
-    },        
+    }, 
+    cargarInternosErroresTecnicos: async () => {
+      try {
+        const response = await api.get('/errorestecnicos/nombresErroresTecnicos');
+        set({ internosErroresTecnicos: response.data });
+      } catch (error) {
+        console.error('Error al cargar los datos de errores técnicos (procesado 4):', error);
+      }
+    },
+    cargarInternosRechazadosMexico: async () => {
+      try {
+        const response = await api.get('/rechazadosmexico/nombresRechazadosMexico');
+        set({ internosRechazadosMexico: response.data });
+      } catch (error) {
+        console.error('Error al cargar los datos de rechazados por México (procesado 3):', error);
+      }
+    },               
 }));
 
 export default useStore;
