@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { FinalizarSesion } from "../../../accesoLogin/reducers/thunks/finalizarSesion/FinalizarSesion";
@@ -76,6 +76,18 @@ const Capturista = () => {
                   <FaDatabase className="text-success" /> Bloque 1 y 2 Rechazados
                 </NavLink>
               </motion.li>
+              {/* ✅ NUEVAS PESTAÑAS */}
+              <motion.li whileHover={{ scale: 1.1 }}>
+                <NavLink to="/capturista/rechazadosmexico" className="nav-link text-white d-flex align-items-center gap-2">
+                  <FaDatabase className="text-success" /> Rechazados por México
+                </NavLink>
+              </motion.li>
+              <motion.li whileHover={{ scale: 1.1 }}>
+                <NavLink to="/capturista/errorestecnicos" className="nav-link text-white d-flex align-items-center gap-2">
+                  <FaDatabase className="text-success" /> Errores Técnicos
+                </NavLink>
+              </motion.li>
+
               <motion.li whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <button
                   onClick={handleLogout}
