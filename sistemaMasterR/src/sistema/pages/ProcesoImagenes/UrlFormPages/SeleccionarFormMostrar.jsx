@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import { Nav, NavItem, NavLink, Button, Card, CardBody } from 'react-bootstrap';
+import { Nav, NavItem, NavLink, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { setImagenes, setObtuveImagenes } from '../../../redux/imagenesSlice';
 import axios from 'axios';
@@ -14,20 +14,17 @@ import { motion } from 'framer-motion';
 const SeleccionarFormMostrar = () => {
   const navigate = useNavigate();
   const { llaveSeleccionada } = useStore();
-  const LLAVE = llaveSeleccionada;
   const dispatch = useDispatch();
-
-  const emisor = '33';
-  const estado_emisor = '3';
 
   const errores2 = useSelector((state) => state.imagenes.errores2);
   const errores3 = useSelector((state) => state.huellas.errores2);
   const erroresCombinados = { ...errores2, ...errores3 };
 
   const imagenes = useSelector((state) => state.imagenes.imagenes);
-  const imagenesFiltradas = imagenes.filter((img) => img !== null);
   const huellas = useSelector((state) => state.huellas.imagenes);
-  const huellasFiltradas = huellas.filter((img) => img !== null);
+
+  const imagenesFiltradas = imagenes.filter((img) => img?.file);
+  const huellasFiltradas = huellas.filter((img) => img?.file);
 
   const [idAlterna, setIdAlterna] = useState(0);
   const [activeKey, setActiveKey] = useState('2');
@@ -36,22 +33,24 @@ const SeleccionarFormMostrar = () => {
     const obtenerIdAlterna = async () => {
       if (!llaveSeleccionada) return;
       try {
-        const response = await axios.post('http://localhost:3000/api/bloque1/idAlterna', { LLAVE: llaveSeleccionada });
-        if (response.data && response.data[0]) {
+        const response = await axios.post('http://localhost:3000/api/bloque1/idAlterna', {
+          LLAVE: llaveSeleccionada
+        });
+        if (response.data?.[0]) {
           setIdAlterna(response.data[0].ID_ALTERNA);
         }
       } catch (error) {
         console.error("Error obteniendo ID_ALTERNA:", error);
       }
     };
-    if (llaveSeleccionada) obtenerIdAlterna();
+    obtenerIdAlterna();
   }, [llaveSeleccionada]);
 
   useEffect(() => {
-    const obtenerImagenesPorLlave = async () => {
-      if (!LLAVE) return;
+    const obtenerImagenes = async () => {
+      if (!llaveSeleccionada) return;
       try {
-        const response = await axios.get(`http://localhost:3000/api/imagenesPorLlave/${LLAVE}`);
+        const response = await axios.get(`http://localhost:3000/api/imagenesPorLlave/${llaveSeleccionada}`);
         if (Array.isArray(response.data)) {
           dispatch(setImagenes(response.data));
           dispatch(setObtuveImagenes(response.data.length > 0));
@@ -60,13 +59,11 @@ const SeleccionarFormMostrar = () => {
           dispatch(setObtuveImagenes(false));
         }
       } catch (error) {
-        dispatch(setImagenes([]));
-        dispatch(setObtuveImagenes(false));
-        console.error("Error al obtener imágenes por LLAVE:", error);
+        console.error("Error al obtener imágenes:", error);
       }
     };
-    obtenerImagenesPorLlave();
-  }, [LLAVE]);
+    obtenerImagenes();
+  }, [llaveSeleccionada]);
 
   const handleRegresar = () => {
     dispatch(setImagenes([]));
@@ -76,61 +73,54 @@ const SeleccionarFormMostrar = () => {
   };
 
   const handleSubmit = async () => {
-    try {
-      const responseMovimientos = await axios.post("http://localhost:3000/api/movimientos/generar-id-alterna", {
-        llave: llaveSeleccionada,
-      });
+    if (!idAlterna) {
+      return Swal.fire("Error", "No se encontró el ID_ALTERNA del interno.", "error");
+    }
 
-      if (responseMovimientos.status !== 200 || !responseMovimientos.data.id_alterna) {
-        return Swal.fire("Error", "No se pudo generar el nuevo ID_ALTERNA.", "error");
+    const formData = new FormData();
+    let archivosSeleccionados = false;
+
+    // Agregar imágenes principales: A, B, C
+    ['A', 'B', 'C'].forEach((grupo, index) => {
+      const img = imagenes[index];
+      if (img?.file) {
+        formData.append('nuevaImagen', img.file);
+        formData.append('grupo', grupo);
+        archivosSeleccionados = true;
       }
+    });
 
-      const nuevoIdAlterna = responseMovimientos.data.id_alterna;
+    // Agregar imágenes de huellas: 0 a 9 (el grupo correcto está basado en el índice)
+    const grupoMap = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]; // mapping correcto
+    huellas.forEach((img, index) => {
+      if (img?.file) {
+        formData.append('nuevaImagen', img.file);
+        formData.append('grupo', grupoMap[index].toString());
+        archivosSeleccionados = true;
+      }
+    });
 
-      const formData = new FormData();
-      const gruposPrincipales = ["A", "B", "C"];
-      const imagenesPrincipales = imagenesFiltradas.map((img, index) => ({
-        ...img,
-        key: `imagen${index + 1}`,
-        grupo: gruposPrincipales[index] || "A"
-      }));
-      const imagenesHuellas = huellasFiltradas.map((img, index) => ({
-        ...img,
-        key: `imagen${index + 1 + imagenesPrincipales.length}`,
-        grupo: (index + 1) % 10
-      }));
-      const imagenesFinales = [...imagenesPrincipales, ...imagenesHuellas];
+    if (!archivosSeleccionados) {
+      return Swal.fire("Advertencia", "No se ha seleccionado ninguna nueva imagen para actualizar.", "warning");
+    }
 
-      imagenesFinales.forEach((img) => {
-        if (img?.file) {
-          formData.append(img.key, img.file);
-          formData.append(`${img.key}_grupo`, img.grupo);
-        }
-      });
-
-      formData.append("id_alterna", nuevoIdAlterna);
-      formData.append("estado_emisor", estado_emisor);
-      formData.append("emisor", emisor);
-      formData.append("llave", llaveSeleccionada);
-      formData.append("folio", "101001");
-
-      const responseImagenes = await axios.post(
-        "http://localhost:3000/api/imagenes/upload",
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/imagenes/editar/${idAlterna}`,
         formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        { headers: { 'Content-Type': 'multipart/form-data' } }
       );
 
-      if (responseImagenes.status === 200) {
-        Swal.fire("¡Éxito!", "Las imágenes se enviaron correctamente.", "success").then(() => {
+      if (response.status === 200) {
+        Swal.fire("¡Éxito!", "Las imágenes se actualizaron correctamente.", "success").then(() => {
           navigate('/capturista');
           setTimeout(() => window.location.reload(), 100);
         });
       } else {
-        Swal.fire("Error", "No se pudieron enviar las imágenes.", "error");
+        Swal.fire("Error", "No se pudieron actualizar las imágenes.", "error");
       }
-
     } catch (error) {
-      console.error("Error en handleSubmit:", error);
+      console.error("Error al enviar imágenes:", error);
       Swal.fire("Error", "Hubo un problema al conectar con el servidor.", "error");
     }
   };
@@ -143,9 +133,10 @@ const SeleccionarFormMostrar = () => {
             ✨ Selecciona qué deseas editar
           </h2>
 
-          <Nav variant="pills" className="justify-content-center gap-3 mb-4" activeKey={activeKey} onSelect={(k) => setActiveKey(k)}>
+          <Nav variant="pills" className="justify-content-center gap-3 mb-4" activeKey={activeKey} onSelect={setActiveKey}>
             <NavItem><NavLink eventKey="2" className="rounded-full bg-gray-800 text-cyan-400">📷 Principales</NavLink></NavItem>
             <NavItem><NavLink eventKey="3" className="rounded-full bg-gray-800 text-cyan-400">🧤 Huellas</NavLink></NavItem>
+            <NavItem><NavLink eventKey="4" className="rounded-full bg-green-700 text-white">🚀 Finalizar</NavLink></NavItem>
           </Nav>
 
           <div className="text-end">
@@ -165,27 +156,30 @@ const SeleccionarFormMostrar = () => {
                 variant="success"
                 className="w-full mb-4 rounded-full"
                 onClick={handleSubmit}
-                disabled={imagenesFiltradas.length + huellasFiltradas.length < 13 || Object.keys(erroresCombinados).length > 0}
+                disabled={
+                  Object.keys(erroresCombinados).length > 0 ||
+                  (imagenesFiltradas.length === 0 && huellasFiltradas.length === 0)
+                }
               >
                 🚀 Enviar Imágenes
               </Button>
 
-              <div>
-                {Object.keys(erroresCombinados).length === 0 ? (
-                  <div className="alert alert-success rounded text-white bg-green-700 border-0">
-                    ✅ No hay errores.
-                  </div>
-                ) : (
-                  <div className="alert alert-danger rounded bg-red-800 text-white border-0">
-                    <h6 className="mb-2">❗ Errores detectados:</h6>
-                    <ul className="mb-0">
-                      {Object.values(erroresCombinados).map((err, i) => (
-                        <li key={i}>{err}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
+              {Object.keys(erroresCombinados).length > 0 && (
+                <div className="alert alert-danger rounded bg-red-800 text-white border-0">
+                  <h6 className="mb-2">❗ Errores detectados:</h6>
+                  <ul className="mb-0">
+                    {Object.values(erroresCombinados).map((err, i) => (
+                      <li key={i}>{err}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {(imagenesFiltradas.length === 0 && huellasFiltradas.length === 0) && (
+                <div className="alert alert-warning rounded bg-yellow-600 text-white border-0 mt-3">
+                  ⚠ Debes seleccionar al menos una nueva imagen para actualizar.
+                </div>
+              )}
             </>
           )}
         </div>
