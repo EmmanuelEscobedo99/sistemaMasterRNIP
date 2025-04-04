@@ -206,7 +206,12 @@ const buscarInternosModel = {
   async obtenerDescripcionErrorB6() {
     try {
       const [ resultados ] = await pool.query( `
-      SELECT DISTINCT n.descripcion, n.LLAVE
+SELECT DISTINCT 
+    n.descripcion, 
+    n.LLAVE,
+    n.FORMULARIO,
+    n.CAMPO,
+    n.ID_BLOQUE_FUNCIONAL
 FROM errores_formulario n
 JOIN movimientos m1 ON n.LLAVE = m1.LLAVE
 JOIN (
@@ -221,8 +226,7 @@ JOIN (
     AND m2.procesado = 11
   GROUP BY m1.LLAVE
 ) AS sub ON m1.ID_ALTERNA = sub.ID_ALTERNA
-ORDER BY n.LLAVE ASC
-LIMIT 1;
+ORDER BY n.LLAVE ASC;
 
       `);
       return resultados.length > 0 ? resultados : [];
