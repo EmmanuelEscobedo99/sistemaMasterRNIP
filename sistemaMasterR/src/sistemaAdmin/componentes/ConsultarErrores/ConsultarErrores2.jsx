@@ -62,7 +62,7 @@ const ConsultarErrores2 = () => {
           // Iterar sobre cada formulario y rechazar los registros
           for ( const [ formName, items ] of Object.entries( erroresAgrupados ) ) {
             for ( const item of items ) {
-              await rechazarRegistro2( LLAVE, formName, item.nombre, mensaje );
+              await rechazarRegistro2(LLAVE, formName, item.nombre, mensaje);
             }
           }
 
@@ -97,7 +97,7 @@ const ConsultarErrores2 = () => {
   };
 
   // Función para rechazar el registro y enviar los datos al backend
-  const rechazarRegistro2 = async ( LLAVE, FORMULARIO, CAMPO, DESCRIPCION ) => {
+  const rechazarRegistro2 = async (LLAVE, FORMULARIO, CAMPO, DESCRIPCION) => {
     try {
       // Realizas la solicitud PUT aquí, pasando los datos necesarios
       await api.put( `rechazar/rechazarRegistro2/${ LLAVE }/${ FORMULARIO }/${ CAMPO }/${ DESCRIPCION }` );
